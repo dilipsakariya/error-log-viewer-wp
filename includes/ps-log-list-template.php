@@ -1,4 +1,4 @@
-<div class="ps_log_overview">
+<div class="wp_elv_log_overview">
     <h1><?php _e( 'Error Log List', 'wp_elv' ); ?></h1>
     <hr>
     <div class="wp_elv_log_table">

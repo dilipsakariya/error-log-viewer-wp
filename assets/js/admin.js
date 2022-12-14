@@ -84,14 +84,24 @@ function sortEntries(type, order) {
     jQuery('section').html(aList);
 }
 jQuery(document).ready(function($) {
-    // $('#ps_error_log_refresh').on('click', function (e) {
+    // $('#wp_elv_error_log_refresh').on('click', function (e) {
     //        e.preventDefault();
     //        var date = $('#date').val();
     // });
-    $( "#ps_datepicker" ).datepicker({
+    $( "#wp_elv_datepicker,#wp_elv_select_date" ).datepicker({
         format: ajax_script_object.date_format
     });
-    $('#ps_skip_to_bottom').on('click', function() {
+    $(document).on('change', '#wp_elv_datepicker,#wp_elv_select_date', function(){
+        var date_format_php = ajax_script_object.date_format_php;
+        var date_val = $(this).val();
+        if (date_format_php == 'F j, Y') {
+            var date_val_arr = date_val.split(' ');
+            date_val_arr[0]  = ajax_script_object.months[date_val_arr[0]]
+            date_val = date_val_arr.join(' ');
+            $(this).val(date_val);
+        }
+    });
+    $('#wp_elv_skip_to_bottom').on('click', function() {
         $(document).scrollTop($(document).height());
     });
     $('#wp_elv_skip_to_top').on('click', function() {
@@ -101,14 +111,15 @@ jQuery(document).ready(function($) {
     $('#wp_elv_error_log_purge').on('click', function() {
         var r = confirm("Are you sure want to delete this log?");
         if (r == true) {
-            var ps_error_log = $('#ps_error_log').val();
+            var wp_elv_error_log = $('#wp_elv_error_log').val();
             jQuery.ajax({
                 type: 'POST',
                 url: ajax_script_object.ajax_url,
                 dataType: "json",
                 data: {
                     'action': 'wp_elv_purge_log',
-                    'ps_error_log': ps_error_log
+                    'wp_elv_nonce': ajax_script_object.purge_log_nonce,
+                    'wp_elv_error_log': wp_elv_error_log
                 },
                 success: function(data) {
                     // alert(data);
@@ -178,7 +189,7 @@ $(document).ready(function() {
         }, {
             data: 'others'
         }, {
-            data: 'ps_log_path'
+            data: 'wp_elv_log_path'
         }, {
             data: 'action'
         }],
@@ -194,6 +205,7 @@ $(document).ready(function() {
                 dataType: "json",
                 data: {
                     'action': 'wp_elv_datatable_delete_data',
+                    '_wpnonce': ajax_script_object.delete_data_nonce,
                     'wp_elv_datatable_deleteid': wp_elv_datatable_deleteid
                 },
                 success: function(data) {

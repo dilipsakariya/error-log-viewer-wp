@@ -23,7 +23,7 @@ $instance = new WP_Error_Log_Viewer;
 $date_format = get_option( 'date_format' );
 
 if ( isset( $_GET["date"] ) && !empty( $_GET["date"] ) ) {
-    $log_date = date( "d-M-Y", strtotime( str_replace( array( ' ', ',' ), array( '-','' ), $_GET['date'] ) ) );
+    $log_date = date( "d-M-Y", strtotime(  $_GET['date'] ) );
 }
 
 if ( isset( $_GET["date"] ) && !empty( $_GET["date"] ) && isset( $_GET["type"] ) && !empty( $_GET["type"] ) ) {
@@ -35,8 +35,12 @@ if( isset( $_GET['is_raw_log'] ) && 'true' == $_GET['is_raw_log'] ) {
     $is_raw_log = true;
 }
 
-if( isset( $_POST['date'] ) && !empty( $_POST['date'] ) ) {
-    $log_date = date( "d-M-Y", strtotime( str_replace( array( ' ', ',' ), array( '-','' ), $_POST['date'] ) ) );
+if( isset( $_POST['date'] ) && !empty( $_POST['date'] ) && wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_date_filter_nonce' ) ) {
+
+    if ( 'd/m/Y' === $date_format ) {
+        $_POST['date'] = str_replace( '/', '-', $_POST['date'] );
+    }
+    $log_date = date( "d-M-Y", strtotime(  $_POST['date'] ) );
 } elseif ( !isset( $_GET["date"] ) && empty( $_GET["date"] ) && !isset( $_GET["type"] ) && empty( $_GET["type"] ) ) {
     $last_log = wp_elv_get_last_log();
 
@@ -53,14 +57,15 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
     
     <?php if ( !empty(  $log_details['logs'] ) ): ?>
         <h1><?php _e( 'WP Error Log Viewer', 'wp_elv' ); ?></h1>
-        <div class="wp_elv_ps_error_log_filter">
+        <div class="wp_elv_error_log_filter">
             <div class="">
                 <h3 class="wp_elv_filter_heading"><?php _e( 'Filters', 'wp_elv' ); ?></h3>
                 <form action="" method="POST">
                     <fieldset id="dateFilter">
-                        <div><label class="wp_elv-lbl-filter"><?php _e( 'Filter by Date: ', 'wp_elv' ); ?></label> <input type="text" name="date" id="ps_datepicker" class="hasDatepicker" value="<?php echo date( $date_format,strtotime( $log_date ) );?>" />&nbsp;&nbsp;
-                        <button type="submit" class="button button-primary" name="wp_elv_ps_error_log_filter_by_date" id="wp_elv_ps_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
+                        <div><label class="wp_elv-lbl-filter"><?php _e( 'Filter by Date: ', 'wp_elv' ); ?></label> <input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo date( $date_format,strtotime( $log_date ) );?>" />&nbsp;&nbsp;
+                        <button type="submit" class="button button-primary" name="wp_elv_error_log_filter_by_date" id="wp_elv_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
                     </fieldset>
+                    <?php wp_nonce_field( 'wp_elv_date_filter_nonce', 'wp_elv_nonce' ); ?>
                 </form>
 
                 <fieldset id="wp_elv_path_filter">
@@ -111,35 +116,30 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
             <div class="clear"></div>
         </div>
         <p id="entryCount">
-            <div class="ps_error_log_buttons">
+            <div class="wp_elv_error_log_buttons">
                 <?php if( isset( $log_details['error_log'] ) && !empty( $log_details['error_log'] ) ) {   ?>
                     <form method="post">
                         
                         <button type="submit" class="button primary" name="wp_elv_error_log_download" id="wp_elv_error_log_download" value=""><?php _e( 'Download Log', 'wp_elv' ); ?></button>
                     
-                        <input type="hidden" name="ps_error_log" id="ps_error_log"  value="<?php echo $log_details['error_log'];?>">
+                        <input type="hidden" name="wp_elv_error_log" id="wp_elv_error_log"  value="<?php echo $log_details['error_log'];?>">
                         <button type="button" class="button primary" name="wp_elv_error_log_purge" id="wp_elv_error_log_purge" value=""><?php _e( 'Purge Log', 'wp_elv' ); ?></button>
-
                     </form>
                 <?php } ?>
             </div>
             <div class="wp_elv_skip_bottom_wrap">
-                <a href="javascript:void(0);" name="ps_skip_to_bottom" id="ps_skip_to_bottom" value=""><?php _e( 'Skip To Bottom', 'wp_elv' ); ?></a>
+                <a href="javascript:void(0);" name="wp_elv_skip_to_bottom" id="wp_elv_skip_to_bottom" value=""><?php _e( 'Skip To Bottom', 'wp_elv' ); ?></a>
             </div>
             <div class="clear"></div>
             <div class="wp_elv-log-path-main-holder">
                 <div class="wp_elv-log-path-holder">
                     <p><strong><?php _e( 'Log Path: ', 'wp_elv' ); ?></strong><?php echo $log_details['error_log'];?></p>
-                    <div class="wp_elv_log_data_wrap">
-                        <span class="log_entries">
-                            <strong><?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );printf( __( 'Distinct Entr%s: ', 'wp_elv' ), $total_str ); ?> </strong> <?php echo $log_details['total']; ?>
-                        </span>
-                        <span id="wp_elv_ps_file_size">
-                            <strong><?php _e( 'File Size: ', 'wp_elv' ); ?></strong><?php echo wp_elv_file_size_convert( filesize( $log_details['error_log'] ) ); ?>
-                        </span>
-                    </div>
                 </div>
-
+                <div class="wp_elv_log_data_wrap">
+                    <span class="log_entries">
+                    <strong><?php echo $log_details['total']; ?></strong> <?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );printf( __( 'Distinct Entr%s', 'wp_elv' ), $total_str ); ?></span>
+                    <span id="wp_elv_file_size"> <?php _e( 'File Size : ', 'wp_elv' ); ?><strong><?php echo wp_elv_file_size_convert( filesize( $log_details['error_log'] ) ); ?> </strong></span>
+                </div>
             </div>
         </p>
         <p id="logfilesize">
@@ -201,13 +201,14 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
         </section>
         <p id="nothingToShow" class="hide"><?php _e( 'Nothing to show with selected filters.', 'wp_elv' ); ?></p>
     <?php else: ?>
-        <div class="wp_elv_ps_error_log_filter">
+        <div class="wp_elv_error_log_filter">
             <div class="left">
                 <h3 class="wp_elv_filter_heading"><?php _e( 'Filters', 'wp_elv' ); ?></h3>
                 <form action="" method="POST">
                     <fieldset id="dateFilter">
-                        <div><label><?php _e( 'Filter by Date: ', 'wp_elv' ); ?><input type="text" name="date" id="ps_datepicker" class="hasDatepicker" value="<?php echo date( $date_format,strtotime( $log_date ) );?>" ></label>&nbsp;&nbsp;
-                        <button type="submit" class="button primary" name="wp_elv_ps_error_log_filter_by_date" id="wp_elv_ps_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
+                        <div><label><?php _e( 'Filter by Date: ', 'wp_elv' ); ?><input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo date( $date_format,strtotime( $log_date ) );?>" ></label>&nbsp;&nbsp;
+                        <button type="submit" class="button primary" name="wp_elv_error_log_filter_by_date" id="wp_elv_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
+                        <?php wp_nonce_field( 'wp_elv_date_filter_nonce', 'wp_elv_nonce' ); ?>
                     </fieldset>
                 </form>
 

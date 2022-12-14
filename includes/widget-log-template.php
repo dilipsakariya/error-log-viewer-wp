@@ -8,7 +8,7 @@
             }
         ?>
         <label for="select_date" class="new_lbl_selected"><?php _e( 'Log From:', 'wp_elv' ); ?></label>
-        <input type="date" value="<?php echo $first_date;?>" name="select_date" id="select_date" class="new_date_field" /></br>
+        <input type="text" value="<?php echo $first_date;?>" name="select_date" id="wp_elv_select_date" class="new_date_field" /></br>
         <input type="submit" class="button button-primary view" name="view" value="View"></label>
             <div >
                 <?php

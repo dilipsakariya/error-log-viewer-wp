@@ -2,7 +2,7 @@
 /**
  * Helper Functions
  *
- * @package     WP_Error_Log_Viewer\Functions
+ * @package     EDD\PluginTemplateWP\Functions
  * @since       1.0.0
  */
 
@@ -76,10 +76,10 @@ if( !function_exists( 'wp_elv_get_last_log' ) ) {
 	function wp_elv_get_last_log() {
 	    global $wpdb;
 	    $table           = $wpdb->prefix . 'wp_error_logs';
-	    $ps_table_data   = $wpdb->get_results( "select * from $table ORDER BY created_at DESC LIMIT 1" );
+	    $wp_elv_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at DESC LIMIT 1" ) );
 
-	    if ( isset( $ps_table_data[0] ) ) {
-	    	return $ps_table_data[0];
+	    if ( isset( $wp_elv_table_data[0] ) ) {
+	    	return $wp_elv_table_data[0];
 	    }
 	    return null;
 	}

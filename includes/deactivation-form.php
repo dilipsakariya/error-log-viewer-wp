@@ -1,7 +1,7 @@
 <?php
 /**
- * WP_Error_Log_Viewer deactivation Content.
- * @package WP_Error_Log_Viewer\Deactivation_Content
+ * PluginTemplateWP deactivation Content.
+ * @package PluginTemplateWP
  * @version 1.0.0
  */
 

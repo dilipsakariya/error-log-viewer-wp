@@ -77,14 +77,14 @@
 .wp_elv_log_selection th, .wp_elv_log_stats th {
     text-align: left;
 }
-.wp_elv_clear_all_ps_logs, .wp_elv_log_stats td, .wp_elv_download_wp_log_file {
+.wp_elv_clear_all_logs, .wp_elv_log_stats td, .wp_elv_download_wp_log_file {
     text-align: right;
 }
 .wp_elv_log_area {
     background-color: #fff;
     padding: 10px;
 }
-#wp_elv_clear_this_log, #wp_elv_clear_all_ps_logs {
+#wp_elv_clear_this_log, #wp_elv_clear_all_logs {
     color: #fff;
     background-color: #ec3b3b;
     border-color: #ec3b3b
@@ -94,7 +94,7 @@
     background-color: #228622;
     border-color: #228622
 }
-.wp_elv_ps_error_log_filter {
+.wp_elv_error_log_filter {
     background-color: #fff;
     padding: 10px;
 }
@@ -262,10 +262,10 @@
 #wp_elv_skip_to_top {
     float: right;
 }
-#wp_elv_ps_file_size {
+#wp_elv_file_size {
     margin: 49px;
 }
-.ps_error_log_buttons {
+.wp_elv_error_log_buttons {
     width: 33.33%;
     float: left;
 }
@@ -304,7 +304,7 @@
 .wp_elv_skip_bottom_wrap, .wp_elv_log_data_wrap {
     line-height: 25px
 }
-#wp-admin-bar-ps_admin_bar .wp_elv-admin-bar-error-count {
+#wp-admin-bar-wp_elv_admin_bar .wp_elv-admin-bar-error-count {
     margin: 1px 0 0 7px;
     padding: 0 5px;
     min-width: 7px;

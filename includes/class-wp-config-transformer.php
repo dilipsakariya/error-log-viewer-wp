@@ -277,6 +277,8 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                 $placeholder = "define( '%s', %s );";
             } elseif ( 'variable' === $type ) {
                 $placeholder = '$%s = %s;';
+            } elseif ( 'inivariable' === $type ) {
+                $placeholder = "ini_set( '%s', %s );";
             } else {
                 throw new Exception( "Unable to normalize config type '{$type}'." );
             }
@@ -292,9 +294,10 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
          * @return array
          */
         protected function parse_wp_config( $src ) {
-            $configs               = array();
-            $configs[ 'constant' ] = array();
-            $configs[ 'variable' ] = array();
+            $configs                    = array();
+            $configs[ 'constant' ]      = array();
+            $configs[ 'inivariable' ]   = array();
+            $configs[ 'variable' ]      = array();
             
             // Strip comments.
 
@@ -310,6 +313,7 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
             }
             
             preg_match_all( '/(?<=^|;|<\?php\s|<\?\s)(\h*define\s*\(\s*[\'"](\w*?)[\'"]\s*)(,\s*(\'\'|""|\'.*?[^\\\\]\'|".*?[^\\\\]"|.*?)\s*)((?:,\s*(?:true|false)\s*)?\)\s*;)/ims', $src, $constants );
+            preg_match_all( '/(?<=^|;|<\?php\s|<\?\s)(\h*ini_set\s*\(\s*[\'"](\w*?)[\'"]\s*)(,\s*(\'\'|""|\'.*?[^\\\\]\'|".*?[^\\\\]"|.*?)\s*)((?:,\s*(?:true|false)\s*)?\)\s*;)/ims', $src, $inivariables );
             preg_match_all( '/(?<=^|;|<\?php\s|<\?\s)(\h*\$(\w+)\s*=)(\s*(\'\'|""|\'.*?[^\\\\]\'|".*?[^\\\\]"|.*?)\s*;)/ims', $src, $variables );
             
             if ( ! empty( $constants[0] ) && ! empty( $constants[1] ) && ! empty( $constants[2] ) && ! empty( $constants[3] ) && ! empty( $constants[4] ) && ! empty( $constants[5] ) ) {
@@ -322,6 +326,22 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                             $constants[1][ $index ],
                             $constants[3][ $index ],
                             $constants[5][ $index ] 
+                        ) 
+                    );
+                }
+
+            }
+
+            if ( ! empty( $inivariables[0] ) && ! empty( $inivariables[1] ) && ! empty( $inivariables[2] ) && ! empty( $inivariables[3] ) && ! empty( $inivariables[4] ) && ! empty( $inivariables[5] ) ) {
+
+                foreach ( $inivariables[2] as $index => $name ) {
+                    $configs['inivariable'][ $name ] = array(
+                        'src'   => $inivariables[0][ $index ],
+                        'value' => $inivariables[4][ $index ],
+                        'parts' => array(
+                            $inivariables[1][ $index ],
+                            $inivariables[3][ $index ],
+                            $inivariables[5][ $index ] 
                         ) 
                     );
                 }
