@@ -16,12 +16,10 @@
  *
  */
 
-
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) )
+if ( !defined( 'ABSPATH' ) ){
     exit;
-
-
+}
 
 if ( !class_exists( 'WP_Error_Log_Viewer' ) ) {
     
@@ -1403,7 +1401,6 @@ function WP_Error_Log_Viewer_load()
     return WP_Error_Log_Viewer::instance();
 }
 add_action( 'plugins_loaded', 'WP_Error_Log_Viewer_load' );
-
 
 /**
  * The activation hook is called outside of the singleton because WordPress doesn't

@@ -16,11 +16,9 @@
  * @var string|null Path to error log file or null to get from ini settings
  */
 
+$instance       = new WP_Error_Log_Viewer;
 
-
-$instance = new WP_Error_Log_Viewer;
-
-$date_format = get_option( 'date_format' );
+$date_format    = get_option( 'date_format' );
 
 if ( isset( $_GET["date"] ) && !empty( $_GET["date"] ) ) {
     $log_date = date( "d-M-Y", strtotime(  $_GET['date'] ) );

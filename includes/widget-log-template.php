@@ -1,4 +1,3 @@
-
 <div class="wp_elv_new_error_form_style">
     <form id="form1" method="post" action="">
         <?php
