@@ -1,18 +1,18 @@
 <?php
 /**
  * Plugin Name:     WP Error Log Viewer
- * Plugin URI:      https://www.pluginsandsnippets.com/downloads/wp-error-log-viewer/
- * Description:     This plugin offers a user-friendly way to analyze the PHP error log by identifying distinct erorr log notices and warnings. Simply install the plugin and identify the error log notices and warnings you need to work on.
+ * Plugin URI:      https://wordpress.org/plugins/wp-error-log-viewer/
+ * Description:     WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Version:         1.0.2
- * Author:          Plugins & Snippets
- * Author URI:      https://pluginsandsnippets.com/
+ * Author:          Jaitras
+ * Author URI:      https://jaitras.com/
  * Text Domain:     wp_elv
  * Requires at least:   3.9
- * Tested up to:        5.5.3
+ * Tested up to:        6.1.1
  *
  * @package         EDD\WP_Error_Log_Viewer
- * @author          PluginsandSnippets.com
- * @copyright       All rights reserved Copyright (c) 2020, PluginsandSnippets.com
+ * @author          jaitras.com
+ * @copyright       All rights reserved Copyright (c) 2022, jaitras.com
  *
  */
 
@@ -128,9 +128,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             // Plugin URL
             define( 'WP_ERROR_LOG_VIEWER_URL', plugin_dir_url( __FILE__ ) );
             
-            define( 'WP_ERROR_LOG_VIEWER_SUPPORT_URL', 'https://www.pluginsandsnippets.com/support/' );
+            define( 'WP_ERROR_LOG_VIEWER_SUPPORT_URL', 'https://wordpress.org/support/plugin/wp-error-log-viewer/' );
             
-            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://www.pluginsandsnippets.com/downloads/wp-error-log-viewer/#review' );
+            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://wordpress.org/support/plugin/wp-error-log-viewer/reviews/#new-post' );
             
             define( 'WP_ERROR_LOG_VIEWER_DEBUG_LOGFOLDER', WP_CONTENT_DIR . '/uploads/wp-error-log-viewer' );
 
@@ -1245,7 +1245,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 'php_version' => PHP_VERSION 
             );
                         
-            $to      = 'info@pluginsandsnippets.com';
+            $to      = 'info@jaitras.com';
             $subject = 'Plugin Uninstallation';
             $body    = '<p>Plugin Name: ' . WP_ERROR_LOG_VIEWER_NAME . '</p>';
             $body .= '<p>Plugin Version: ' . WP_ERROR_LOG_VIEWER_VER . '</p>';
