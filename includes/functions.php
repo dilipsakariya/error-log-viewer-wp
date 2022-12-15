@@ -8,43 +8,43 @@
 
 
 // Exit if accessed directly
-if( !defined( 'ABSPATH' ) ){
+if( ! defined( 'ABSPATH' ) ){
 	exit;
 }
 
 
-if( !function_exists( 'wp_elv_file_size_convert' ) ) {
+if( ! function_exists( 'wp_elv_file_size_convert' ) ) {
 	
 	function wp_elv_file_size_convert( $bytes ) {
 	    $bytes = floatval( $bytes );
 	        $arBytes = array(
 	            0 => array(
-	                "UNIT" => "TB",
-	                "VALUE" => pow( 1024, 4 )
+	                'UNIT' 	=> 'TB',
+	                'VALUE' => pow( 1024, 4 ),
 	            ),
 	            1 => array(
-	                "UNIT" => "GB",
-	                "VALUE" => pow( 1024, 3 )
+	                'UNIT' 	=> 'GB',
+	                'VALUE' => pow( 1024, 3 ),
 	            ),
 	            2 => array(
-	                "UNIT" => "MB",
-	                "VALUE" => pow( 1024, 2 )
+	                'UNIT' 	=> 'MB',
+	                'VALUE' => pow( 1024, 2 ),
 	            ),
 	            3 => array(
-	                "UNIT" => "KB",
-	                "VALUE" => 1024
+	                'UNIT' 	=> 'KB',
+	                'VALUE' => 1024,
 	            ),
 	            4 => array(
-	                "UNIT" => "B",
-	                "VALUE" => 1
+	                'UNIT' 	=> 'B',
+	                'VALUE' => 1,
 	            ),
 	        );
 
 	    foreach ( $arBytes as $arItem ) {
 	        
-	        if ( $bytes >= $arItem["VALUE"] ) {
-	            $result = $bytes / $arItem["VALUE"];
-	            $result = str_replace( ".", "," , strval( round( $result, 2 ) ) )." ".$arItem["UNIT"];
+	        if ( $bytes >= $arItem[ 'VALUE' ] ) {
+	            $result = $bytes / $arItem[ 'VALUE' ];
+	            $result = str_replace( '.', ',' , strval( round( $result, 2 ) ) ).' '.$arItem[ 'UNIT' ];
 	            break;
 	        }
 	    }
@@ -52,7 +52,7 @@ if( !function_exists( 'wp_elv_file_size_convert' ) ) {
 	}
 }
 
-if( !function_exists( 'wp_elv_date_formate' ) ) {
+if( ! function_exists( 'wp_elv_date_formate' ) ) {
 	
 	function wp_elv_date_formate() {
 	    $date_format =  get_option( 'date_format' );
@@ -66,14 +66,14 @@ if( !function_exists( 'wp_elv_date_formate' ) ) {
 	    } elseif ( 'd/m/Y' === $date_format ){
 		    $res_date_format = str_replace( array( 'Y', 'm', 'd' ), array( 'yyyy', 'mm', 'dd' ), $date_format );
 	    } else {
-	    	$date_format = "d-m-Y";
+	    	$date_format = 'd-m-Y';
 		    $res_date_format = str_replace( array( 'Y', 'm', 'd' ), array( 'yyyy', 'mm', 'dd' ), $date_format );
 	    }
 	    return $res_date_format;
 	}
 }
 
-if( !function_exists( 'wp_elv_get_last_log' ) ) {
+if( ! function_exists( 'wp_elv_get_last_log' ) ) {
 	
 	function wp_elv_get_last_log() {
 	    global $wpdb;

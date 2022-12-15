@@ -99,7 +99,7 @@ $wp_elv_error_log_deactivation_nonce = wp_create_nonce( 'wp_elv_error_log_deacti
                                     </input>
                                 </span>
                                 <span class="reason_text">
-                                    <?php _e( "It's a temporary deactivation. I'm just debugging an issue.", 'wp_elv' ); ?>
+                                    <?php _e( 'It\'s a temporary deactivation. I\'m just debugging an issue.', 'wp_elv' ); ?>
                                 </span>
                             </label>
                             <div class="wp_elv-internal-message">
