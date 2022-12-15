@@ -20,26 +20,26 @@ $instance       = new WP_Error_Log_Viewer;
 
 $date_format    = get_option( 'date_format' );
 
-if ( isset( $_GET[ 'date' ] ) && !empty( $_GET[ 'date' ] ) ) {
-    $log_date = date( 'd-M-Y', strtotime(  $_GET[ 'date' ] ) );
+if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) ) {
+    $log_date = date( 'd-M-Y', strtotime(  $_GET['date'] ) );
 }
 
-if ( isset( $_GET[ 'date' ] ) && !empty( $_GET[ 'date' ] ) && isset( $_GET[ 'type' ] ) && !empty( $_GET[ 'type' ] ) ) {
-    $error_type = str_replace( ' ', '', $_GET[ 'type' ] );
+if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) && isset( $_GET['type'] ) && !empty( $_GET['type'] ) ) {
+    $error_type = str_replace( ' ', '', $_GET['type'] );
 }
 $is_raw_log = false;
 
-if( isset( $_GET[ 'is_raw_log' ] ) && 'true' == $_GET[ 'is_raw_log' ] ) {
+if( isset( $_GET['is_raw_log'] ) && 'true' == $_GET['is_raw_log'] ) {
     $is_raw_log = true;
 }
 
-if( isset( $_POST[ 'date' ] ) && !empty( $_POST[ 'date' ] ) && wp_verify_nonce( $_POST[ 'wp_elv_nonce' ], 'wp_elv_date_filter_nonce' ) ) {
+if( isset( $_POST['date'] ) && !empty( $_POST['date'] ) && wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_date_filter_nonce' ) ) {
 
     if ( 'd/m/Y' === $date_format ) {
-        $_POST[ 'date' ] = str_replace( '/', '-', $_POST[ 'date' ] );
+        $_POST['date'] = str_replace( '/', '-', $_POST['date'] );
     }
-    $log_date = date( 'd-M-Y', strtotime(  $_POST[ 'date' ] ) );
-} elseif ( ! isset( $_GET[ 'date' ] ) && empty( $_GET[ 'date' ] ) && !isset( $_GET[ 'type' ] ) && empty( $_GET[ 'type' ] ) ) {
+    $log_date = date( 'd-M-Y', strtotime(  $_POST['date'] ) );
+} elseif ( ! isset( $_GET['date'] ) && empty( $_GET['date'] ) && !isset( $_GET['type'] ) && empty( $_GET['type'] ) ) {
     $last_log = wp_elv_get_last_log();
 
     if ( $last_log ) {
@@ -53,7 +53,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
 
 <div id="wp_elv_err_container">
     
-    <?php if ( ! empty( $log_details[ 'logs' ] ) ): ?>
+    <?php if ( ! empty( $log_details['logs'] ) ): ?>
         <h1><?php _e( 'WP Error Log Viewer', 'wp_elv' ); ?></h1>
         <div class="wp_elv_error_log_filter">
             <div class="">
@@ -72,16 +72,16 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 <?php if ( ! $is_raw_log ) { ?>
                 <fieldset id="wp_elv_type_filter">
                     <p> <label class="wp_elv-lbl-filter"><?php _e( 'Filter by Type: ', 'wp_elv' ); ?></label>
-                        <?php foreach ( $log_details[ 'types' ] as $title => $class ): ?>
+                        <?php foreach ( $log_details['types'] as $title => $class ): ?>
                         
                         <label class=" wp_elv_type_lbl <?php if( ! empty( $class ) ) { echo $class; } else{ echo $type; } ?>">
                             <input type="checkbox" value="<?php echo $class; ?>" checked="checked" /> 
                             <?php
                                 echo ucwords( $title ); 
                             ?> 
-                            (<span data-total="<?php echo $log_details[ 'typecount' ][ $title ]; ?>">
+                            (<span data-total="<?php echo $log_details['typecount'][ $title ]; ?>">
                             <?php
-                                echo $log_details[ 'typecount' ][ $title ]; 
+                                echo $log_details['typecount'][ $title ]; 
                             ?>
                             </span>)
                         </label>
@@ -121,12 +121,12 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
         </div>
         <p id="entryCount">
             <div class="wp_elv_error_log_buttons">
-                <?php if( isset( $log_details[ 'error_log' ] ) && ! empty( $log_details[ 'error_log' ] ) ) {   ?>
+                <?php if( isset( $log_details['error_log'] ) && ! empty( $log_details['error_log'] ) ) {   ?>
                     <form method="post">
                         
                         <button type="submit" class="button primary" name="wp_elv_error_log_download" id="wp_elv_error_log_download" value=""><?php _e( 'Download Log', 'wp_elv' ); ?></button>
                     
-                        <input type="hidden" name="wp_elv_error_log" id="wp_elv_error_log" value="<?php echo $log_details[ 'error_log' ];?>">
+                        <input type="hidden" name="wp_elv_error_log" id="wp_elv_error_log" value="<?php echo $log_details['error_log'];?>">
                         <button type="button" class="button primary" name="wp_elv_error_log_purge" id="wp_elv_error_log_purge" value=""><?php _e( 'Purge Log', 'wp_elv' ); ?></button>
                     </form>
                 <?php } ?>
@@ -137,35 +137,35 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
             <div class="clear"></div>
             <div class="wp_elv-log-path-main-holder">
                 <div class="wp_elv-log-path-holder">
-                    <p><strong><?php _e( 'Log Path: ', 'wp_elv' ); ?></strong><?php echo $log_details[ 'error_log' ];?></p>
+                    <p><strong><?php _e( 'Log Path: ', 'wp_elv' ); ?></strong><?php echo $log_details['error_log'];?></p>
                 </div>
                 <div class="wp_elv_log_data_wrap">
                     <span class="log_entries">
-                    <strong><?php echo $log_details[ 'total' ]; ?></strong> <?php $total_str = ( 1 == $log_details[ 'total' ] ? 'y' : 'ies' );printf( __( 'Distinct Entr%s', 'wp_elv' ), $total_str ); ?></span>
-                    <span id="wp_elv_file_size"> <?php _e( 'File Size : ', 'wp_elv' ); ?><strong><?php echo wp_elv_file_size_convert( filesize( $log_details[ 'error_log' ] ) ); ?> </strong></span>
+                    <strong><?php echo $log_details['total']; ?></strong> <?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );printf( __( 'Distinct Entr%s', 'wp_elv' ), $total_str ); ?></span>
+                    <span id="wp_elv_file_size"> <?php _e( 'File Size : ', 'wp_elv' ); ?><strong><?php echo wp_elv_file_size_convert( filesize( $log_details['error_log'] ) ); ?> </strong></span>
                 </div>
             </div>
         </p>
         <p id="logfilesize">
         </p>
         <div class="wp_elv_type_error">
-            <?php foreach( $log_details[ 'types' ] as $type => $class ){?>
+            <?php foreach( $log_details['types'] as $type => $class ){?>
                 <div class="wp_elv_logoverview_static <?php if( ! empty( $class ) ) { echo $class; } else{ echo $type; } ?>">
-                    <div><strong><i class="dashicons-before dashicons-info<?php echo ( 'warning' === $type ) ? '-outline' : '' ;?>"></i><?php echo ucwords( $type );?>: </strong><?php echo $log_details[ 'typecount' ][ $type ];?> <?php _e( 'Entries - ', 'wp_elv' ); ?><span><?php echo number_format( 100 * $log_details[ 'typecount' ][ $type ] / $log_details[ 'total' ], 2 );  ?>%</span></div>
+                    <div><strong><i class="dashicons-before dashicons-info<?php echo ( 'warning' === $type ) ? '-outline' : '' ;?>"></i><?php echo ucwords( $type );?>: </strong><?php echo $log_details['typecount'][ $type ];?> <?php _e( 'Entries - ', 'wp_elv' ); ?><span><?php echo number_format( 100 * $log_details['typecount'][ $type ] / $log_details['total'], 2 );  ?>%</span></div>
                 </div>
             <?php } ?>
         </div>
         <section id="wp_elv_error_list">
 
             <?php if ( ! $is_raw_log ) { ?>
-                <?php foreach ( $log_details[ 'logs' ] as $log ): ?>
-                    <article class="<?php echo $log_details[ 'types' ][ $log->type ]; ?>"
+                <?php foreach ( $log_details['logs'] as $log ): ?>
+                    <article class="<?php echo $log_details['types'][ $log->type ]; ?>"
                             data-path="<?php if ( ! empty( $log->path ) ) echo htmlentities( $log->path ); ?>"
                             data-line="<?php if ( ! empty( $log->line ) ) echo $log->line; ?>"
-                            data-type="<?php echo $log_details[ 'types' ][ $log->type ]; ?>"
+                            data-type="<?php echo $log_details['types'][ $log->type ]; ?>"
                             data-hits="<?php echo $log->hits; ?>"
                             data-last="<?php echo $log->last; ?>">
-                        <div class="<?php echo $log_details[ 'types' ][ $log->type ]; ?>">
+                        <div class="<?php echo $log_details['types'][ $log->type ]; ?>">
                             <div class="wp_elv_er_type"><i class="dashicons-before dashicons-info<?php echo ( 'warning' === $log->type ) ? '-outline' : '' ;?>"></i><?php echo ucwords( htmlentities( $log->type ) ); ?></div> 
                             <div class="wp_elv_er_path">
                                 <b><?php echo htmlentities( ( empty( $log->core ) ? $log->msg : $log->core ) ); ?></b>
@@ -200,7 +200,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 <?php endforeach; ?>
                 <a href="javascript:void(0);" name="wp_elv_skip_to_top" id="wp_elv_skip_to_top" value=""><?php _e( 'Skip To Top', 'wp_elv' ); ?></a>
             <?php }else{  ?>
-                <textarea class="widefat" rows="25" name="raw_log_textarea"><?php $raw_log_details = implode( '', $log_details[ 'file' ] ); echo $raw_log_details; ?></textarea>
+                <textarea class="widefat" rows="25" name="raw_log_textarea"><?php $raw_log_details = implode( '', $log_details['file'] ); echo $raw_log_details; ?></textarea>
             <?php }  ?>
         </section>
         <p id="nothingToShow" class="hide"><?php _e( 'Nothing to show with selected filters.', 'wp_elv' ); ?></p>
@@ -243,7 +243,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
 
     $script_object = array(
         'error_type'    => ( isset( $error_type ) ? true : false ),
-        'total'         => ( isset( $log_details[ 'total' ] ) ? $log_details[ 'total' ] : 0 ),
+        'total'         => ( isset( $log_details['total'] ) ? $log_details['total'] : 0 ),
     );
     wp_localize_script( 'wp_elv_admin_script', 'script_object', $script_object );
     ?>

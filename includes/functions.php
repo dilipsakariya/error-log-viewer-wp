@@ -42,9 +42,9 @@ if( ! function_exists( 'wp_elv_file_size_convert' ) ) {
 
 	    foreach ( $arBytes as $arItem ) {
 	        
-	        if ( $bytes >= $arItem[ 'VALUE' ] ) {
-	            $result = $bytes / $arItem[ 'VALUE' ];
-	            $result = str_replace( '.', ',' , strval( round( $result, 2 ) ) ).' '.$arItem[ 'UNIT' ];
+	        if ( $bytes >= $arItem['VALUE'] ) {
+	            $result = $bytes / $arItem['VALUE'];
+	            $result = str_replace( '.', ',' , strval( round( $result, 2 ) ) ).' '.$arItem['UNIT'];
 	            break;
 	        }
 	    }

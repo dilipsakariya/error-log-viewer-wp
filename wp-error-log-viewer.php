@@ -261,8 +261,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             $log_details        = $this->wp_elv_log_details( $wp_elv_coneverted_date );
                             
                             if ( $log_details ) {
-                              $wp_elv_serialize_data  = serialize( $log_details[ 'typecount' ] );
-                              $log_path           = $log_details[ 'error_log' ];
+                              $wp_elv_serialize_data  = serialize( $log_details['typecount'] );
+                              $log_path           = $log_details['error_log'];
                               
                               if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
                                   $data   = array(
@@ -286,8 +286,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             $current_date       = date( 'Y-m-d', strtotime( substr( $file_name, 4, 11 ) ) );
                             $wp_elv_coneverted_date = date( 'd-M-Y', strtotime( $current_date ) );
                             $log_details        = $this->wp_elv_log_details( $wp_elv_coneverted_date );
-                            $wp_elv_serialize_data  = serialize( $log_details[ 'typecount' ] );
-                            $log_path           = $log_details[ 'error_log' ];
+                            $wp_elv_serialize_data  = serialize( $log_details['typecount'] );
+                            $log_path           = $log_details['error_log'];
                             
                             if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
                                 $data          = array(
@@ -429,9 +429,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         public function wp_elv_log_download()
         {
             
-            if ( is_admin() && isset( $_POST[ 'wp_elv_error_log_download' ] ) && isset( $_POST[ 'wp_elv_error_log' ] ) && !empty( $_POST[ 'wp_elv_error_log' ] ) ) {
+            if ( is_admin() && isset( $_POST['wp_elv_error_log_download'] ) && isset( $_POST['wp_elv_error_log'] ) && !empty( $_POST['wp_elv_error_log'] ) ) {
                 
-                $wp_elv_file = sanitize_text_field( $_POST[ 'wp_elv_error_log' ] );
+                $wp_elv_file = sanitize_text_field( $_POST['wp_elv_error_log'] );
                 
                 try {
                     $filename = basename( $wp_elv_file );
@@ -447,15 +447,15 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     exit;
                 }
                 catch ( Exception $e ) {
-                    $data[ 'error' ] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
+                    $data['error'] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
                 }
             }
             
-            if ( is_admin() && isset( $_POST[ 'wp_elv_datatable_log_download' ] ) && isset( $_POST[ 'wp_elv_datatable_downloadid' ] ) && !empty( $_POST[ 'wp_elv_datatable_downloadid' ] ) ) {
+            if ( is_admin() && isset( $_POST['wp_elv_datatable_log_download'] ) && isset( $_POST['wp_elv_datatable_downloadid'] ) && !empty( $_POST['wp_elv_datatable_downloadid'] ) ) {
 
                 global $wpdb;
                 $table                          = $wpdb->prefix . 'wp_error_logs';
-                $wp_elv_datatable_downloadid    = sanitize_text_field( $_POST[ 'wp_elv_datatable_downloadid' ] );
+                $wp_elv_datatable_downloadid    = sanitize_text_field( $_POST['wp_elv_datatable_downloadid'] );
 
                 $wp_elv_download_table_data     = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from {$table} where id=%d", $wp_elv_datatable_downloadid ) );
                 
@@ -479,7 +479,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     exit;
                 }
                 catch ( Exception $e ) {
-                    $data[ 'error' ] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
+                    $data['error'] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
                 }
             }
         }
@@ -493,7 +493,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         public function wp_elv_purge_log()
         {
-            if ( ! isset( $_POST[ 'wp_elv_nonce' ] ) ) {
+            if ( ! isset( $_POST['wp_elv_nonce'] ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -502,7 +502,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( ! wp_verify_nonce( $_POST[ 'wp_elv_nonce' ], 'wp_elv_purge_log_nonce' ) ) {
+            if ( ! wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_purge_log_nonce' ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -511,8 +511,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( is_admin() && isset( $_POST[ 'wp_elv_error_log' ] ) && !empty( $_POST[ 'wp_elv_error_log' ] ) ) {
-                $wp_elv_error_log = sanitize_text_field( $_POST[ 'wp_elv_error_log' ] );
+            if ( is_admin() && isset( $_POST['wp_elv_error_log'] ) && !empty( $_POST['wp_elv_error_log'] ) ) {
+                $wp_elv_error_log = sanitize_text_field( $_POST['wp_elv_error_log'] );
                 
                 if ( file_exists( $wp_elv_error_log ) ) {
                     
@@ -546,8 +546,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         public function wp_elv_register_admin_bar()
         {
             
-            if ( isset( $_POST[ 'date' ] ) && !empty( $_POST[ 'date' ] ) ) {
-                $log_date = date( 'd-M-Y', strtotime( sanitize_text_field( $_POST[ 'date' ] ) ) );
+            if ( isset( $_POST['date'] ) && !empty( $_POST['date'] ) ) {
+                $log_date = date( 'd-M-Y', strtotime( sanitize_text_field( $_POST['date'] ) ) );
             } else {
                 $log_date = date( 'd-M-Y' );
             }
@@ -557,11 +557,11 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
 
             if ( $log_details ) {
                 $count       = 1;
-                $error_log   = $log_details[ 'error_log' ];
-                $total       = $log_details[ 'total' ];
+                $error_log   = $log_details['error_log'];
+                $total       = $log_details['total'];
                 
                 if ( file_exists( $error_log ) ) {
-                    $wp_elv_serialize_data = serialize( $log_details[ 'typecount' ] );
+                    $wp_elv_serialize_data = serialize( $log_details['typecount'] );
                     $wp_elv_primary_alert  = '<span class="wp_elv-admin-bar-error-count"><strong>' .$total.' </strong></span>';
                 }
             }
@@ -652,7 +652,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                         $log->next();
                         
                         while ( ( preg_match( '!^\[(?P<time>[^\]]*)\] PHP\s+(?P<msg>\d+\. .*)$!', $log->current(), $parts ) || preg_match( '!^(?P<msg>#\d+ .*)$!', $log->current(), $parts ) && !$log->eof() ) ) {
-                            array_push( $stack_trace, $parts[ 'msg' ] );
+                            array_push( $stack_trace, $parts['msg'] );
                             $log->next();
                         }
                         
@@ -678,21 +678,21 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     $parts = array();
                     
                     if ( preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current(), $parts ) ) {
-                        $parts[ 'type' ] = ( @$parts[ 'typea' ] ?: $parts[ 'typeb' ] );
+                        $parts['type'] = ( @$parts['typea'] ?: $parts['typeb'] );
                         
                         if ( $parts[ 3 ] == 'ojs2: ' || $parts[ 6 ] == 'ojs2' ) {
-                            $parts[ 'type' ] = 'ojs2 application';
+                            $parts['type'] = 'ojs2 application';
                         }
 
-                        $msg            = trim( $parts[ 'msg' ] );
-                        $type           = strtolower( trim( $parts[ 'type' ] ) );
+                        $msg            = trim( $parts['msg'] );
+                        $type           = strtolower( trim( $parts['type'] ) );
                         $types[ $type ] = strtolower( preg_replace( '/[^a-z]/i', '', $type ) );
                         
                         if ( ! isset( $logs[ $msg ] ) ) {
                             $data     = array(
                                 'type'  => $type,
-                                'first' => date_timestamp_get( date_create( $parts[ 'time' ] ) ),
-                                'last'  => date_timestamp_get( date_create( $parts[ 'time' ] ) ),
+                                'first' => date_timestamp_get( date_create( $parts['time'] ) ),
+                                'last'  => date_timestamp_get( date_create( $parts['time'] ) ),
                                 'msg'   => $msg,
                                 'hits'  => 1,
                                 'trace' => null,
@@ -701,18 +701,18 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             $subparts = array();
                             
                             if ( preg_match( '!(?<core> in (?P<path>(/|zend)[^ :]*)(?: on line |:)(?P<line>\d+))$!', $msg, $subparts ) ) {
-                                $data[ 'path' ] = $subparts[ 'path' ];
-                                $data[ 'line' ] = $subparts[ 'line' ];
-                                $data[ 'core' ] = str_replace( $subparts[ 'core' ], '', $data[ 'msg' ] );
-                                $data[ 'code' ] = '';
+                                $data['path'] = $subparts['path'];
+                                $data['line'] = $subparts['line'];
+                                $data['core'] = str_replace( $subparts['core'], '', $data['msg'] );
+                                $data['code'] = '';
                                 
                                 try {
-                                    $file = new SplFileObject( str_replace( 'zend.view://', '', $subparts[ 'path' ] ) );
-                                    $file->seek( $subparts[ 'line' ] - 4 );
+                                    $file = new SplFileObject( str_replace( 'zend.view://', '', $subparts['path'] ) );
+                                    $file->seek( $subparts['line'] - 4 );
                                     $i = 7;
                                     
                                     do {
-                                        $data[ 'code' ] .= $file->current();
+                                        $data['code'] .= $file->current();
                                         $file->next();
                                     } while ( --$i && !$file->eof() );
                                 }
@@ -749,10 +749,10 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             $logs[ $msg ] = (object) $data;
 
                             
-                            if ( ! isset( $typecount[ $err_type ][$err_type_folder][ $type ] ) ) {
-                                $typecount[ $err_type ][$err_type_folder][ $type ] = 1;
+                            if ( ! isset( $typecount[ $err_type ][ $err_type_folder ][ $type ] ) ) {
+                                $typecount[ $err_type ][ $err_type_folder ][ $type ] = 1;
                             } else {
-                                ++$typecount[ $err_type ][$err_type_folder][ $type ];
+                                ++$typecount[ $err_type ][ $err_type_folder ][ $type ];
                             }
 
                             if ( ! isset( $typecount[ $type ] ) ) {
@@ -762,7 +762,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             }
                         } else {
                             ++$logs[ $msg ]->hits;
-                            $time = date_timestamp_get( date_create( $parts[ 'time' ] ) );
+                            $time = date_timestamp_get( date_create( $parts['time'] ) );
                             
                             if ( $time < $logs[ $msg ]->first ) {
                                 $logs[ $msg ]->first = $time;
@@ -794,16 +794,16 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 ) );
                 $total = count( $logs );
                 ksort( $types );
-                $log_details[ 'typecount' ] = $typecount;
-                $log_details[ 'error_log' ] = $error_log;
-                $log_details[ 'total' ]     = $total;
-                $log_details[ 'logs' ]      = $logs;
-                $log_details[ 'types' ]     = $types;
+                $log_details['typecount'] = $typecount;
+                $log_details['error_log'] = $error_log;
+                $log_details['total']     = $total;
+                $log_details['logs']      = $logs;
+                $log_details['types']     = $types;
                 
                 if ( $is_raw_log ) {
                     // Return raw log
                     $file                   = file( $error_log );
-                    $log_details[ 'file' ]    = $file;
+                    $log_details['file']    = $file;
                 }
                 
                 return $log_details;
@@ -930,12 +930,12 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         {
             global $wpdb;
             $table           = $wpdb->prefix . 'wp_error_logs';
-            $columnSortOrder = sanitize_text_field( $_POST[ 'order' ][ 0 ][ 'dir' ] );
-            $draw            = sanitize_text_field( $_POST[ 'draw' ] );
-            $row             = sanitize_text_field( $_POST[ 'start' ] );
-            $rowperpage      = sanitize_text_field( $_POST[ 'length' ] ); // Rows display per page
-            $columnIndex     = sanitize_text_field( $_POST[ 'order' ][ 0 ][ 'column' ] ); // Column index
-            $columnName      = sanitize_text_field( $_POST[ 'columns' ][ $columnIndex ][ 'data' ] );
+            $columnSortOrder = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
+            $draw            = sanitize_text_field( $_POST['draw'] );
+            $row             = sanitize_text_field( $_POST['start'] );
+            $rowperpage      = sanitize_text_field( $_POST['length'] ); // Rows display per page
+            $columnIndex     = sanitize_text_field( $_POST['order'][ 0 ]['column'] ); // Column index
+            $columnName      = sanitize_text_field( $_POST['columns'][ $columnIndex ]['data'] );
             $wp_elv_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$columnSortOrder} LIMIT %d,%d", $row, $rowperpage ) );
             $data = array();
 
@@ -996,9 +996,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 $button       = '<div class="wp_elv_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $wp_elv_url . '\';" id="wp_elv_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="wp_elv_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="wp_elv_datatable_downloadid" value="' . $id . '"><button type="submit" name="wp_elv_datatable_log_download" class="wp_elv_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
                 $data_ar       = array(
                     'created_at'        => $created_at,
-                    'plugin'            => $wp_elv_output[ 'plugin' ],
-                    'theme'             => $wp_elv_output[ 'theme' ],
-                    'others'            => $wp_elv_output[ 'other' ],
+                    'plugin'            => $wp_elv_output['plugin'],
+                    'theme'             => $wp_elv_output['theme'],
+                    'others'            => $wp_elv_output['other'],
                     'wp_elv_log_path'   => $wp_elv_log_path,
                     'action'            => $button, 
                 );
@@ -1037,7 +1037,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         
         public function wp_elv_datatable_delete_data()
         {
-            if ( ! isset( $_POST[ 'wp_elv_nonce' ] ) ) {
+            if ( ! isset( $_POST['wp_elv_nonce'] ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -1046,7 +1046,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( ! wp_verify_nonce( $_POST[ 'wp_elv_nonce' ], 'wp_elv_delete_data_nonce' ) ) {
+            if ( ! wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_delete_data_nonce' ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -1055,11 +1055,11 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( is_admin() && isset( $_POST[ 'wp_elv_datatable_deleteid' ] ) && !empty( $_POST[ 'wp_elv_datatable_deleteid' ] ) ) {
+            if ( is_admin() && isset( $_POST['wp_elv_datatable_deleteid'] ) && !empty( $_POST['wp_elv_datatable_deleteid'] ) ) {
                 
                 global $wpdb;
                 $table                     = $wpdb->prefix . 'wp_error_logs';
-                $wp_elv_datatable_deleteid = sanitize_text_field( $_POST[ 'wp_elv_datatable_deleteid' ] );
+                $wp_elv_datatable_deleteid = sanitize_text_field( $_POST['wp_elv_datatable_deleteid'] );
                 
                 $wp_elv_table_data         = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $table where id=%d", $wp_elv_datatable_deleteid ) );
                 
@@ -1198,20 +1198,20 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         public function wp_elv_error_log_deactivation()
         {
         
-            wp_verify_nonce( $_REQUEST[ 'wp_elv_error_log_deactivation_nonce' ], 'wp_elv_error_log_deactivation_nonce' );
+            wp_verify_nonce( $_REQUEST['wp_elv_error_log_deactivation_nonce'], 'wp_elv_error_log_deactivation_nonce' );
             
             if ( ! current_user_can( 'manage_options' ) ) {
                 wp_die();
             }
             
-            $reason_id = sanitize_text_field( wp_unslash( $_POST[ 'reason' ] ) );
+            $reason_id = sanitize_text_field( wp_unslash( $_POST['reason'] ) );
             
             
             if ( empty( $reason_id ) ) {
                 wp_die();
             }
             
-            $reason_info = sanitize_text_field( wp_unslash( $_POST[ 'reason_detail' ] ) );
+            $reason_info = sanitize_text_field( wp_unslash( $_POST['reason_detail'] ) );
             
             if ( $reason_id == '1' ) {
                 $reason_text = __( 'I only needed the plugin for a short period', 'wp_elv' );

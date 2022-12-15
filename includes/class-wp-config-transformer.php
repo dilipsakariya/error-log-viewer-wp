@@ -114,7 +114,7 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                 throw new Exception( "Config type '{$type}' does not exist." );
             }
             
-            return $this->wp_configs[ $type ][ $name ][ 'value' ];
+            return $this->wp_configs[ $type ][ $name ]['value'];
         }
         
         /**
@@ -235,7 +235,7 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                 return false;
             }
             
-            $pattern  = sprintf( '/(?<=^|;|<\?php\s|<\?\s)%s\s*(\S|$)/m', preg_quote( $this->wp_configs[ $type ][ $name ][ 'src' ], '/' ) );
+            $pattern  = sprintf( '/(?<=^|;|<\?php\s|<\?\s)%s\s*(\S|$)/m', preg_quote( $this->wp_configs[ $type ][ $name ]['src'], '/' ) );
             $contents = preg_replace( $pattern, '$1', $this->wp_config_src );
             
             return $this->save( $contents );
@@ -295,9 +295,9 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
          */
         protected function parse_wp_config( $src ) {
             $configs                    = array();
-            $configs[ 'constant' ]      = array();
-            $configs[ 'inivariable' ]   = array();
-            $configs[ 'variable' ]      = array();
+            $configs['constant']      = array();
+            $configs['inivariable']   = array();
+            $configs['variable']      = array();
             
             // Strip comments.
 

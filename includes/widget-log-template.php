@@ -2,8 +2,8 @@
     <form id="form1" method="post" action="">
         <?php
             $first_date  =  date( 'Y-m-d' ); 
-            if( isset( $_POST[ 'view' ] ) ) {
-                $first_date  = date( 'Y-m-d', strtotime( $_POST[ 'select_date' ] ) );
+            if( isset( $_POST['view'] ) ) {
+                $first_date  = date( 'Y-m-d', strtotime( $_POST['select_date'] ) );
             }
         ?>
         <label for="select_date" class="new_lbl_selected"><?php _e( 'Log From: ', 'wp_elv' ); ?></label>
@@ -11,9 +11,9 @@
         <input type="submit" class="button button-primary view" name="view" value="View"></label>
         <div>
             <?php
-                get_option('timezone_string');
+                get_option( 'timezone_string' );
                 
-                if ( ! isset( $_POST[ 'view' ] ) ) {
+                if ( ! isset( $_POST['view'] ) ) {
                     $first_date                 =    date( 'd-M-Y', strtotime( $first_date ) );
                     $file                       =  WP_CONTENT_DIR .'/uploads/wp-error-log-viewer/log-'.$first_date.'.log';
                     $pattern                    = '/\[(.*?)\s/';
@@ -71,7 +71,7 @@
                     }
                 }
 
-                if ( isset( $_POST[ 'view' ] ) ) {
+                if ( isset( $_POST['view'] ) ) {
                     $first_date     = date( 'd-M-Y', strtotime( $first_date ) );
                     $file           = WP_CONTENT_DIR.'/uploads/wp-error-log-viewer/log-'.$first_date.'.log';
                     $pattern        = '/\[(.*?)\s/';
