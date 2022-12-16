@@ -672,7 +672,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     }
                     
                     if ( ! empty( $more ) ) {
-                        $prev_error->more = join( "\n", $more );
+                        $prev_error->more = join( '\n', $more );
                     }
 
                     $parts = array();
@@ -929,15 +929,15 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         public function wp_elv_datatable_loglist()
         {
             global $wpdb;
-            $table           = $wpdb->prefix . 'wp_error_logs';
-            $columnSortOrder = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
-            $draw            = sanitize_text_field( $_POST['draw'] );
-            $row             = sanitize_text_field( $_POST['start'] );
-            $rowperpage      = sanitize_text_field( $_POST['length'] ); // Rows display per page
-            $columnIndex     = sanitize_text_field( $_POST['order'][ 0 ]['column'] ); // Column index
-            $columnName      = sanitize_text_field( $_POST['columns'][ $columnIndex ]['data'] );
-            $wp_elv_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$columnSortOrder} LIMIT %d,%d", $row, $rowperpage ) );
-            $data = array();
+            $table                  = $wpdb->prefix . 'wp_error_logs';
+            $columnSortOrder        = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
+            $draw                   = sanitize_text_field( $_POST['draw'] );
+            $row                    = sanitize_text_field( $_POST['start'] );
+            $rowperpage             = sanitize_text_field( $_POST['length'] ); // Rows display per page
+            $columnIndex            = sanitize_text_field( $_POST['order'][ 0 ]['column'] ); // Column index
+            $columnName             = sanitize_text_field( $_POST['columns'][ $columnIndex ]['data'] );
+            $wp_elv_table_data      = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$columnSortOrder} LIMIT %d,%d", $row, $rowperpage ) );
+            $data                   = array();
 
             foreach ( $wp_elv_table_data as $key => $value ) {
                 $created_at         = $value->created_at;
