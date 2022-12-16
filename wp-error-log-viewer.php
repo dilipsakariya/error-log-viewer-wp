@@ -130,7 +130,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             
             define( 'WP_ERROR_LOG_VIEWER_SUPPORT_URL', 'https://wordpress.org/support/plugin/wp-error-log-viewer/' );
             
-            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://wordpress.org/support/plugin/wp-error-log-viewer/reviews/#new-post' );
+            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/wp-error-log-viewer?filter=5' );
             
             define( 'WP_ERROR_LOG_VIEWER_DEBUG_LOGFOLDER', WP_CONTENT_DIR . '/uploads/wp-error-log-viewer' );
 
