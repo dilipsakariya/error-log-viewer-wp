@@ -930,13 +930,13 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         {
             global $wpdb;
             $table                  = $wpdb->prefix . 'wp_error_logs';
-            $columnSortOrder        = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
+            $column_sort_order      = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
             $draw                   = sanitize_text_field( $_POST['draw'] );
             $row                    = sanitize_text_field( $_POST['start'] );
-            $rowperpage             = sanitize_text_field( $_POST['length'] ); // Rows display per page
-            $columnIndex            = sanitize_text_field( $_POST['order'][ 0 ]['column'] ); // Column index
-            $columnName             = sanitize_text_field( $_POST['columns'][ $columnIndex ]['data'] );
-            $wp_elv_table_data      = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$columnSortOrder} LIMIT %d,%d", $row, $rowperpage ) );
+            $row_per_page           = sanitize_text_field( $_POST['length'] ); // Rows display per page
+            $column_index           = sanitize_text_field( $_POST['order'][ 0 ]['column'] ); // Column index
+            $columnName             = sanitize_text_field( $_POST['columns'][ $column_index ]['data'] );
+            $wp_elv_table_data      = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) );
             $data                   = array();
 
             foreach ( $wp_elv_table_data as $key => $value ) {
@@ -949,15 +949,15 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 // Array with the md5 hashes
                 $array              = array();
 
-                $arrayHashes_main   = unserialize( $value->details );
+                $array_hashes_main   = unserialize( $value->details );
 
                 $folder_wise        = array( 'plugin', 'theme', 'other' );
 
                 foreach ( $folder_wise as $ftype) {
                     // code...
-                    $arrayHashes = isset( $arrayHashes_main[ $ftype ] ) ? $arrayHashes_main[ $ftype ] : array() ;
+                    $array_hashes = isset( $array_hashes_main[ $ftype ] ) ? $array_hashes_main[ $ftype ] : array() ;
 
-                    if ( $arrayHashes ) {
+                    if ( $array_hashes ) {
 
                         $wp_elv_output[ $ftype ]    = implode( '', array_map( function( $v, $k ) use ($created_at)
                         {
@@ -987,7 +987,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                 $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
                                 return '<div class="wp_elv_datatable ' . $k . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k . ": " . $v ) . '</a></div>';
                             }
-                        }, $arrayHashes, array_keys( $arrayHashes ) ) );
+                        }, $array_hashes, array_keys( $array_hashes ) ) );
                     } else {
                         $wp_elv_output[ $ftype ]    = '';
                     }
