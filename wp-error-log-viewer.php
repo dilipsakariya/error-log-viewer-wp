@@ -138,7 +138,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
             }
             
-            $config_path            = ABSPATH . '\wp-config.php';
+            $config_path            = ABSPATH . 'wp-config.php';
             $config_transformer     = new WP_Config_Transformer( $config_path );
                         
             if ( ( defined( WP_DEBUG_LOG ) && WP_DEBUG_LOG == false ) || !defined( WP_DEBUG_LOG ) ) {
