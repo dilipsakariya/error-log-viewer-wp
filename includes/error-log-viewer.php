@@ -27,6 +27,7 @@ if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) ) {
 if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) && isset( $_GET['type'] ) && !empty( $_GET['type'] ) ) {
     $error_type = str_replace( ' ', '', $_GET['type'] );
 }
+
 $is_raw_log = false;
 
 if( isset( $_GET['is_raw_log'] ) && 'true' == $_GET['is_raw_log'] ) {
@@ -48,6 +49,7 @@ if( isset( $_POST['date'] ) && !empty( $_POST['date'] ) && wp_verify_nonce( $_PO
         $log_date = date( 'd-M-Y' );
     }
 }
+
 $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
 ?>
 
@@ -71,7 +73,8 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 </fieldset>
                 <?php if ( ! $is_raw_log ) { ?>
                 <fieldset id="wp_elv_type_filter">
-                    <p> <label class="wp_elv-lbl-filter"><?php _e( 'Filter by Type: ', 'wp_elv' ); ?></label>
+                    <p> 
+                        <label class="wp_elv-lbl-filter"><?php _e( 'Filter by Type: ', 'wp_elv' ); ?></label>
                         <?php foreach ( $log_details['types'] as $title => $class ): ?>
                         
                         <label class=" wp_elv_type_lbl <?php if( ! empty( $class ) ) { echo $class; } else{ echo $type; } ?>">
@@ -90,7 +93,8 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 </fieldset>
 
                 <fieldset id="wp_elv_sort_options">
-                    <p><label class="wp_elv-lbl-filter"><?php _e( 'Sort By: ', 'wp_elv' ); ?></label>
+                    <p>
+                        <label class="wp_elv-lbl-filter"><?php _e( 'Sort By: ', 'wp_elv' ); ?></label>
                         <a href="?type=last&amp;order=asc"><?php _e( 'Last Seen', 'wp_elv' ); ?> (<span><?php _e( 'asc', 'wp_elv' ); ?></span>)</a>, 
                         <a href="?type=hits&amp;order=desc"><?php _e( 'Hits', 'wp_elv' ); ?> (<span><?php _e( 'desc', 'wp_elv' ); ?></span>)</a>, 
                         <a href="?type=type&amp;order=asc"><?php _e( 'Type', 'wp_elv' ); ?> (<span><?php _e( 'a-z', 'wp_elv' ); ?></span>)</a>

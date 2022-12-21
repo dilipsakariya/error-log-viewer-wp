@@ -36,7 +36,6 @@
                             }
                             echo $c;
                             $c++;
-                            // echo 'string'.$line_date;
                             
                             if ( preg_match( $pattern_fatal_error, $line ) ) {
                                 echo '<div class="fatal_error_body">';
