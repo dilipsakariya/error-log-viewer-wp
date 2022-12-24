@@ -936,85 +936,82 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             $wp_elv_table_data      = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) );
             $data                   = array();
 
-            foreach ( $wp_elv_table_data as $key => $value ) {
-                $created_at         = $value->created_at;
-                $wp_elv_log_path    = $value->log_path;
-                $id                 = $value->id;
-                $filename           = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $value->file_name;
-                $wp_elv_url         = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
-                $array_rewrite      = array();
-                // Array with the md5 hashes
-                $array              = array();
+            if ( $wp_elv_table_data ) {
 
-                $array_hashes_main   = unserialize( $value->details );
+                foreach ( $wp_elv_table_data as $key => $value ) {
+                    $created_at         = $value->created_at;
+                    $wp_elv_log_path    = $value->log_path;
+                    $id                 = $value->id;
+                    $filename           = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $value->file_name;
+                    $wp_elv_url         = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                    $array_rewrite      = array();
+                    // Array with the md5 hashes
+                    $array              = array();
 
-                $folder_wise        = array( 'plugin', 'theme', 'other' );
+                    $array_hashes_main   = unserialize( $value->details );
 
-                foreach ( $folder_wise as $ftype) {
-                    // code...
-                    $array_hashes = isset( $array_hashes_main[ $ftype ] ) ? $array_hashes_main[ $ftype ] : array() ;
+                    $folder_wise        = array( 'plugin', 'theme', 'other' );
 
-                    if ( $array_hashes ) {
+                    foreach ( $folder_wise as $ftype) {
+                        // code...
+                        $array_hashes = isset( $array_hashes_main[ $ftype ] ) ? $array_hashes_main[ $ftype ] : array() ;
 
-                        $wp_elv_output[ $ftype ]    = implode( '', array_map( function( $v, $k ) use ($created_at) {
-                            
-                                if ( is_array( $v ) ) {
-                                    return '<b>'.$k.'</b><br>'.implode( '', array_map( function( $v1, $k1 ) use ($created_at) {
-                                                
-                                                if ( is_array( $v1 ) ) {
-                                                    return '<div class="wp_elv_datatable ' . $k1 . '">' . $k1 . "[]: " . implode( '&' . $k1 . "[]: ", $v1 ) . '</div>';
-                                                } else {
+                        if ( $array_hashes ) {
+
+                            $wp_elv_output[ $ftype ]    = implode( '', array_map( function( $v, $k ) use ($created_at) {
+                                
+                                    if ( is_array( $v ) ) {
+                                        return '<b>'.$k.'</b><br>'.implode( '', array_map( function( $v1, $k1 ) use ($created_at) {
                                                     
-                                                    $wp_elv_date_url_array = array(
-                                                        'date' => $created_at,
-                                                        'type' => $k1, 
-                                                    );
-                                                    $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
-                                                    return '<div class="wp_elv_datatable ' . $k1 . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k1 . ": " . $v1 ) . '</a></div>';
-                                                }
-                                            }, $v, array_keys( $v ) ) );
-                                } else {
-                                    
-                                    $wp_elv_date_url_array = array(
-                                        'date' => $created_at,
-                                        'type' => $k, 
-                                    );
-                                    $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
-                                    return '<div class="wp_elv_datatable ' . $k . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k . ": " . $v ) . '</a></div>';
-                                }
-                            }, $array_hashes, array_keys( $array_hashes ) ) );
-                    } else {
-                        $wp_elv_output[ $ftype ]    = '';
+                                                    if ( is_array( $v1 ) ) {
+                                                        return '<div class="wp_elv_datatable ' . $k1 . '">' . $k1 . "[]: " . implode( '&' . $k1 . "[]: ", $v1 ) . '</div>';
+                                                    } else {
+                                                        
+                                                        $wp_elv_date_url_array = array(
+                                                            'date' => $created_at,
+                                                            'type' => $k1, 
+                                                        );
+                                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                                                        return '<div class="wp_elv_datatable ' . $k1 . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k1 . ": " . $v1 ) . '</a></div>';
+                                                    }
+                                                }, $v, array_keys( $v ) ) );
+                                    } else {
+                                        
+                                        $wp_elv_date_url_array = array(
+                                            'date' => $created_at,
+                                            'type' => $k, 
+                                        );
+                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                                        return '<div class="wp_elv_datatable ' . $k . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k . ": " . $v ) . '</a></div>';
+                                    }
+                                }, $array_hashes, array_keys( $array_hashes ) ) );
+                        } else {
+                            $wp_elv_output[ $ftype ]    = '';
+                        }
                     }
+
+                    $button       = '<div class="wp_elv_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $wp_elv_url . '\';" id="wp_elv_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="wp_elv_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="wp_elv_datatable_downloadid" value="' . $id . '"><button type="submit" name="wp_elv_datatable_log_download" class="wp_elv_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
+                    
+                    $data_ar       = array(
+                        'created_at'        => $created_at,
+                        'plugin'            => $wp_elv_output['plugin'],
+                        'theme'             => $wp_elv_output['theme'],
+                        'others'            => $wp_elv_output['other'],
+                        'wp_elv_log_path'   => $wp_elv_log_path,
+                        'action'            => $button, 
+                    );
+                    array_push( $data, $data_ar );
+
+                    $total_record = $wpdb->get_var( $wpdb->prepare( "SELECT count(file_name) as filecount from {$table}" ) );
+                    
+                    $json_data = array(
+                        'draw'                  => intval( $draw ),
+                        'iTotalRecords'         => $records_total,
+                        'iTotalDisplayRecords'  => $records_total,
+                        'data'                  => $data,
+                    );
                 }
-
-                $button       = '<div class="wp_elv_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $wp_elv_url . '\';" id="wp_elv_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="wp_elv_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="wp_elv_datatable_downloadid" value="' . $id . '"><button type="submit" name="wp_elv_datatable_log_download" class="wp_elv_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
-                
-                $data_ar       = array(
-                    'created_at'        => $created_at,
-                    'plugin'            => $wp_elv_output['plugin'],
-                    'theme'             => $wp_elv_output['theme'],
-                    'others'            => $wp_elv_output['other'],
-                    'wp_elv_log_path'   => $wp_elv_log_path,
-                    'action'            => $button, 
-                );
-                array_push( $data, $data_ar );
-
-                $total_record = $wpdb->get_results( $wpdb->prepare( "SELECT count(file_name) as filecount from {$table}" ) );
-                
-                foreach ( $total_record as $key => $value ) {
-                    $records_total = $value->filecount;
-                }
-
-                $json_data = array(
-                    'draw'                  => intval( $draw ),
-                    'iTotalRecords'         => $records_total,
-                    'iTotalDisplayRecords'  => $records_total,
-                    'data'                  => $data,
-                );
-            }
-            
-            if ( empty( $json_data ) ) {
+            } else {
                 $data      = array(
                     'created_at'    => 'No log',
                     'plugin'        => 'No log',
@@ -1024,9 +1021,13 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 );
 
                 $json_data = array(
-                     'data' => $data 
+                    'draw'                  => intval( $draw ),
+                    'iTotalRecords'         => 0,
+                    'iTotalDisplayRecords'  => 0,
+                    'data'                  => $data,
                 );
             }
+
             echo json_encode( $json_data );
             wp_die();
         }
