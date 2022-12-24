@@ -107,7 +107,7 @@
     background-color: #fcfcfc;
 }
 #wp_elv_error_list article>div {
-    border: 1px solid #000000;
+    border: 1px solid #BDBDBD;
     border-left-width: 10px;
     padding: 1em;
 }
@@ -162,16 +162,16 @@
     border-color: #acacac !important;
 }
 .notice {
-    border-color: #6dcff6 !important;
+    border-color: #4885ed !important;
     margin: 0px;
     padding: 0px;
     border: none;
 }
 .warning {
-    border-color: #ffa341 !important;
+    border-color: #f4c20d !important;
 }
 .fatalerror {
-    border-color: #da111a !important;
+    border-color: #db3236 !important;
 }
 .wp_elv_strict_standards {
     border-color: #534741 !important;
@@ -198,13 +198,13 @@
     vertical-align: top;
 }
 .fatalerror .wp_elv_er_type {
-    color: #da111a !important;
+    color: #db3236 !important;
 }
 .warning .wp_elv_er_type {
-    color: #ffa341 !important;
+    color: #f4c20d !important;
 }
 .notice .wp_elv_er_type {
-    color: #6dcff6 !important;
+    color: #4885ed !important;
 }
 .parseerror .wp_elv_er_type {
     color: #aa66cc !important;
@@ -225,15 +225,15 @@
 }
 .wp_elv_logoverview_static.notice {
     color: #fff;
-    background-color: #6dcff6 !important;
+    background-color: #4885ed !important;
 }
 .wp_elv_logoverview_static.warning {
     color: #fff;
-    background-color: #ffa341 !important;
+    background-color: #f4c20d !important;
 }
 .wp_elv_logoverview_static.fatalerror {
     color: #fff;
-    background-color: #da111a !important;
+    background-color: #db3236 !important;
 }
 .wp_elv_logoverview_static.wp_elv_strict_standards {
     color: #fff;
@@ -254,7 +254,7 @@
 .wp_elv_logoverview_static.wordpressdatabaseerror {
     color: #fff;
     padding: 0px;
-    background-color: #f74949 !important;
+    background-color: #BDBDBD !important;
 }
 .wp_elv_logoverview_static div {
     padding: 9px 9px
@@ -322,8 +322,8 @@
     color: white;
 }
 #wp_elv_error_log_purge {
-    background: red;
-    border: red;
+    background: #db3236;
+    border: #db3236;
     color: white;
 }
 #wp_elv_error_raw_log {
@@ -417,12 +417,12 @@ div.wp_elv_datatable.fatal.error {
 }
 div.wp_elv_datatable.warning {
     color: #fff;
-    background: #ffa341;
-    border: 1px solid #ffa341;
+    background: #f4c20d;
+    border: 1px solid #f4c20d;
 }
 div.wp_elv_datatable.notice {
     color: #fff;
-    background: #6dcff6;
+    background: #4885ed;
     border: 1px solid red;
 }
 div.wp_elv_datatable.wordpress.database.error {
