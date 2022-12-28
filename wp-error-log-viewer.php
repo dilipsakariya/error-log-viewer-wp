@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WP Error Log Viewer
- * Version:           1.0.2
+ * Version:           1.0.0
  * Plugin URI:        https://wordpress.org/plugins/wp-error-log-viewer/
  * Description:       WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            Jaitras
@@ -119,7 +119,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         private function setup_constants() {
             
             // Plugin version
-            define( 'WP_ERROR_LOG_VIEWER_VER', '1.0.2' );
+            define( 'WP_ERROR_LOG_VIEWER_VER', '1.0.0' );
             
             // Plugin name
             define( 'WP_ERROR_LOG_VIEWER_NAME', 'WP Error Log Viewer' );
@@ -191,19 +191,6 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 
                 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
                 dbDelta( $sql );
-            }
-            
-            $version = get_option( 'wp_elv_error_log_details' ) ? get_option( 'wp_elv_error_log_details' ) : '1.0.0';
-            
-            if ( version_compare( $version, '1.0.1', '<' ) ) {
-                
-                $row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-                    WHERE table_name = %s AND column_name = 'log_path'", $table ) );
-                if ( empty( $row ) ) {
-                    $wpdb->query( $wpdb->prepare( "ALTER TABLE {$table} ADD log_path text NOT NULL after details" ) );
-                }
-                
-                update_option( 'wp_elv_error_log_details', WP_ERROR_LOG_VIEWER_VER );
             }
         }
         
