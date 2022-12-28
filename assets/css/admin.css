@@ -148,7 +148,7 @@
     margin-top: 0;
 }
 #wp_elv_type_filter .wp_elv_type_lbl {
-    border-bottom: 4px solid #000;
+    border-bottom: 4px solid #bdbdbd;
     margin-right: 10px;
     padding-bottom: 5px;
 }
@@ -214,6 +214,9 @@
     display: inline-block;
     margin: 2px;
     border-radius: 3px;
+    color: #fff;
+    padding: 0px;
+    background-color: #BDBDBD !important;
 }
 .wp_elv_logoverview_static.alternate {
     color: #fff;
@@ -424,6 +427,11 @@ div.wp_elv_datatable.notice {
     color: #fff;
     background: #4885ed;
     border: 1px solid red;
+}
+div.wp_elv_datatable.error {
+    color: #fff;
+    background: #BDBDBD ;
+    border: 1px solid #BDBDBD;
 }
 div.wp_elv_datatable.wordpress.database.error {
     color: #fff;

@@ -590,6 +590,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          *
          */
         public function wp_elv_log_details( $log_date = '', $is_raw_log = false ) {
+            
             $error_log = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/log-' . $log_date . '.log';
             /**
              * @var string|null Path to log cache - must be writable - null for no cache
@@ -652,7 +653,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     }
                     $more = array();
                     
-                    while ( ! preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current() ) && !$log->eof() ) {
+                    while ( ! preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|Error|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current() ) && !$log->eof() ) {
                         $more_str = $log->current();
                         array_push( $more, $more_str );
                         $log->next();
@@ -664,8 +665,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
 
                     $parts = array();
                     
-                    if ( preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current(), $parts ) ) {
-                        $parts['type'] = ( @$parts['typea'] ?: $parts['typeb'] );
+                    if ( preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|Error|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current(), $parts ) ) {
+                        
+                        $parts['type'] = ( $parts['typea'] ?: $parts['typeb'] );
                         
                         if ( $parts[ 3 ] == 'ojs2: ' || $parts[ 6 ] == 'ojs2' ) {
                             $parts['type'] = 'ojs2 application';
@@ -761,7 +763,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                         }
                         $prev_error =& $logs[ $msg ];
                     }
+                    
                     $log->next();
+
                 }
                 
                 if ( $cache !== null ) {
@@ -993,8 +997,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     
                     $json_data = array(
                         'draw'                  => intval( $draw ),
-                        'iTotalRecords'         => $records_total,
-                        'iTotalDisplayRecords'  => $records_total,
+                        'iTotalRecords'         => $total_record,
+                        'iTotalDisplayRecords'  => $total_record,
                         'data'                  => $data,
                     );
                 }

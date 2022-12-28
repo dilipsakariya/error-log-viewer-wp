@@ -335,7 +335,7 @@ if (script_object.error_type) {
         var a = jQuery(this);
         var checkedvalue = jQuery(this).val();
         a.addClass(checkedvalue);
-        jQuery('.<?php echo $error_type;?>').prop("checked", true);
+        jQuery('.'+script_object.error_type).prop("checked", true);
         var typeCount = {};
         var checked = jQuery('#wp_elv_type_filter').find('input:checkbox:checked').map(function() {
             return jQuery(this).val();

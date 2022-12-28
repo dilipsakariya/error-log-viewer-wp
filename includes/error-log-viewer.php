@@ -246,7 +246,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
     <?php endif; 
 
     $script_object = array(
-        'error_type'    => ( isset( $error_type ) ? true : false ),
+        'error_type'    => ( isset( $error_type ) ? $error_type : false ),
         'total'         => ( isset( $log_details['total'] ) ? $log_details['total'] : 0 ),
     );
     wp_localize_script( 'wp_elv_admin_script', 'script_object', $script_object );
