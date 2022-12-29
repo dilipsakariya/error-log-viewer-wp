@@ -290,12 +290,14 @@
 }
 .wp_elv_log_data_wrap {
     width: 35%;
+    padding: 12px 5px;
 }
 .wp_elv-log-path-main-holder {
     margin-top: 15px;
     border: 1px solid #bcbcbc;
     padding: 0px 15px;
     border-radius: 1px;
+    display: flex;
 }
 .wp_elv_log_data_wrap {
     text-align: center;
@@ -584,6 +586,7 @@ div.wp_elv_datatable.notice a, div.wp_elv_datatable.fatal.error a, div.wp_elv_da
 }
 #wp_elv_error_list p {
     margin: 0 !important;
+    word-break: break-word;
 }
 .wp_elv_type_error {
     margin-bottom: 10px;

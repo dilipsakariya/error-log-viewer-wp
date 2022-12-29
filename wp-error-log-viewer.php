@@ -379,7 +379,6 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     $this,
                     'wp_elv_plugin_menu', 
                 ) );
-                // add_action( 'wp_dashboard_setup', array($this,'error_widget_new' ));
                 add_action( 'init', array(
                     $this,
                     'wp_elv_log_download', 
@@ -709,6 +708,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                 }
                             }
                             $err_type_folder = 'other';
+                            
                             if ( strpos( $msg, '\wp-content\plugins' ) !== false ) {
                                 $err_type           = 'plugin';
                                 $msg_arr            = explode( '\wp-content\plugins\\', $msg );
@@ -717,12 +717,28 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                     $folders_arr    = explode( '\\', ltrim( $msg_arr[1], '\\' ) );
                                     $err_type_folder =  isset( $folders_arr[0] ) ? $folders_arr[0] : '' ;
                                 }
+                            } elseif ( strpos( $msg, '/wp-content/plugins' ) !== false ) {
+                                $err_type           = 'plugin';
+                                $msg_arr            = explode( '/wp-content/plugins/', $msg );
+
+                                if ( isset( $msg_arr[1] ) ) {
+                                    $folders_arr    = explode( '/', ltrim( $msg_arr[1], '/' ) );
+                                    $err_type_folder =  isset( $folders_arr[0] ) ? $folders_arr[0] : '' ;
+                                }
                             } elseif ( strpos( $msg, '\wp-content\themes' ) !== false ) {
                                 $err_type           = 'theme';
                                 $msg_arr            = explode( '\wp-content\themes\\', $msg );
 
                                 if ( isset( $msg_arr[1] ) ) {
                                     $folders_arr        = explode( '\\', ltrim( $msg_arr[1], '\\' ) );
+                                    $err_type_folder    =  isset( $folders_arr[0] ) ? $folders_arr[0] : '' ;
+                                }
+                            } elseif ( strpos( $msg, '/wp-content/themes' ) !== false ) {
+                                $err_type           = 'theme';
+                                $msg_arr            = explode( '/wp-content/themes/', $msg );
+
+                                if ( isset( $msg_arr[1] ) ) {
+                                    $folders_arr        = explode( '/', ltrim( $msg_arr[1], '/' ) );
                                     $err_type_folder    =  isset( $folders_arr[0] ) ? $folders_arr[0] : '' ;
                                 }
                             } else {
@@ -735,6 +751,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                     $err_type_folder    =  isset( $folders_arr[0] ) ? $folders_arr[0] : '' ;
                                 }
                             }
+                            
                             $logs[ $msg ] = (object) $data;
 
                             
