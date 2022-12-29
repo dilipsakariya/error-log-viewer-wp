@@ -196,7 +196,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                                     <?php if ( ! empty( $log->path ) ): ?>
                                         <?php echo htmlentities( $log->path ); ?>, line <?php echo $log->line; ?><br />
                                     <?php endif; ?>
-                                    Last seen <?php echo date_format( date_create( "@{$log->last}" ), 'Y-m-d G:ia' ); ?>, <?php echo $log->hits; ?> hit<?php echo( 1 == $log->hits ? '' : 's' ); ?><br />
+                                    Last seen <?php echo date_format( date_create( "@{$log->last}" ), 'Y-m-d G:ia' ); ?>, <strong><?php echo $log->hits; ?></strong> Hit<?php echo( 1 == $log->hits ? '' : 's' ); ?><br />
                                 </p>
                             </div>
                         </div>
