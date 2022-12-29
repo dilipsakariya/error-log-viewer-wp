@@ -943,7 +943,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             $columnName             = sanitize_text_field( $_POST['columns'][ $column_index ]['data'] );
             $wp_elv_table_data      = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) );
             $data                   = array();
-
+            $date_format    = get_option( 'date_format' );
+            
             if ( $wp_elv_table_data ) {
 
                 foreach ( $wp_elv_table_data as $key => $value ) {
@@ -1001,7 +1002,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     $button       = '<div class="wp_elv_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $wp_elv_url . '\';" id="wp_elv_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="wp_elv_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="wp_elv_datatable_downloadid" value="' . $id . '"><button type="submit" name="wp_elv_datatable_log_download" class="wp_elv_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
                     
                     $data_ar       = array(
-                        'created_at'        => $created_at,
+                        'created_at'        => date( $date_format, strtotime( $created_at ) ),
                         'plugin'            => $wp_elv_output['plugin'],
                         'theme'             => $wp_elv_output['theme'],
                         'others'            => $wp_elv_output['other'],

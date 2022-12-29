@@ -186,7 +186,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                             
                                 <?php if ( ! empty( $log->code ) ): ?>
                                     <?php $uid = uniqid( 'cbq' ); ?>
-                                    <p><a href="#" class="codeblock" data-for="<?php echo $uid; ?>">Show code snippet</a></p>
+                                    <p><a href="#" class="codeblock" data-for="<?php echo $uid; ?>"><?php _e( 'Show code snippet', 'wp_elv' ); ?></a></p>
                                     <blockquote id="<?php echo $uid; ?>"><?php echo highlight_string( $log->code, true ); ?></blockquote>
                                 <?php endif; ?>
                                 </div>
@@ -194,9 +194,9 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                             <div class="wp_elv_er_time">
                                 <p>
                                     <?php if ( ! empty( $log->path ) ): ?>
-                                        <?php echo htmlentities( $log->path ); ?>, line <?php echo $log->line; ?><br />
+                                        <?php echo htmlentities( $log->path ); ?>, <?php _e( 'line', 'wp_elv' ); ?> <?php echo $log->line; ?><br />
                                     <?php endif; ?>
-                                    Last seen <?php echo date_format( date_create( "@{$log->last}" ), 'Y-m-d G:ia' ); ?>, <strong><?php echo $log->hits; ?></strong> Hit<?php echo( 1 == $log->hits ? '' : 's' ); ?><br />
+                                    <?php _e( 'Last seen:', 'wp_elv' ); ?> <?php echo date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ); ?>, <strong><?php echo $log->hits; ?></strong> <?php $hit_str = ( 1 == $log->hits ? '' : 's' ); printf( __( 'Hit%s', 'wp_elv' ), $hit_str ); ?><br />
                                 </p>
                             </div>
                         </div>

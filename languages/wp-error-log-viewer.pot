@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-29T12:49:34+01:00\n"
+"POT-Creation-Date: 2022-12-29T13:55:57+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: wp_elv\n"
@@ -47,12 +47,12 @@ msgid "If you have a moment, please let us know why you are deactivating:"
 msgstr ""
 
 #: includes/deactivation-form.php:31
-#: wp-error-log-viewer.php:1217
+#: wp-error-log-viewer.php:1218
 msgid "I only needed the plugin for a short period"
 msgstr ""
 
 #: includes/deactivation-form.php:44
-#: wp-error-log-viewer.php:1219
+#: wp-error-log-viewer.php:1220
 msgid "I found a better plugin"
 msgstr ""
 
@@ -61,27 +61,27 @@ msgid "Kindly tell us the Plugin name."
 msgstr ""
 
 #: includes/deactivation-form.php:63
-#: wp-error-log-viewer.php:1221
+#: wp-error-log-viewer.php:1222
 msgid "The plugin broke my site"
 msgstr ""
 
 #: includes/deactivation-form.php:76
-#: wp-error-log-viewer.php:1223
+#: wp-error-log-viewer.php:1224
 msgid "The plugin suddenly stopped working"
 msgstr ""
 
 #: includes/deactivation-form.php:89
-#: wp-error-log-viewer.php:1225
+#: wp-error-log-viewer.php:1226
 msgid "I no longer need the plugin"
 msgstr ""
 
 #: includes/deactivation-form.php:102
-#: wp-error-log-viewer.php:1227
+#: wp-error-log-viewer.php:1228
 msgid "It's a temporary deactivation. I'm just debugging an issue."
 msgstr ""
 
 #: includes/deactivation-form.php:115
-#: wp-error-log-viewer.php:1229
+#: wp-error-log-viewer.php:1230
 msgid "Other"
 msgstr ""
 
@@ -200,6 +200,22 @@ msgstr ""
 msgid "Show stack trace"
 msgstr ""
 
+#: includes/error-log-viewer.php:189
+msgid "Show code snippet"
+msgstr ""
+
+#: includes/error-log-viewer.php:197
+msgid "line"
+msgstr ""
+
+#: includes/error-log-viewer.php:199
+msgid "Last seen:"
+msgstr ""
+
+#: includes/error-log-viewer.php:199
+msgid "Hit%s"
+msgstr ""
+
 #: includes/error-log-viewer.php:205
 msgid "Skip To Top"
 msgstr ""
@@ -263,13 +279,13 @@ msgstr ""
 
 #: wp-error-log-viewer.php:487
 #: wp-error-log-viewer.php:496
-#: wp-error-log-viewer.php:1047
-#: wp-error-log-viewer.php:1056
+#: wp-error-log-viewer.php:1048
+#: wp-error-log-viewer.php:1057
 msgid "Security Error."
 msgstr ""
 
 #: wp-error-log-viewer.php:511
-#: wp-error-log-viewer.php:1088
+#: wp-error-log-viewer.php:1089
 msgid "Log file deleted successfully."
 msgstr ""
 
@@ -289,28 +305,28 @@ msgstr ""
 msgid "Error Log List"
 msgstr ""
 
-#: wp-error-log-viewer.php:1095
-#: wp-error-log-viewer.php:1103
+#: wp-error-log-viewer.php:1096
+#: wp-error-log-viewer.php:1104
 msgid "Log file deleted Failed."
 msgstr ""
 
-#: wp-error-log-viewer.php:1288
+#: wp-error-log-viewer.php:1289
 msgid "%1$s Log Viewer %2$s"
 msgstr ""
 
-#: wp-error-log-viewer.php:1308
+#: wp-error-log-viewer.php:1309
 msgid "Support"
 msgstr ""
 
-#: wp-error-log-viewer.php:1311
-#: wp-error-log-viewer.php:1329
+#: wp-error-log-viewer.php:1312
+#: wp-error-log-viewer.php:1330
 msgid "Post Review"
 msgstr ""
 
-#: wp-error-log-viewer.php:1329
+#: wp-error-log-viewer.php:1330
 msgid "Hi%s, Thank you for using <b>"
 msgstr ""
 
-#: wp-error-log-viewer.php:1356
+#: wp-error-log-viewer.php:1357
 msgid "If you like <strong><ins>"
 msgstr ""
