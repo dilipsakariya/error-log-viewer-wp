@@ -1,33 +1,29 @@
 # Copyright (C) 2022 WP Guru
-# This file is distributed under the same license as the WP Error Log Viewer plugin.
+# This file is distributed under the same license as the Error Log Viewer By WP Guru plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Error Log Viewer 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/WP-Error-Log-Viewer\n"
+"Project-Id-Version: Error Log Viewer By WP Guru 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/error-log-viewer-wp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-30T12:41:26+01:00\n"
+"POT-Creation-Date: 2022-12-30T13:50:55+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: wp_elv\n"
 
 #. Plugin Name of the plugin
-#: includes/error-log-viewer.php:59
-#: wp-error-log-viewer.php:562
-#: wp-error-log-viewer.php:578
-#: wp-error-log-viewer.php:832
-msgid "WP Error Log Viewer"
+msgid "Error Log Viewer By WP Guru"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://wordpress.org/plugins/wp-error-log-viewer/"
+msgid "https://wordpress.org/plugins/error-log-viewer-wp/"
 msgstr ""
 
 #. Description of the plugin
-msgid "WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly."
+msgid "Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly."
 msgstr ""
 
 #. Author of the plugin
@@ -38,6 +34,99 @@ msgstr ""
 msgid "https://wpguru.co"
 msgstr ""
 
+#: error-log-viewer-wp.php:487
+#: error-log-viewer-wp.php:496
+#: error-log-viewer-wp.php:1048
+#: error-log-viewer-wp.php:1057
+msgid "Security Error."
+msgstr ""
+
+#: error-log-viewer-wp.php:511
+#: error-log-viewer-wp.php:1089
+msgid "Log file deleted successfully."
+msgstr ""
+
+#: error-log-viewer-wp.php:518
+msgid "Log file deleted failed. Please try again after reloading page."
+msgstr ""
+
+#: error-log-viewer-wp.php:562
+#: error-log-viewer-wp.php:578
+#: error-log-viewer-wp.php:832
+#: includes/error-log-viewer.php:59
+msgid "Error Log Viewer"
+msgstr ""
+
+#: error-log-viewer-wp.php:837
+msgid "Error Log Overview"
+msgstr ""
+
+#: error-log-viewer-wp.php:842
+#: includes/error-log-list-template.php:2
+msgid "Error Log List"
+msgstr ""
+
+#: error-log-viewer-wp.php:1096
+#: error-log-viewer-wp.php:1104
+msgid "Log file deleted Failed."
+msgstr ""
+
+#: error-log-viewer-wp.php:1218
+#: includes/deactivation-form.php:31
+msgid "I only needed the plugin for a short period"
+msgstr ""
+
+#: error-log-viewer-wp.php:1220
+#: includes/deactivation-form.php:44
+msgid "I found a better plugin"
+msgstr ""
+
+#: error-log-viewer-wp.php:1222
+#: includes/deactivation-form.php:63
+msgid "The plugin broke my site"
+msgstr ""
+
+#: error-log-viewer-wp.php:1224
+#: includes/deactivation-form.php:76
+msgid "The plugin suddenly stopped working"
+msgstr ""
+
+#: error-log-viewer-wp.php:1226
+#: includes/deactivation-form.php:89
+msgid "I no longer need the plugin"
+msgstr ""
+
+#: error-log-viewer-wp.php:1228
+#: includes/deactivation-form.php:102
+msgid "It's a temporary deactivation. I'm just debugging an issue."
+msgstr ""
+
+#: error-log-viewer-wp.php:1230
+#: includes/deactivation-form.php:115
+msgid "Other"
+msgstr ""
+
+#: error-log-viewer-wp.php:1289
+msgid "%1$s Log Viewer %2$s"
+msgstr ""
+
+#: error-log-viewer-wp.php:1309
+msgid "Support"
+msgstr ""
+
+#: error-log-viewer-wp.php:1312
+#: error-log-viewer-wp.php:1330
+msgid "Post Review"
+msgstr ""
+
+#: error-log-viewer-wp.php:1330
+msgid "Hi%s, Thank you for using <b>"
+msgstr ""
+
+#: error-log-viewer-wp.php:1357
+msgid "If you like <strong><ins>"
+msgstr ""
+
 #: includes/deactivation-form.php:15
 msgid "Quick feedback about "
 msgstr ""
@@ -46,43 +135,8 @@ msgstr ""
 msgid "If you have a moment, please let us know why you are deactivating:"
 msgstr ""
 
-#: includes/deactivation-form.php:31
-#: wp-error-log-viewer.php:1218
-msgid "I only needed the plugin for a short period"
-msgstr ""
-
-#: includes/deactivation-form.php:44
-#: wp-error-log-viewer.php:1220
-msgid "I found a better plugin"
-msgstr ""
-
 #: includes/deactivation-form.php:51
 msgid "Kindly tell us the Plugin name."
-msgstr ""
-
-#: includes/deactivation-form.php:63
-#: wp-error-log-viewer.php:1222
-msgid "The plugin broke my site"
-msgstr ""
-
-#: includes/deactivation-form.php:76
-#: wp-error-log-viewer.php:1224
-msgid "The plugin suddenly stopped working"
-msgstr ""
-
-#: includes/deactivation-form.php:89
-#: wp-error-log-viewer.php:1226
-msgid "I no longer need the plugin"
-msgstr ""
-
-#: includes/deactivation-form.php:102
-#: wp-error-log-viewer.php:1228
-msgid "It's a temporary deactivation. I'm just debugging an issue."
-msgstr ""
-
-#: includes/deactivation-form.php:115
-#: wp-error-log-viewer.php:1230
-msgid "Other"
 msgstr ""
 
 #: includes/deactivation-form.php:122
@@ -103,6 +157,30 @@ msgstr ""
 
 #: includes/deactivation-form.php:142
 msgid "Cancel"
+msgstr ""
+
+#: includes/error-log-list-template.php:8
+msgid "Date"
+msgstr ""
+
+#: includes/error-log-list-template.php:9
+msgid "Plugin"
+msgstr ""
+
+#: includes/error-log-list-template.php:10
+msgid "Theme"
+msgstr ""
+
+#: includes/error-log-list-template.php:11
+msgid "Others"
+msgstr ""
+
+#: includes/error-log-list-template.php:12
+msgid "Log Path"
+msgstr ""
+
+#: includes/error-log-list-template.php:13
+msgid "Action"
 msgstr ""
 
 #: includes/error-log-viewer.php:62
@@ -246,87 +324,4 @@ msgstr ""
 
 #: includes/error-log-viewer.php:245
 msgid "There are currently no PHP error log entries available for this date."
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:2
-#: wp-error-log-viewer.php:842
-msgid "WP Error Log List"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:8
-msgid "Date"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:9
-msgid "Plugin"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:10
-msgid "Theme"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:11
-msgid "Others"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:12
-msgid "Log Path"
-msgstr ""
-
-#: includes/wp-error-log-list-template.php:13
-msgid "Action"
-msgstr ""
-
-#: wp-error-log-viewer.php:487
-#: wp-error-log-viewer.php:496
-#: wp-error-log-viewer.php:1048
-#: wp-error-log-viewer.php:1057
-msgid "Security Error."
-msgstr ""
-
-#: wp-error-log-viewer.php:511
-#: wp-error-log-viewer.php:1089
-msgid "Log file deleted successfully."
-msgstr ""
-
-#: wp-error-log-viewer.php:518
-msgid "Log file deleted failed. Please try again after reloading page."
-msgstr ""
-
-#: wp-error-log-viewer.php:837
-msgid "WP Error Log Overview"
-msgstr ""
-
-#: wp-error-log-viewer.php:837
-msgid "Error Log Overview"
-msgstr ""
-
-#: wp-error-log-viewer.php:842
-msgid "Error Log List"
-msgstr ""
-
-#: wp-error-log-viewer.php:1096
-#: wp-error-log-viewer.php:1104
-msgid "Log file deleted Failed."
-msgstr ""
-
-#: wp-error-log-viewer.php:1289
-msgid "%1$s Log Viewer %2$s"
-msgstr ""
-
-#: wp-error-log-viewer.php:1309
-msgid "Support"
-msgstr ""
-
-#: wp-error-log-viewer.php:1312
-#: wp-error-log-viewer.php:1330
-msgid "Post Review"
-msgstr ""
-
-#: wp-error-log-viewer.php:1330
-msgid "Hi%s, Thank you for using <b>"
-msgstr ""
-
-#: wp-error-log-viewer.php:1357
-msgid "If you like <strong><ins>"
 msgstr ""
