@@ -1,6 +1,6 @@
 <?php
 /**
- * WP Error Log Viewer Plugin.
+ * Error Log Viewer By WP Guru Plugin.
  *
  * @package      WP_Error_Log_Viewer
  * @copyright    Copyright (C) 2022-2023, WP Guru - support@wpguru.co
@@ -8,10 +8,10 @@
  * @since        1.0.0
  *
  * @wordpress-plugin
- * Plugin Name:       WP Error Log Viewer
+ * Plugin Name:       Error Log Viewer By WP Guru
  * Version:           1.0.0
- * Plugin URI:        https://wordpress.org/plugins/wp-error-log-viewer/
- * Description:       WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
+ * Plugin URI:        https://wordpress.org/plugins/error-log-viewer-wp/
+ * Description:       Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            WP Guru
  * Author URI:        https://wpguru.co
  * License:           GPL-3.0+
@@ -47,9 +47,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         
         public function __construct() {
             
-            $log_directory_folder   = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer';
-            $wp_elv_htaccess        = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/.htaccess';
-            $wp_elv_index           = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/index.php';
+            $log_directory_folder   = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp';
+            $wp_elv_htaccess        = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/.htaccess';
+            $wp_elv_index           = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/index.php';
             
             if ( ! is_dir( $log_directory_folder ) ) {
                 mkdir( $log_directory_folder );
@@ -81,7 +81,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             if ( ! file_exists( $wp_elv_htaccess ) ) {
                 $wp_elv_htaccess = fopen( $wp_elv_htaccess, 'w' ) or die( 'Unable to open file!' );
                 $txt = 'RewriteCond %{REQUEST_FILENAME} -s
-                      RewriteRule ^(.*)$ /index.php?wp-error-log-viewer=$1 [QSA,L]';
+                      RewriteRule ^(.*)$ /index.php?error-log-viewer-wp=$1 [QSA,L]';
                 fwrite( $wp_elv_htaccess, $txt );
                 fclose( $wp_elv_htaccess );
             }
@@ -122,7 +122,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             define( 'WP_ERROR_LOG_VIEWER_VER', '1.0.0' );
             
             // Plugin name
-            define( 'WP_ERROR_LOG_VIEWER_NAME', 'WP Error Log Viewer' );
+            define( 'WP_ERROR_LOG_VIEWER_NAME', 'Error Log Viewer By WP Guru' );
             
             // Plugin path
             define( 'WP_ERROR_LOG_VIEWER_DIR', plugin_dir_path( __FILE__ ) );
@@ -130,11 +130,11 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             // Plugin URL
             define( 'WP_ERROR_LOG_VIEWER_URL', plugin_dir_url( __FILE__ ) );
             
-            define( 'WP_ERROR_LOG_VIEWER_SUPPORT_URL', 'https://wordpress.org/support/plugin/wp-error-log-viewer/' );
+            define( 'WP_ERROR_LOG_VIEWER_SUPPORT_URL', 'https://wordpress.org/support/plugin/error-log-viewer-wp/' );
             
-            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/wp-error-log-viewer?filter=5' );
+            define( 'WP_ERROR_LOG_VIEWER_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/error-log-viewer-wp?filter=5' );
             
-            define( 'WP_ERROR_LOG_VIEWER_DEBUG_LOGFOLDER', WP_CONTENT_DIR . '/uploads/wp-error-log-viewer' );
+            define( 'WP_ERROR_LOG_VIEWER_DEBUG_LOGFOLDER', WP_CONTENT_DIR . '/uploads/error-log-viewer-wp' );
 
             if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
@@ -152,7 +152,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 }
             }
 
-            $error_log  = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/log-' . date( 'd-M-Y' ) . '.log';
+            $error_log  = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/log-' . date( 'd-M-Y' ) . '.log';
 
             if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
                 $config_transformer->update( 'inivariable', 'log_errors', 'On' );
@@ -176,7 +176,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         private function load_table() {
             global $wpdb;
-            $table = $wpdb->prefix . 'wp_error_logs';
+            $table = $wpdb->prefix . 'error_log_viewer_wpguru';
             
             // create database table
             if ( $wpdb->get_var( $wpdb->prepare( "show tables like %s", $table ) ) != $table ) {
@@ -206,7 +206,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             global $wpdb;
                                     
             $count                = 1;
-            $log_directory_folder = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer';
+            $log_directory_folder = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp';
             $wp_empty_folder       = ( count( glob( "$log_directory_folder/*" ) ) === 0 ) ? 'Empty' : 'Not empty';
             
             if ( 'Empty' === $wp_empty_folder ) {
@@ -238,7 +238,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                             if ( $wp_elv_database_file == $file_name ) {
                                 $count = 0;
                             } else {
-                                $wp_elv_checkfile = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $wp_elv_database_file;
+                                $wp_elv_checkfile = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $wp_elv_database_file;
                             }
                         }
                         
@@ -305,7 +305,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 
                 foreach ( $wp_elv_table_data as $key => $value ) {
                     $wp_elv_database_file = $value->file_name;
-                    $wp_elv_checkfile     = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $wp_elv_database_file;
+                    $wp_elv_checkfile     = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $wp_elv_database_file;
                     
                     if ( ! file_exists( $wp_elv_checkfile ) ) {
                         $wpdb->delete( $table, array(
@@ -451,7 +451,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     $ps_download_filename = $value;
                 }
                 
-                $wp_elv_download_filepath = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $ps_download_filename;
+                $wp_elv_download_filepath = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $ps_download_filename;
                 
                 try {
                     $filename = basename( $wp_elv_download_filepath );
@@ -559,7 +559,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             }
 
             // Primary link text.
-            $link_text = esc_html__( 'WP Error Log Viewer', 'wp_elv' );
+            $link_text = esc_html__( 'Error Log Viewer', 'wp_elv' );
             
             if ( empty( $total ) ) {
                 $wp_elv_primary_alert = '<span class="wp_elv-admin-bar-error-count"><strong>0</strong></span>';
@@ -573,9 +573,9 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 'parent'    => false,
                 'id'        => 'wp_elv_admin_bar',
                 'title'     => $link_text . $wp_elv_primary_alert,
-                'href'      => admin_url( 'admin.php?page=wp-error-log-viewer' ),
+                'href'      => admin_url( 'admin.php?page=error-log-viewer-wp' ),
                 'meta'      => array(
-                                    'title' => __( 'WP Error Log Viewer', 'wp_elv' ),
+                                    'title' => __( 'Error Log Viewer', 'wp_elv' ),
                                ) 
             ) );
         }
@@ -590,7 +590,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         public function wp_elv_log_details( $log_date = '', $is_raw_log = false ) {
             
-            $error_log = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/log-' . $log_date . '.log';
+            $error_log = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/log-' . $log_date . '.log';
             /**
              * @var string|null Path to log cache - must be writable - null for no cache
              */
@@ -829,17 +829,17 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         public function wp_elv_plugin_menu() {
             
-            $menu = add_menu_page( __( 'WP Error Log Viewer', 'wp_elv' ), __( 'WP Error Log Viewer', 'wp_elv' ), 'manage_options', 'wp-error-log-viewer', array(
+            $menu = add_menu_page( __( 'Error Log Viewer', 'wp_elv' ), __( 'Error Log Viewer', 'wp_elv' ), 'manage_options', 'error-log-viewer-wp', array(
                 $this,
                 'wp_elv_error_by_date', 
             ) );
 
-            add_submenu_page( 'wp_elv', __( 'WP Error Log Overview', 'wp_elv' ), __( 'Error Log Overview', 'wp_elv' ), 'manage_options', 'wp-error-log-viewer', array(
+            add_submenu_page( 'wp_elv', __( 'Error Log Overview', 'wp_elv' ), __( 'Error Log Overview', 'wp_elv' ), 'manage_options', 'error-log-viewer-wp', array(
                 $this,
                 'wp_elv_error_by_date', 
             ) );
 
-            $list = add_submenu_page( 'wp-error-log-viewer', __( 'WP Error Log List', 'wp_elv' ), __( 'Error Log List', 'wp_elv' ), 'manage_options', 'wp_elv-list', array(
+            $list = add_submenu_page( 'error-log-viewer-wp', __( 'Error Log List', 'wp_elv' ), __( 'Error Log List', 'wp_elv' ), 'manage_options', 'wp_elv-list', array(
                 $this,
                 'wp_elv_log_list_datatable', 
             ) );
@@ -857,7 +857,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         }
         
         public function wp_elv_log_list_datatable() {
-            require_once( WP_ERROR_LOG_VIEWER_DIR . 'includes/wp-error-log-list-template.php' );
+            require_once( WP_ERROR_LOG_VIEWER_DIR . 'includes/error-log-list-template.php' );
         }
         
         public function wp_elv_error_by_date() {
@@ -951,8 +951,8 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                     $created_at         = $value->created_at;
                     $wp_elv_log_path    = $value->log_path;
                     $id                 = $value->id;
-                    $filename           = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $value->file_name;
-                    $wp_elv_url         = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                    $filename           = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $value->file_name;
+                    $wp_elv_url         = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
                     $array_rewrite      = array();
                     // Array with the md5 hashes
                     $array              = array();
@@ -980,7 +980,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                                             'date' => $created_at,
                                                             'type' => $k1, 
                                                         );
-                                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
                                                         return '<div class="wp_elv_datatable ' . $k1 . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k1 . ": " . $v1 ) . '</a></div>';
                                                     }
                                                 }, $v, array_keys( $v ) ) );
@@ -990,7 +990,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                                             'date' => $created_at,
                                             'type' => $k, 
                                         );
-                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=wp-error-log-viewer' ) );
+                                        $wp_elv_error_type_url   = add_query_arg( $wp_elv_date_url_array, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
                                         return '<div class="wp_elv_datatable ' . $k . '"><a href="' . $wp_elv_error_type_url . '">' . ucwords( $k . ": " . $v ) . '</a></div>';
                                     }
                                 }, $array_hashes, array_keys( $array_hashes ) ) );
@@ -1071,7 +1071,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 if ( ! empty( $wp_elv_table_data ) ) {
                     
                     foreach ( $wp_elv_table_data as $value ) {
-                        $wp_elv_datatable_filename = WP_CONTENT_DIR . '/uploads/wp-error-log-viewer/' . $value;
+                        $wp_elv_datatable_filename = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $value;
                     }
                     
                     if ( file_exists( $wp_elv_datatable_filename ) ) {
@@ -1281,12 +1281,12 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             
             if ( empty( $this_plugin ) ) {
                 
-                $this_plugin = 'wp-error-log-viewer/wp-error-log-viewer.php';
+                $this_plugin = 'error-log-viewer-wp/error-log-viewer-wp.php';
             }
             
             if ( $file == $this_plugin ) {
                 
-                $settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'wp_elv' ), '<a href="' . admin_url( 'admin.php?page=wp-error-log-viewer' ) . '">', '</a>' );
+                $settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'wp_elv' ), '<a href="' . admin_url( 'admin.php?page=error-log-viewer-wp' ) . '">', '</a>' );
                 
                 array_unshift( $links, $settings_link );
                 

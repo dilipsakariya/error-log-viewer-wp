@@ -223,7 +223,7 @@ $(document).ready(function() {
 (function($) {
     // alert('dd');
     $(function() {
-        var pluginSlug = 'wp-error-log-viewer';
+        var pluginSlug = 'error-log-viewer-wp';
         // Code to fire when the DOM is ready.
         $(document).on('click', 'tr[data-slug="' + pluginSlug + '"] .deactivate', function(e) {
             e.preventDefault();

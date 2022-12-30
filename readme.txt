@@ -1,7 +1,7 @@
-=== WP Error Log Viewer ===
+=== Error Log Viewer By WP Guru ===
 
 Author URI: https://www.wpguru.co
-Plugin URI: https://wordpress.org/plugins/wp-error-log-viewer/
+Plugin URI: https://wordpress.org/plugins/error-log-viewer-wp/
 Contributors: wpguruin
 Tags: error log, error reporting, log report, debug tool, admin
 Requires at least: 3.9
@@ -11,15 +11,15 @@ Stable Tag: 1.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
-WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
+Error Log Viewer By WP Guru plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
 
 == Description ==
 
-### WP Error Log Viewer - Best Error Log Viewer Plugin for WordPress ###
+### Error Log Viewer By WP Guru - Best Error Log Viewer Plugin for WordPress ###
 
 A Lightweight Plugin to Handle Error Logs easily and efficiently.
 
-WP Error Log Viewer is a great Free WordPress plugin if you are looking to manage Error log entries and kill errors on time. Error logs help you monitor your site and provide visibility into important changes that occur on your website. PHP error logs, including WordPress logs, can help you to spot problems and identify the offending plugin, theme, or custom code.
+Error Log Viewer By WP Guru is a great Free WordPress plugin if you are looking to manage Error log entries and kill errors on time. Error logs help you monitor your site and provide visibility into important changes that occur on your website. PHP error logs, including WordPress logs, can help you to spot problems and identify the offending plugin, theme, or custom code.
 
 Logging errors is considered one of the top “best practices” in software development; it becomes more important as your website grows and scales.
 
@@ -27,7 +27,7 @@ Additionally, you can track all types of errors based on Plugins, Themes, and WP
 
 Monitoring PHP errors is something you need to do if you want to keep your WordPress website secure, healthy, and fast. If not fixed, PHP errors can indeed reduce your website performance and increase your website's vulnerability to downtime and hackers.
 
-**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/wp-error-log-viewer?filter=5).
+**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/error-log-viewer-wp?filter=5).
 
 = Features =
 
@@ -40,10 +40,10 @@ Monitoring PHP errors is something you need to do if you want to keep your WordP
 == Installation ==
 
 1. Go to your admin area and navigate to the Plugins menu, and click “Add New.”
-2. Search for "WP Error Log Viewer".
+2. Search for "Error Log Viewer".
 3. Click install.
 4. Click activate.
-5. Navigate to the WP Error Log Viewer menu.
+5. Navigate to the Error Log Viewer menu.
 
 
 == Frequently Asked Questions ==
@@ -51,11 +51,11 @@ Monitoring PHP errors is something you need to do if you want to keep your WordP
 
 = Where can I find Error Log Files using FTP? =
 
-In Case when WP Admin is blocked due to Error then you may use FTP to check Log files located at /wp-content/uploads/wp-error-log-viewer/ directory.
+In Case when WP Admin is blocked due to Error then you may use FTP to check Log files located at /wp-content/uploads/error-log-viewer-wp/ directory.
 
 = Where can I ask for help? =
 
-You may contact our [Support](Report bugs and suggest ideas at: https://wordpress.org/support/plugin/wp-error-log-viewer/) at any time.
+You may contact our [Support](Report bugs and suggest ideas at: https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
 
 = Is this plugin [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) compliant? =
 
@@ -74,4 +74,4 @@ This plugin does not log nor transmit any user data. In fact, it doesn't even do
 == Changelog ==
 
 = 1.0.0 : December 25, 2022 =
-* WP Error Log Viewer Initial Release*
+* Plugin Release*

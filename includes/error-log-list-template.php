@@ -1,5 +1,5 @@
 <div class="wp_elv_log_overview">
-    <h1><?php _e( 'WP Error Log List', 'wp_elv' ); ?></h1>
+    <h1><?php _e( 'Error Log List', 'wp_elv' ); ?></h1>
     <hr>
     <div class="wp_elv_log_table">
         <table class="wp_elv_log_list_table row-border hover" id="wp_elv_log_list_table">

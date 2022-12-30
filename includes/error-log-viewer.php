@@ -56,7 +56,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
 <div id="wp_elv_err_container">
     
     <?php if ( ! empty( $log_details['logs'] ) ): ?>
-        <h1><?php _e( 'WP Error Log Viewer', 'wp_elv' ); ?></h1>
+        <h1><?php _e( 'Error Log Viewer', 'wp_elv' ); ?></h1>
         <div class="wp_elv_error_log_filter">
             <div class="">
                 <h3 class="wp_elv_filter_heading"><?php _e( 'Filters', 'wp_elv' ); ?></h3>
@@ -109,17 +109,17 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                                             'date'          => date( 'Y-m-d', strtotime( $log_date) ),
                                             'is_raw_log'    => 'true',
                                         );
-                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=wp-error-log-viewer' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Raw Log', 'wp_elv' ); ?></a>
+                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Raw Log', 'wp_elv' ); ?></a>
                 <?php }else{ ?>
                     <a href="<?php 
                         $view_raw_log  = array( 
                                             'date'          => date( 'Y-m-d', strtotime( $log_date) ), 
                                             'is_raw_log'    => 'false', 
                                         );
-                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=wp-error-log-viewer' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Log', 'wp_elv' ); ?></a>
+                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Log', 'wp_elv' ); ?></a>
                 <?php } ?>
 
-                    <a href="<?php echo add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=wp-error-log-viewer' ) );?>" class="button primary" value=""><?php _e( 'Refresh Log', 'wp_elv' ); ?></a>
+                    <a href="<?php echo add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=error-log-viewer-wp' ) );?>" class="button primary" value=""><?php _e( 'Refresh Log', 'wp_elv' ); ?></a>
             </div>
             <div class="clear"></div>
         </div>
