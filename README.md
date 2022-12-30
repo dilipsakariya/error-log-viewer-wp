@@ -1,1 +1,1 @@
-# Plugin Template PS (v 1.0.0) #
+# WP Error Log Viewer (v 1.0.0) #
