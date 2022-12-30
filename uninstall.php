@@ -10,8 +10,8 @@
  *
  * @package     WP_Error_Log_Viewer
  * @subpackage  Uninstall
- * @copyright   All rights reserved Copyright (c) 2022, Jaitras - support@jaitras.com
- * @author      jaitras.com
+ * @copyright   All rights reserved Copyright (c) 2022, Jaitras - support@wpguru.co
+ * @author      wpguru.co
  * @since       1.0.0
  */
 

@@ -3,8 +3,8 @@
  * WP Error Log Viewer Plugin.
  *
  * @package      WP_Error_Log_Viewer
- * @copyright    Copyright (C) 2022-2023, Jaitras - support@jaitras.com
- * @link         https://jaitras.com
+ * @copyright    Copyright (C) 2022-2023, WP Guru - support@wpguru.co
+ * @link         https://wpguru.co
  * @since        1.0.0
  *
  * @wordpress-plugin
@@ -12,8 +12,8 @@
  * Version:           1.0.0
  * Plugin URI:        https://wordpress.org/plugins/wp-error-log-viewer/
  * Description:       WP Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
- * Author:            Jaitras
- * Author URI:        https://jaitras.com
+ * Author:            WP Guru
+ * Author URI:        https://wpguru.co
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       wp_elv
@@ -1246,7 +1246,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 'php_version'           => PHP_VERSION ,
             );
                         
-            $to      = 'info@jaitras.com';
+            $to      = 'info@wpguru.co';
             $subject = 'Plugin Uninstallation';
             
             $body    = '<p>Plugin Name: ' . WP_ERROR_LOG_VIEWER_NAME . '</p>';

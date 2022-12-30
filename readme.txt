@@ -1,8 +1,8 @@
 === WP Error Log Viewer ===
 
-Author URI: https://www.jaitras.com
+Author URI: https://www.wpguru.co
 Plugin URI: https://wordpress.org/plugins/wp-error-log-viewer/
-Contributors: jaitras
+Contributors: wpguruin
 Tags: error log, error reporting, log report, debug tool, admin
 Requires at least: 3.9
 Tested up to: 6.1.1
