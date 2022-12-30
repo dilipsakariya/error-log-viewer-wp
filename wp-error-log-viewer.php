@@ -882,7 +882,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          *
          */
         public function wp_elv_admin_dash_enqueue() {
-            wp_enqueue_style( 'wp_elv_error_log_admin_style', plugins_url( '/assets/css/admin.css', __FILE__ ) );
+            wp_enqueue_style( 'wp_elv_error_log_admin_style', plugins_url( '/assets/css/admin.css', __FILE__ ), array(), WP_ERROR_LOG_VIEWER_VER );
             wp_enqueue_style( 'dashicons' );
             global $pagenow;
             
@@ -903,10 +903,10 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             
             wp_enqueue_script( 'wp_elv_admin_ui_script', plugins_url( '/assets/js/datepicker.min.js', __FILE__ ), array(
                  'jquery' 
-            ), time(), true );
+            ), WP_ERROR_LOG_VIEWER_VER );
             wp_enqueue_script( 'wp_elv_admin_script', plugins_url( '/assets/js/admin.js', __FILE__ ), array(
                  'wp_elv_admin_ui_script' 
-            ), time(), true );
+            ), WP_ERROR_LOG_VIEWER_VER );
             
             wp_localize_script( 'wp_elv_admin_script', 'ajax_script_object', array(
                  'ajax_url'                 => admin_url( 'admin-ajax.php' ), 
@@ -923,10 +923,10 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
             
             wp_enqueue_script( 'wp_elv_datatable', plugins_url( '/assets/js/jquery.dataTables.min.js', __FILE__ ), array(
                  'jquery' 
-            ), time(), true );
+            ), WP_ERROR_LOG_VIEWER_VER );
             
-            wp_register_style( 'wp_elv_datatables_style', plugins_url( '/assets/css/jquery.dataTables.min.css', __FILE__ ) );
-            wp_register_style( 'wp_elv_ui_style', 'https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.css' );
+            wp_register_style( 'wp_elv_datatables_style', plugins_url( '/assets/css/jquery.dataTables.min.css', __FILE__ ), array(), WP_ERROR_LOG_VIEWER_VER );
+            wp_register_style( 'wp_elv_ui_style', plugins_url( '/assets/css/datepicker.min.css', __FILE__ ), array(), WP_ERROR_LOG_VIEWER_VER );
             
             wp_enqueue_style( 'wp_elv_datatables_style' );
             wp_enqueue_style( 'wp_elv_ui_style' );
