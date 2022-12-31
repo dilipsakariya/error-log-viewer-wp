@@ -1,7 +1,7 @@
 <?php
 /**
- * WP_Error_Log_Viewer deactivation Content.
- * @package WP_Error_Log_Viewer
+ * Error_Log_Viewer_WP deactivation Content.
+ * @package Error_Log_Viewer_WP
  * @version 1.0.0
  */
 
@@ -19,7 +19,7 @@ $wp_elv_error_log_deactivation_nonce = wp_create_nonce( 'wp_elv_error_log_deacti
                 <h3>
                     <?php _e( 'If you have a moment, please let us know why you are deactivating:', 'wp_elv' ); ?>
                 </h3>
-                <input class="wp_elv_error_log_deactivation_nonce" name="wp_elv_error_log_deactivation_nonce" type="hidden" value="<?php echo $wp_elv_error_log_deactivation_nonce; ?>">
+                <input class="wp_elv_error_log_deactivation_nonce" name="wp_elv_error_log_deactivation_nonce" type="hidden" value="<?php echo esc_attr( $wp_elv_error_log_deactivation_nonce ); ?>">
                     <ul id="wp_elv-reason-list">
                         <li class="wp_elv-reason" data-input-placeholder="" data-input-type="">
                             <label>
@@ -135,7 +135,7 @@ $wp_elv_error_log_deactivation_nonce = wp_create_nonce( 'wp_elv_error_log_deacti
                 <input class="button button-secondary button-skip wp_elv-popup-skip-feedback" type="button" value="<?php _e( 'Skip & Deactivate', 'wp_elv'); ?>">
                     <div class="wp_elv_action-btns">
                         <span class="wp_elv-spinner">
-                            <img alt="" src="<?php echo admin_url( '/images/spinner.gif' ); ?>"/>
+                            <img alt="" src="<?php echo esc_url( admin_url( '/images/spinner.gif' ) ); ?>"/>
                         </span>
                         <input class="button button-secondary button-deactivate wp_elv-popup-allow-deactivate" disabled="disabled" type="submit" value="<?php _e( 'Submit & Deactivate', 'wp_elv'); ?>">
                             <a class="button button-primary wp_elv-popup-button-close" href="#">

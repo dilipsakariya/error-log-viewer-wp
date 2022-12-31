@@ -2,7 +2,7 @@
 /**
  * Error Log Viewer By WP Guru Plugin.
  *
- * @package      WP_Error_Log_Viewer
+ * @package      Error_Log_Viewer_WP
  * @copyright    Copyright (C) 2022-2023, WP Guru - support@wpguru.co
  * @link         https://wpguru.co
  * @since        1.0.0
@@ -27,17 +27,17 @@ if ( ! defined( 'ABSPATH' ) ){
     exit;
 }
 
-if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
+if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
     
     /**
-     * Main WP_Error_Log_Viewer class
+     * Main Error_Log_Viewer_WP class
      *
      * @since       1.0.0
      */
-    class WP_Error_Log_Viewer {
+    class Error_Log_Viewer_WP {
         
         /**
-         * @var         WP_Error_Log_Viewer $instance The one true WP_Error_Log_Viewer
+         * @var         Error_Log_Viewer_WP $instance The one true Error_Log_Viewer_WP
          * @since       1.0.0
          */
         private static $instance;
@@ -94,12 +94,12 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          *
          * @access      public
          * @since       1.0.0
-         * @return      object self::$instance The one true WP_Error_Log_Viewer
+         * @return      object self::$instance The one true Error_Log_Viewer_WP
          */
         public static function instance() {
             
             if ( ! self::$instance ) {
-                self::$instance = new WP_Error_Log_Viewer();
+                self::$instance = new Error_Log_Viewer_WP();
                 self::$instance->setup_constants();
                 self::$instance->load_table();
                 self::$instance->load_textdomain();
@@ -417,7 +417,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         public function wp_elv_log_download() {
             
-            if ( is_admin() && isset( $_POST['wp_elv_error_log_download'] ) && isset( $_POST['wp_elv_error_log'] ) && !empty( $_POST['wp_elv_error_log'] ) ) {
+            if ( is_admin() && isset( sanitize_text_field( $_POST['wp_elv_error_log_download'] ) ) && isset( sanitize_text_field( $_POST['wp_elv_error_log'] ) ) && !empty( sanitize_text_field( $_POST['wp_elv_error_log'] ) ) ) {
                 
                 $wp_elv_file = sanitize_text_field( $_POST['wp_elv_error_log'] );
                 
@@ -439,7 +439,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 }
             }
             
-            if ( is_admin() && isset( $_POST['wp_elv_datatable_log_download'] ) && isset( $_POST['wp_elv_datatable_downloadid'] ) && !empty( $_POST['wp_elv_datatable_downloadid'] ) ) {
+            if ( is_admin() && isset( sanitize_text_field( $_POST['wp_elv_datatable_log_download'] ) ) && isset( sanitize_text_field( $_POST['wp_elv_datatable_downloadid'] ) ) && !empty( sanitize_text_field( $_POST['wp_elv_datatable_downloadid'] ) ) ) {
 
                 global $wpdb;
                 $table                          = $wpdb->prefix . 'wp_error_logs';
@@ -481,7 +481,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          *
          */
         public function wp_elv_purge_log() {
-            if ( ! isset( $_POST['wp_elv_nonce'] ) ) {
+            if ( ! isset( sanitize_text_field( $_POST['wp_elv_nonce'] ) ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -490,7 +490,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( ! wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_purge_log_nonce' ) ) {
+            if ( ! wp_verify_nonce( sanitize_text_field( $_POST['wp_elv_nonce'] ), 'wp_elv_purge_log_nonce' ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -499,7 +499,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( is_admin() && isset( $_POST['wp_elv_error_log'] ) && !empty( $_POST['wp_elv_error_log'] ) ) {
+            if ( is_admin() && isset( sanitize_text_field( $_POST['wp_elv_error_log'] ) ) && !empty( sanitize_text_field( $_POST['wp_elv_error_log'] ) ) ) {
                 $wp_elv_error_log = sanitize_text_field( $_POST['wp_elv_error_log'] );
                 
                 if ( file_exists( $wp_elv_error_log ) ) {
@@ -533,7 +533,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
          */
         public function wp_elv_register_admin_bar() {
             
-            if ( isset( $_POST['date'] ) && !empty( $_POST['date'] ) ) {
+            if ( isset( sanitize_text_field( $_POST['date'] ) ) && !empty( sanitize_text_field( $_POST['date'] ) ) ) {
                 $log_date = date( 'd-M-Y', strtotime( sanitize_text_field( $_POST['date'] ) ) );
             } else {
                 $log_date = date( 'd-M-Y' );
@@ -1042,7 +1042,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         }
         
         public function wp_elv_datatable_delete_data() {
-            if ( ! isset( $_POST['wp_elv_nonce'] ) ) {
+            if ( ! isset( sanitize_text_field( $_POST['wp_elv_nonce'] ) ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -1051,7 +1051,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( ! wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_delete_data_nonce' ) ) {
+            if ( ! wp_verify_nonce( sanitize_text_field( $_POST['wp_elv_nonce'] ), 'wp_elv_delete_data_nonce' ) ) {
                 echo json_encode( array(
                     'success'   => '0',
                     'msg'       => __( 'Security Error.', 'wp_elv' ), 
@@ -1060,7 +1060,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 wp_die();
             }
 
-            if ( is_admin() && isset( $_POST['wp_elv_datatable_deleteid'] ) && !empty( $_POST['wp_elv_datatable_deleteid'] ) ) {
+            if ( is_admin() && isset( sanitize_text_field( $_POST['wp_elv_datatable_deleteid'] ) ) && !empty( sanitize_text_field( $_POST['wp_elv_datatable_deleteid'] ) ) ) {
                 
                 global $wpdb;
                 $table                     = $wpdb->prefix . 'wp_error_logs';
@@ -1157,7 +1157,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         public function load_textdomain() {
             // Set filter for language directory
             $lang_dir = WP_ERROR_LOG_VIEWER_DIR . '/languages/';
-            $lang_dir = apply_filters( 'wp_error_log_viewer_languages_directory', $lang_dir );
+            $lang_dir = apply_filters( 'error_log_viewer_wp_languages_directory', $lang_dir );
             
             // Traditional WordPress plugin locale filter
             $locale = apply_filters( 'plugin_locale', get_locale(), 'wp_elv' );
@@ -1199,7 +1199,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
         
         public function wp_elv_error_log_deactivation() {
         
-            wp_verify_nonce( $_REQUEST['wp_elv_error_log_deactivation_nonce'], 'wp_elv_error_log_deactivation_nonce' );
+            wp_verify_nonce( sanitize_text_field( $_REQUEST['wp_elv_error_log_deactivation_nonce'] ), 'wp_elv_error_log_deactivation_nonce' );
             
             if ( ! current_user_can( 'manage_options' ) ) {
                 wp_die();
@@ -1327,7 +1327,7 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
                 $user_n = ' ' . $current_user->display_name;
             }
             
-            echo '<div id="wp_elv-review" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'Hi%s, Thank you for using <b>' . WP_ERROR_LOG_VIEWER_NAME . '</b>. Please don\'t forget to rate our plugin. We sincerely appreciate your feedback.', 'wp_elv' ), $user_n ) . '<br><a target="_blank" href="' . WP_ERROR_LOG_VIEWER_REVIEW_URL . '" class="button-secondary">' . esc_html__( 'Post Review', 'wp_elv' ) . '</a>' . '</p></div>';
+            echo '<div id="wp_elv-review" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'Hi%s, Thank you for using <b>' . WP_ERROR_LOG_VIEWER_NAME . '</b>. Please don\'t forget to rate our plugin. We sincerely appreciate your feedback.', 'wp_elv' ), esc_html( $user_n ) ) . '<br><a target="_blank" href="' . WP_ERROR_LOG_VIEWER_REVIEW_URL . '" class="button-secondary">' . esc_html__( 'Post Review', 'wp_elv' ) . '</a>' . '</p></div>';
         }
         
         /**
@@ -1361,25 +1361,25 @@ if ( ! class_exists( 'WP_Error_Log_Viewer' ) ) {
 } // End if class_exists check
 
 /**
- * The main function responsible for returning the one true WP_Error_Log_Viewer
+ * The main function responsible for returning the one true Error_Log_Viewer_WP
  * instance to functions everywhere
  *
  * @since       1.0.0
- * @return      \WP_Error_Log_Viewer The one true WP_Error_Log_Viewer
+ * @return      \Error_Log_Viewer_WP The one true Error_Log_Viewer_WP
  *
  * @todo        Inclusion of the activation code below isn't mandatory, but
  *              can prevent any number of errors, including fatal errors, in
  *              situations where your extension is activated but EDD is not
  *              present.
  */
-function WP_Error_Log_Viewer_load() {
+function error_log_viewer_wp_load() {
     
     if ( is_admin() ) {
         require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
     }
-    return WP_Error_Log_Viewer::instance();
+    return Error_Log_Viewer_WP::instance();
 }
-add_action( 'plugins_loaded', 'WP_Error_Log_Viewer_load' );
+add_action( 'plugins_loaded', 'error_log_viewer_wp_load' );
 
 /**
  * The activation hook is called outside of the singleton because WordPress doesn't
@@ -1391,7 +1391,7 @@ add_action( 'plugins_loaded', 'WP_Error_Log_Viewer_load' );
  * @return      void
  */
 
-function wp_error_log_viewer_activation() {
+function error_log_viewer_wp_activation() {
     /* Activation functions here */
 }
-register_activation_hook( __FILE__, 'wp_error_log_viewer_activation' );
+register_activation_hook( __FILE__, 'error_log_viewer_wp_activation' );

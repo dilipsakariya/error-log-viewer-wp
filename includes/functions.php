@@ -2,7 +2,7 @@
 /**
  * Helper Functions
  *
- * @package     WP_Error_Log_Viewer\Functions
+ * @package     Error_Log_Viewer_WP\Functions
  * @since       1.0.0
  */
 

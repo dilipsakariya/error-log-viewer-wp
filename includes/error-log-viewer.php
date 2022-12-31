@@ -16,31 +16,31 @@
  * @var string|null Path to error log file or null to get from ini settings
  */
 
-$instance       = new WP_Error_Log_Viewer;
+$instance       = new Error_Log_Viewer_WP;
 
 $date_format    = get_option( 'date_format' );
 
-if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) ) {
-    $log_date = date( 'd-M-Y', strtotime(  $_GET['date'] ) );
+if ( isset( sanitize_text_field( $_GET['date'] ) ) && !empty( sanitize_text_field( $_GET['date'] ) ) ) {
+    $log_date = date( 'd-M-Y', strtotime( sanitize_text_field( $_GET['date'] ) ) );
 }
 
-if ( isset( $_GET['date'] ) && !empty( $_GET['date'] ) && isset( $_GET['type'] ) && !empty( $_GET['type'] ) ) {
-    $error_type = str_replace( ' ', '', $_GET['type'] );
+if ( isset( sanitize_text_field( $_GET['date'] ) ) && !empty( sanitize_text_field( $_GET['date'] ) ) && isset( sanitize_text_field( $_GET['type'] ) ) && !empty( sanitize_text_field( $_GET['type'] ) ) ) {
+    $error_type = str_replace( ' ', '', sanitize_text_field( $_GET['type'] ) );
 }
 
 $is_raw_log = false;
 
-if( isset( $_GET['is_raw_log'] ) && 'true' == $_GET['is_raw_log'] ) {
+if( isset( sanitize_text_field( $_GET['is_raw_log'] ) ) && 'true' == sanitize_text_field( $_GET['is_raw_log'] ) ) {
     $is_raw_log = true;
 }
 
-if( isset( $_POST['date'] ) && !empty( $_POST['date'] ) && wp_verify_nonce( $_POST['wp_elv_nonce'], 'wp_elv_date_filter_nonce' ) ) {
+if( isset( sanitize_text_field( $_POST['date'] ) ) && !empty( sanitize_text_field( $_POST['date'] ) ) && wp_verify_nonce( sanitize_text_field( $_POST['wp_elv_nonce'] ), 'wp_elv_date_filter_nonce' ) ) {
 
     if ( 'd/m/Y' === $date_format ) {
-        $_POST['date'] = str_replace( '/', '-', $_POST['date'] );
+        sanitize_text_field( $_POST['date'] ) = str_replace( '/', '-', sanitize_text_field( $_POST['date'] ) );
     }
-    $log_date = date( 'd-M-Y', strtotime(  $_POST['date'] ) );
-} elseif ( ! isset( $_GET['date'] ) && empty( $_GET['date'] ) && !isset( $_GET['type'] ) && empty( $_GET['type'] ) ) {
+    $log_date = date( 'd-M-Y', strtotime( sanitize_text_field( $_POST['date'] ) ) );
+} elseif ( ! isset( sanitize_text_field( $_GET['date'] ) ) && empty( sanitize_text_field( $_GET['date'] ) ) && !isset( sanitize_text_field( $_GET['type'] ) ) && empty( sanitize_text_field( $_GET['type'] ) ) ) {
     $last_log = wp_elv_get_last_log();
 
     if ( $last_log ) {
@@ -62,7 +62,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 <h3 class="wp_elv_filter_heading"><?php _e( 'Filters', 'wp_elv' ); ?></h3>
                 <form action="" method="POST">
                     <fieldset id="dateFilter">
-                        <div><label class="wp_elv-lbl-filter"><?php _e( 'Filter by Date: ', 'wp_elv' ); ?></label> <input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo date( $date_format, strtotime( $log_date ) );?>" />&nbsp;&nbsp;
+                        <div><label class="wp_elv-lbl-filter"><?php _e( 'Filter by Date: ', 'wp_elv' ); ?></label> <input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo esc_attr( date( $date_format, strtotime( $log_date ) ) );?>" />&nbsp;&nbsp;
                         <button type="submit" class="button button-primary" name="wp_elv_error_log_filter_by_date" id="wp_elv_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
                     </fieldset>
                     <?php wp_nonce_field( 'wp_elv_date_filter_nonce', 'wp_elv_nonce' ); ?>
@@ -77,14 +77,14 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                         <label class="wp_elv-lbl-filter"><?php _e( 'Filter by Type: ', 'wp_elv' ); ?></label>
                         <?php foreach ( $log_details['types'] as $title => $class ): ?>
                         
-                        <label class=" wp_elv_type_lbl <?php if( ! empty( $class ) ) { echo $class; } else{ echo $type; } ?>">
-                            <input type="checkbox" value="<?php echo $class; ?>" checked="checked" /> 
+                        <label class=" wp_elv_type_lbl <?php if( ! empty( $class ) ) { echo esc_attr( $class ); } else{ echo esc_attr( $type ); } ?>">
+                            <input type="checkbox" value="<?php echo esc_attr( $class ); ?>" checked="checked" /> 
                             <?php
-                                echo ucwords( $title ); 
+                                echo esc_html( ucwords( $title ) ); 
                             ?> 
-                            (<span data-total="<?php echo $log_details['typecount'][ $title ]; ?>">
+                            (<span data-total="<?php echo esc_attr( $log_details['typecount'][ $title ] ); ?>">
                             <?php
-                                echo $log_details['typecount'][ $title ]; 
+                                echo esc_html( $log_details['typecount'][ $title ] );
                             ?>
                             </span>)
                         </label>
@@ -109,17 +109,17 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                                             'date'          => date( 'Y-m-d', strtotime( $log_date) ),
                                             'is_raw_log'    => 'true',
                                         );
-                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Raw Log', 'wp_elv' ); ?></a>
+                        echo esc_url( add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Raw Log', 'wp_elv' ); ?></a>
                 <?php }else{ ?>
                     <a href="<?php 
                         $view_raw_log  = array( 
                                             'date'          => date( 'Y-m-d', strtotime( $log_date) ), 
                                             'is_raw_log'    => 'false', 
                                         );
-                        echo add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Log', 'wp_elv' ); ?></a>
+                        echo esc_url( add_query_arg( $view_raw_log, admin_url( 'admin.php?page=error-log-viewer-wp' ) ) ); ?>" class="button primary" name="wp_elv_error_raw_log" id="wp_elv_error_raw_log" value=""><?php _e( 'View Log', 'wp_elv' ); ?></a>
                 <?php } ?>
 
-                    <a href="<?php echo add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=error-log-viewer-wp' ) );?>" class="button primary" value=""><?php _e( 'Refresh Log', 'wp_elv' ); ?></a>
+                    <a href="<?php echo esc_url( add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=error-log-viewer-wp' ) ) );?>" class="button primary" value=""><?php _e( 'Refresh Log', 'wp_elv' ); ?></a>
             </div>
             <div class="clear"></div>
         </div>
@@ -130,7 +130,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                         
                         <button type="submit" class="button primary" name="wp_elv_error_log_download" id="wp_elv_error_log_download" value=""><?php _e( 'Download Log', 'wp_elv' ); ?></button>
                     
-                        <input type="hidden" name="wp_elv_error_log" id="wp_elv_error_log" value="<?php echo $log_details['error_log'];?>">
+                        <input type="hidden" name="wp_elv_error_log" id="wp_elv_error_log" value="<?php echo esc_attr( $log_details['error_log'] );?>">
                         <button type="button" class="button primary" name="wp_elv_error_log_purge" id="wp_elv_error_log_purge" value=""><?php _e( 'Purge Log', 'wp_elv' ); ?></button>
                     </form>
                 <?php } ?>
@@ -141,12 +141,12 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
             <div class="clear"></div>
             <div class="wp_elv-log-path-main-holder">
                 <div class="wp_elv-log-path-holder">
-                    <p><strong><?php _e( 'Log Path: ', 'wp_elv' ); ?></strong><?php echo $log_details['error_log'];?></p>
+                    <p><strong><?php _e( 'Log Path: ', 'wp_elv' ); ?></strong><?php echo esc_html( $log_details['error_log'] );?></p>
                 </div>
                 <div class="wp_elv_log_data_wrap">
                     <span class="log_entries">
-                    <strong><?php echo $log_details['total']; ?></strong> <?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );printf( __( 'Distinct Entr%s', 'wp_elv' ), $total_str ); ?></span>
-                    <span id="wp_elv_file_size"> <?php _e( 'File Size : ', 'wp_elv' ); ?><strong><?php echo wp_elv_file_size_convert( filesize( $log_details['error_log'] ) ); ?> </strong></span>
+                    <strong><?php echo esc_html( $log_details['total'] ); ?></strong> <?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );esc_html( printf( __( 'Distinct Entr%s', 'wp_elv' ), $total_str ) ); ?></span>
+                    <span id="wp_elv_file_size"> <?php _e( 'File Size : ', 'wp_elv' ); ?><strong><?php echo esc_html( wp_elv_file_size_convert( filesize( $log_details['error_log'] ) ) ); ?> </strong></span>
                 </div>
             </div>
         </p>
@@ -154,8 +154,8 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
         </p>
         <div class="wp_elv_type_error">
             <?php foreach( $log_details['types'] as $type => $class ){?>
-                <div class="wp_elv_logoverview_static <?php if( ! empty( $class ) ) { echo $class; } else{ echo $type; } ?>">
-                    <div><strong><i class="dashicons-before dashicons-info<?php echo ( 'warning' === $type ) ? '-outline' : '' ;?>"></i><?php echo ucwords( $type );?>: </strong><?php echo $log_details['typecount'][ $type ];?> <?php _e( 'Entries - ', 'wp_elv' ); ?><span><?php echo number_format( 100 * $log_details['typecount'][ $type ] / $log_details['total'], 2 );  ?>%</span></div>
+                <div class="wp_elv_logoverview_static <?php if( ! empty( $class ) ) { echo esc_attr( $class ); } else{ echo esc_attr( $type ); } ?>">
+                    <div><strong><i class="dashicons-before dashicons-info<?php esc_attr( echo ( 'warning' === $type ) ? '-outline' : '' ) ;?>"></i><?php echo esc_html( ucwords( $type ) );?>: </strong><?php echo esc_html( $log_details['typecount'][ $type ] );?> <?php _e( 'Entries - ', 'wp_elv' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $type ] / $log_details['total'], 2 ) ); ?>%</span></div>
                 </div>
             <?php } ?>
         </div>
@@ -163,40 +163,40 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
 
             <?php if ( ! $is_raw_log ) { ?>
                 <?php foreach ( $log_details['logs'] as $log ): ?>
-                    <article class="<?php echo $log_details['types'][ $log->type ]; ?>"
-                            data-path="<?php if ( ! empty( $log->path ) ) echo htmlentities( $log->path ); ?>"
-                            data-line="<?php if ( ! empty( $log->line ) ) echo $log->line; ?>"
-                            data-type="<?php echo $log_details['types'][ $log->type ]; ?>"
-                            data-hits="<?php echo $log->hits; ?>"
-                            data-last="<?php echo $log->last; ?>">
-                        <div class="<?php echo $log_details['types'][ $log->type ]; ?>">
-                            <div class="wp_elv_er_type"><i class="dashicons-before dashicons-info<?php echo ( 'warning' === $log->type ) ? '-outline' : '' ;?>"></i><?php echo ucwords( htmlentities( $log->type ) ); ?></div> 
+                    <article class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
+                            data-path="<?php if ( ! empty( $log->path ) ) echo esc_attr( htmlentities( $log->path ) ); ?>"
+                            data-line="<?php if ( ! empty( $log->line ) ) echo esc_attr( $log->line ); ?>"
+                            data-type="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
+                            data-hits="<?php echo esc_attr( $log->hits ); ?>"
+                            data-last="<?php echo esc_attr( $log->last ); ?>">
+                        <div class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>">
+                            <div class="wp_elv_er_type"><i class="dashicons-before dashicons-info<?php echo esc_attr( ( 'warning' === $log->type ) ? '-outline' : '' );?>"></i><?php echo esc_html( ucwords( htmlentities( $log->type ) ) ); ?></div> 
                             <div class="wp_elv_er_path">
-                                <b><?php echo htmlentities( ( empty( $log->core ) ? $log->msg : $log->core ) ); ?></b>
+                                <b><?php echo esc_html( htmlentities( ( empty( $log->core ) ? $log->msg : $log->core ) ) ); ?></b>
                                 <?php if ( ! empty( $log->more ) ): ?>
-                                    <p><i><?php echo nl2br( htmlentities( $log->more ) ); ?></i></p>
+                                    <p><i><?php echo nl2br( esc_html( htmlentities( $log->more ) ) ); ?></i></p>
                                 <?php endif; ?>
                                 <div class="wp_elv_err_trash">
                                     <?php if ( ! empty( $log->trace ) ): ?>
                                     <?php $uid = uniqid( 'tbq' ); ?>
-                                    <p><a href="#" class="traceblock" data-for="<?php echo $uid; ?>"><?php _e( 'Show stack trace', 'wp_elv' );?></a></p>
-                                    <blockquote id="<?php echo $uid; ?>"><?php echo highlight_string( $log->trace, true ); ?></blockquote>
+                                    <p><a href="#" class="traceblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php _e( 'Show stack trace', 'wp_elv' );?></a></p>
+                                    <blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->trace, true ) ); ?></blockquote>
                                 <?php endif; ?>
                             
                             
                                 <?php if ( ! empty( $log->code ) ): ?>
                                     <?php $uid = uniqid( 'cbq' ); ?>
-                                    <p><a href="#" class="codeblock" data-for="<?php echo $uid; ?>"><?php _e( 'Show code snippet', 'wp_elv' ); ?></a></p>
-                                    <blockquote id="<?php echo $uid; ?>"><?php echo highlight_string( $log->code, true ); ?></blockquote>
+                                    <p><a href="#" class="codeblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php _e( 'Show code snippet', 'wp_elv' ); ?></a></p>
+                                    <blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->code, true ) ); ?></blockquote>
                                 <?php endif; ?>
                                 </div>
                             </div>
                             <div class="wp_elv_er_time">
                                 <p>
                                     <?php if ( ! empty( $log->path ) ): ?>
-                                        <?php echo htmlentities( $log->path ); ?>, <?php _e( 'line', 'wp_elv' ); ?> <?php echo $log->line; ?><br />
+                                        <?php echo esc_html( htmlentities( $log->path ) ); ?>, <?php _e( 'line', 'wp_elv' ); ?> <?php echo esc_html( $log->line ); ?><br />
                                     <?php endif; ?>
-                                    <?php _e( 'Last seen:', 'wp_elv' ); ?> <?php echo date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ); ?>, <strong><?php echo $log->hits; ?></strong> <?php $hit_str = ( 1 == $log->hits ? '' : 's' ); printf( __( 'Hit%s', 'wp_elv' ), $hit_str ); ?><br />
+                                    <?php _e( 'Last seen:', 'wp_elv' ); ?> <?php echo esc_html( date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ) ); ?>, <strong><?php echo esc_html( $log->hits ); ?></strong> <?php $hit_str = ( 1 == $log->hits ? '' : 's' ); printf( esc_html__( 'Hit%s', 'wp_elv' ), $hit_str ); ?><br />
                                 </p>
                             </div>
                         </div>
@@ -204,7 +204,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 <?php endforeach; ?>
                 <a href="javascript:void(0);" name="wp_elv_skip_to_top" id="wp_elv_skip_to_top" value=""><?php _e( 'Skip To Top', 'wp_elv' ); ?></a>
             <?php }else{  ?>
-                <textarea class="widefat" rows="25" name="raw_log_textarea"><?php $raw_log_details = implode( '', $log_details['file'] ); echo $raw_log_details; ?></textarea>
+                <textarea class="widefat" rows="25" name="raw_log_textarea"><?php $raw_log_details = implode( '', $log_details['file'] ); echo esc_html( $raw_log_details ); ?></textarea>
             <?php }  ?>
         </section>
         <p id="nothingToShow" class="hide"><?php _e( 'Nothing to show with selected filters.', 'wp_elv' ); ?></p>
@@ -214,7 +214,7 @@ $log_details = $instance->wp_elv_log_details( $log_date, $is_raw_log );
                 <h3 class="wp_elv_filter_heading"><?php _e( 'Filters', 'wp_elv' ); ?></h3>
                 <form action="" method="POST">
                     <fieldset id="dateFilter">
-                        <div><label><?php _e( 'Filter by Date: ', 'wp_elv' ); ?><input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo date( $date_format, strtotime( $log_date ) );?>" ></label>&nbsp;&nbsp;
+                        <div><label><?php _e( 'Filter by Date: ', 'wp_elv' ); ?><input type="text" name="date" id="wp_elv_datepicker" class="hasDatepicker" value="<?php echo esc_attr( date( $date_format, strtotime( $log_date ) ) );?>" ></label>&nbsp;&nbsp;
                         <button type="submit" class="button primary" name="wp_elv_error_log_filter_by_date" id="wp_elv_error_log_filter_by_date" value=""><?php _e( 'Apply', 'wp_elv' ); ?></button></div>
                         <?php wp_nonce_field( 'wp_elv_date_filter_nonce', 'wp_elv_nonce' ); ?>
                     </fieldset>

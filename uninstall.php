@@ -8,7 +8,7 @@
  *         3. Database tables.
  *         4. Cron events.
  *
- * @package     WP_Error_Log_Viewer
+ * @package     Error_Log_Viewer_WP
  * @subpackage  Uninstall
  * @copyright   All rights reserved Copyright (c) 2022, Jaitras - support@wpguru.co
  * @author      wpguru.co
