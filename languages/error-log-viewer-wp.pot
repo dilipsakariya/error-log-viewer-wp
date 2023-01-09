@@ -1,4 +1,4 @@
-# Copyright (C) 2022 WP Guru
+# Copyright (C) 2023 WP Guru
 # This file is distributed under the same license as the Error Log Viewer By WP Guru plugin.
 msgid ""
 msgstr ""
@@ -9,10 +9,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-30T13:50:55+01:00\n"
+"POT-Creation-Date: 2023-01-09T08:06:35+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
-"X-Domain: wp_elv\n"
+"X-Domain: error-log-viewer-wp\n"
 
 #. Plugin Name of the plugin
 msgid "Error Log Viewer By WP Guru"
@@ -34,96 +34,96 @@ msgstr ""
 msgid "https://wpguru.co"
 msgstr ""
 
-#: error-log-viewer-wp.php:487
-#: error-log-viewer-wp.php:496
-#: error-log-viewer-wp.php:1048
-#: error-log-viewer-wp.php:1057
+#: error-log-viewer-wp.php:489
+#: error-log-viewer-wp.php:498
+#: error-log-viewer-wp.php:1037
+#: error-log-viewer-wp.php:1046
 msgid "Security Error."
 msgstr ""
 
-#: error-log-viewer-wp.php:511
-#: error-log-viewer-wp.php:1089
+#: error-log-viewer-wp.php:513
+#: error-log-viewer-wp.php:1078
 msgid "Log file deleted successfully."
 msgstr ""
 
-#: error-log-viewer-wp.php:518
+#: error-log-viewer-wp.php:520
 msgid "Log file deleted failed. Please try again after reloading page."
 msgstr ""
 
-#: error-log-viewer-wp.php:562
-#: error-log-viewer-wp.php:578
-#: error-log-viewer-wp.php:832
-#: includes/error-log-viewer.php:59
+#: error-log-viewer-wp.php:564
+#: error-log-viewer-wp.php:580
+#: error-log-viewer-wp.php:839
+#: includes/error-log-viewer.php:62
 msgid "Error Log Viewer"
 msgstr ""
 
-#: error-log-viewer-wp.php:837
+#: error-log-viewer-wp.php:844
 msgid "Error Log Overview"
 msgstr ""
 
-#: error-log-viewer-wp.php:842
+#: error-log-viewer-wp.php:849
 #: includes/error-log-list-template.php:2
 msgid "Error Log List"
 msgstr ""
 
-#: error-log-viewer-wp.php:1096
-#: error-log-viewer-wp.php:1104
+#: error-log-viewer-wp.php:1085
+#: error-log-viewer-wp.php:1093
 msgid "Log file deleted Failed."
 msgstr ""
 
-#: error-log-viewer-wp.php:1218
+#: error-log-viewer-wp.php:1212
 #: includes/deactivation-form.php:31
 msgid "I only needed the plugin for a short period"
 msgstr ""
 
-#: error-log-viewer-wp.php:1220
+#: error-log-viewer-wp.php:1214
 #: includes/deactivation-form.php:44
 msgid "I found a better plugin"
 msgstr ""
 
-#: error-log-viewer-wp.php:1222
+#: error-log-viewer-wp.php:1216
 #: includes/deactivation-form.php:63
 msgid "The plugin broke my site"
 msgstr ""
 
-#: error-log-viewer-wp.php:1224
+#: error-log-viewer-wp.php:1218
 #: includes/deactivation-form.php:76
 msgid "The plugin suddenly stopped working"
 msgstr ""
 
-#: error-log-viewer-wp.php:1226
+#: error-log-viewer-wp.php:1220
 #: includes/deactivation-form.php:89
 msgid "I no longer need the plugin"
 msgstr ""
 
-#: error-log-viewer-wp.php:1228
+#: error-log-viewer-wp.php:1222
 #: includes/deactivation-form.php:102
 msgid "It's a temporary deactivation. I'm just debugging an issue."
 msgstr ""
 
-#: error-log-viewer-wp.php:1230
+#: error-log-viewer-wp.php:1224
 #: includes/deactivation-form.php:115
 msgid "Other"
 msgstr ""
 
-#: error-log-viewer-wp.php:1289
+#: error-log-viewer-wp.php:1283
 msgid "%1$s Log Viewer %2$s"
 msgstr ""
 
-#: error-log-viewer-wp.php:1309
+#: error-log-viewer-wp.php:1303
 msgid "Support"
 msgstr ""
 
-#: error-log-viewer-wp.php:1312
-#: error-log-viewer-wp.php:1330
+#: error-log-viewer-wp.php:1306
+#: error-log-viewer-wp.php:1325
 msgid "Post Review"
 msgstr ""
 
-#: error-log-viewer-wp.php:1330
+#: error-log-viewer-wp.php:1325
 msgid "Hi%s, Thank you for using <b>"
 msgstr ""
 
-#: error-log-viewer-wp.php:1357
+#: error-log-viewer-wp.php:1352
 msgid "If you like <strong><ins>"
 msgstr ""
 
@@ -183,145 +183,145 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: includes/error-log-viewer.php:62
-#: includes/error-log-viewer.php:214
+#: includes/error-log-viewer.php:65
+#: includes/error-log-viewer.php:217
 msgid "Filters"
 msgstr ""
 
-#: includes/error-log-viewer.php:65
-#: includes/error-log-viewer.php:217
+#: includes/error-log-viewer.php:68
+#: includes/error-log-viewer.php:220
 msgid "Filter by Date: "
 msgstr ""
 
-#: includes/error-log-viewer.php:66
-#: includes/error-log-viewer.php:218
+#: includes/error-log-viewer.php:69
+#: includes/error-log-viewer.php:221
 msgid "Apply"
 msgstr ""
 
-#: includes/error-log-viewer.php:77
+#: includes/error-log-viewer.php:80
 msgid "Filter by Type: "
 msgstr ""
 
-#: includes/error-log-viewer.php:97
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:100
+#: includes/error-log-viewer.php:239
 msgid "Sort By: "
 msgstr ""
 
-#: includes/error-log-viewer.php:98
+#: includes/error-log-viewer.php:101
 msgid "Last Seen"
 msgstr ""
 
-#: includes/error-log-viewer.php:98
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:101
+#: includes/error-log-viewer.php:239
 msgid "asc"
 msgstr ""
 
-#: includes/error-log-viewer.php:99
+#: includes/error-log-viewer.php:102
 msgid "Hits"
 msgstr ""
 
-#: includes/error-log-viewer.php:99
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:102
+#: includes/error-log-viewer.php:239
 msgid "desc"
 msgstr ""
 
-#: includes/error-log-viewer.php:100
+#: includes/error-log-viewer.php:103
 msgid "Type"
 msgstr ""
 
-#: includes/error-log-viewer.php:100
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:103
+#: includes/error-log-viewer.php:239
 msgid "a-z"
 msgstr ""
 
-#: includes/error-log-viewer.php:112
+#: includes/error-log-viewer.php:115
 msgid "View Raw Log"
 msgstr ""
 
-#: includes/error-log-viewer.php:119
+#: includes/error-log-viewer.php:122
 msgid "View Log"
 msgstr ""
 
-#: includes/error-log-viewer.php:122
+#: includes/error-log-viewer.php:125
 msgid "Refresh Log"
 msgstr ""
 
-#: includes/error-log-viewer.php:131
+#: includes/error-log-viewer.php:134
 msgid "Download Log"
 msgstr ""
 
-#: includes/error-log-viewer.php:134
+#: includes/error-log-viewer.php:137
 msgid "Purge Log"
 msgstr ""
 
-#: includes/error-log-viewer.php:139
+#: includes/error-log-viewer.php:142
 msgid "Skip To Bottom"
 msgstr ""
 
-#: includes/error-log-viewer.php:144
+#: includes/error-log-viewer.php:147
 msgid "Log Path: "
 msgstr ""
 
-#: includes/error-log-viewer.php:148
+#: includes/error-log-viewer.php:151
 msgid "Distinct Entr%s"
 msgstr ""
 
-#: includes/error-log-viewer.php:149
+#: includes/error-log-viewer.php:152
 msgid "File Size : "
 msgstr ""
 
-#: includes/error-log-viewer.php:158
+#: includes/error-log-viewer.php:161
 msgid "Entries - "
 msgstr ""
 
-#: includes/error-log-viewer.php:182
+#: includes/error-log-viewer.php:185
 msgid "Show stack trace"
 msgstr ""
 
-#: includes/error-log-viewer.php:189
+#: includes/error-log-viewer.php:192
 msgid "Show code snippet"
 msgstr ""
 
-#: includes/error-log-viewer.php:197
+#: includes/error-log-viewer.php:200
 msgid "line"
 msgstr ""
 
-#: includes/error-log-viewer.php:199
+#: includes/error-log-viewer.php:202
 msgid "Last seen:"
 msgstr ""
 
-#: includes/error-log-viewer.php:199
+#: includes/error-log-viewer.php:202
 msgid "Hit%s"
 msgstr ""
 
-#: includes/error-log-viewer.php:205
+#: includes/error-log-viewer.php:208
 msgid "Skip To Top"
 msgstr ""
 
-#: includes/error-log-viewer.php:210
+#: includes/error-log-viewer.php:213
 msgid "Nothing to show with selected filters."
 msgstr ""
 
-#: includes/error-log-viewer.php:228
+#: includes/error-log-viewer.php:231
 msgid "Filter by Type:"
 msgstr ""
 
-#: includes/error-log-viewer.php:230
+#: includes/error-log-viewer.php:233
 msgid "Fatal Error"
 msgstr ""
 
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:239
 msgid "Last Seen "
 msgstr ""
 
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:239
 msgid "Hits "
 msgstr ""
 
-#: includes/error-log-viewer.php:236
+#: includes/error-log-viewer.php:239
 msgid "Type "
 msgstr ""
 
-#: includes/error-log-viewer.php:245
+#: includes/error-log-viewer.php:248
 msgid "There are currently no PHP error log entries available for this date."
 msgstr ""
