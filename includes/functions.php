@@ -13,9 +13,9 @@ if( ! defined( 'ABSPATH' ) ){
 }
 
 
-if( ! function_exists( 'wp_elv_file_size_convert' ) ) {
+if( ! function_exists( 'elvwp_file_size_convert' ) ) {
 	
-	function wp_elv_file_size_convert( $bytes ) {
+	function elvwp_file_size_convert( $bytes ) {
 	    $bytes = floatval( $bytes );
 	        $arBytes = array(
 	            0 => array(
@@ -45,16 +45,18 @@ if( ! function_exists( 'wp_elv_file_size_convert' ) ) {
 	        if ( $bytes >= $arItem['VALUE'] ) {
 	            $result = $bytes / $arItem['VALUE'];
 	            $result = str_replace( '.', ',' , strval( round( $result, 2 ) ) ).' '.$arItem['UNIT'];
+	            
 	            break;
 	        }
 	    }
+
 	    return $result;
 	}
 }
 
-if( ! function_exists( 'wp_elv_date_formate' ) ) {
+if( ! function_exists( 'elvwp_date_formate' ) ) {
 	
-	function wp_elv_date_formate() {
+	function elvwp_date_formate() {
 	    $date_format =  get_option( 'date_format' );
 	    
 	    if( 'F j, Y' === $date_format ){
@@ -69,20 +71,22 @@ if( ! function_exists( 'wp_elv_date_formate' ) ) {
 	    	$date_format = 'd-m-Y';
 		    $res_date_format = str_replace( array( 'Y', 'm', 'd' ), array( 'yyyy', 'mm', 'dd' ), $date_format );
 	    }
+
 	    return $res_date_format;
 	}
 }
 
-if( ! function_exists( 'wp_elv_get_last_log' ) ) {
+if( ! function_exists( 'elvwp_get_last_log' ) ) {
 	
-	function wp_elv_get_last_log() {
+	function elvwp_get_last_log() {
 	    global $wpdb;
-	    $table           = $wpdb->prefix . 'wp_error_logs';
-	    $wp_elv_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at DESC LIMIT 1" ) );
+	    $table           	= $wpdb->prefix . 'elvwp_error_logs';
+	    $elvwp_table_data 	= $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at DESC LIMIT 1" ) );
 
-	    if ( isset( $wp_elv_table_data[0] ) ) {
-	    	return $wp_elv_table_data[0];
+	    if ( isset( $elvwp_table_data[0] ) ) {
+	    	return $elvwp_table_data[0];
 	    }
+
 	    return null;
 	}
 }

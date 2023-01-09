@@ -24,8 +24,8 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
 }
 
-if ( ! function_exists( 'wp_elv_remove_data_from_config' ) ) {
-    function wp_elv_remove_data_from_config() {
+if ( ! function_exists( 'elvwp_remove_data_from_config' ) ) {
+    function elvwp_remove_data_from_config() {
         $config_path            = ABSPATH . 'wp-config.php';
         $config_transformer     = new WP_Config_Transformer( $config_path );
 
@@ -44,17 +44,17 @@ if ( ! function_exists( 'wp_elv_remove_data_from_config' ) ) {
     }
 }
 
-function wp_elv_uninstall(){
+function elvwp_uninstall(){
 
     global $wpdb;
 
-	delete_option( 'wp_elv_error_log_details' );
-    delete_option( 'wp_elv_dismiss_review_notice' );
-    delete_option( 'wp_elv_error_log_review_time' );
+	delete_option( 'elvwp_error_log_details' );
+    delete_option( 'elvwp_dismiss_review_notice' );
+    delete_option( 'elvwp_review_time' );
 
-    $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'wp_error_logs' ) );
+    $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
 
-    wp_elv_remove_data_from_config();
+    elvwp_remove_data_from_config();
 }
 
-wp_elv_uninstall();
+elvwp_uninstall();

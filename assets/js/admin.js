@@ -29,18 +29,18 @@ function parseQueryString(qs) {
 }
 
 function stripe() {
-    var errors = jQuery('#wp_elv_error_list').find('article');
+    var errors = jQuery('#elvwp_error_list').find('article');
     errors.removeClass('alternate');
     errors.filter(':not(.hide):odd').addClass('alternate');
 }
 
 function filterSet() {
     var typeCount = {};
-    var checked = jQuery('#wp_elv_type_filter').find('input:checkbox:checked').map(function() {
+    var checked = jQuery('#elvwp_type_filter').find('input:checkbox:checked').map(function() {
         return jQuery(this).val();
     }).get();
-    var input = jQuery('#wp_elv_path_filter').find('input').val();
-    jQuery('#wp_elv_error_list article').each(function() {
+    var input = jQuery('#elvwp_path_filter').find('input').val();
+    jQuery('#elvwp_error_list article').each(function() {
         var a = jQuery(this);
         var found = a.data('path').toLowerCase().indexOf(input.toLowerCase());
         if ((input.length && found == -1) || (jQuery.inArray(a.data('type'), checked) == -1)) {
@@ -56,7 +56,7 @@ function filterSet() {
             }
         }
     });
-    jQuery('#wp_elv_type_filter').find('label').each(function() {
+    jQuery('#elvwp_type_filter').find('label').each(function() {
         var type = jQuery(this).attr('class');
         if (typeCount.hasOwnProperty(type)) {
             jQuery('span', jQuery(this)).data('current', typeCount[type]);
@@ -67,7 +67,7 @@ function filterSet() {
 }
 
 function sortEntries(type, order) {
-    var aList = jQuery('#wp_elv_error_list').find('article');
+    var aList = jQuery('#elvwp_error_list').find('article');
     aList.sort(function(a, b) {
         if (!isNaN(jQuery(a).data(type))) {
             var entryA = parseInt(jQuery(a).data(type));
@@ -84,14 +84,11 @@ function sortEntries(type, order) {
     jQuery('section').html(aList);
 }
 jQuery(document).ready(function($) {
-    // $('#wp_elv_error_log_refresh').on('click', function (e) {
-    //        e.preventDefault();
-    //        var date = $('#date').val();
-    // });
-    $( "#wp_elv_datepicker,#wp_elv_select_date" ).datepicker({
+
+    $( "#elvwp_datepicker,#elvwp_select_date" ).datepicker({
         format: ajax_script_object.date_format
     });
-    $(document).on('change', '#wp_elv_datepicker,#wp_elv_select_date', function(){
+    $(document).on('change', '#elvwp_datepicker,#elvwp_select_date', function(){
         var date_format_php = ajax_script_object.date_format_php;
         var date_val = $(this).val();
         if (date_format_php == 'F j, Y') {
@@ -101,25 +98,25 @@ jQuery(document).ready(function($) {
             $(this).val(date_val);
         }
     });
-    $('#wp_elv_skip_to_bottom').on('click', function() {
+    $('#elvwp_skip_to_bottom').on('click', function() {
         $(document).scrollTop($(document).height());
     });
-    $('#wp_elv_skip_to_top').on('click', function() {
+    $('#elvwp_skip_to_top').on('click', function() {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     });
-    $('#wp_elv_error_log_purge').on('click', function() {
+    $('#elvwp_error_log_purge').on('click', function() {
         var r = confirm("Are you sure want to delete this log?");
         if (r == true) {
-            var wp_elv_error_log = $('#wp_elv_error_log').val();
+            var elvwp_error_log = $('#elvwp_error_log').val();
             jQuery.ajax({
                 type: 'POST',
                 url: ajax_script_object.ajax_url,
                 dataType: "json",
                 data: {
-                    'action': 'wp_elv_purge_log',
-                    'wp_elv_nonce': ajax_script_object.purge_log_nonce,
-                    'wp_elv_error_log': wp_elv_error_log
+                    'action': 'elvwp_purge_log',
+                    'elvwp_nonce': ajax_script_object.purge_log_nonce,
+                    'elvwp_error_log': elvwp_error_log
                 },
                 success: function(data) {
                     // alert(data);
@@ -132,15 +129,15 @@ jQuery(document).ready(function($) {
             });
         }
     });
-    $('#wp_elv_type_filter').find('input:checkbox').on('change', function() {
+    $('#elvwp_type_filter').find('input:checkbox').on('change', function() {
         filterSet();
         visible();
     });
-    $('#wp_elv_path_filter').find('input').on('keyup', debounce(function() {
+    $('#elvwp_path_filter').find('input').on('keyup', debounce(function() {
         filterSet();
         visible();
     }));
-    $('#wp_elv_sort_options').find('a').on('click', function() {
+    $('#elvwp_sort_options').find('a').on('click', function() {
         var qs = parseQueryString($(this).attr('href'));
         sortEntries(qs.type, qs.order);
         $(this).attr('href', '?type=' + qs.type + '&order=' + (qs.order == 'asc' ? 'desc' : 'asc'));
@@ -159,7 +156,7 @@ jQuery(document).ready(function($) {
 });
 $ = jQuery;
 $(document).ready(function() {
-    var wp_elv_log_list_table = $('#wp_elv_log_list_table').dataTable({
+    var elvwp_log_list_table = $('#elvwp_log_list_table').dataTable({
         "processing": true,
         "serverSide": true,
         'serverMethod': 'post',
@@ -175,7 +172,7 @@ $(document).ready(function() {
         ],
         "bSort": true,
         "fnDrawCallback": function(oSettings) {
-            if ($('#wp_elv_log_list_table tr').length > 5) {
+            if ($('#elvwp_log_list_table tr').length > 5) {
                 $('.dataTables_paginate').show();
             }
         },
@@ -189,24 +186,24 @@ $(document).ready(function() {
         }, {
             data: 'others'
         }, {
-            data: 'wp_elv_log_path'
+            data: 'elvwp_log_path'
         }, {
             data: 'action'
         }],
         // Needs button container
     });
-    $('body').on('click', '.wp_elv_datatable_delete', function() {
+    $('body').on('click', '.elvwp_datatable_delete', function() {
         var r = confirm("Are you sure want to delete this log?");
         if (r == true) {
-            var wp_elv_datatable_deleteid = $(this)[0].id;
+            var elvwp_datatable_deleteid = $(this)[0].id;
             jQuery.ajax({
                 type: 'POST',
                 url: ajax_script_object.ajax_url,
                 dataType: "json",
                 data: {
-                    'action': 'wp_elv_datatable_delete_data',
+                    'action': 'elvwp_datatable_delete_data',
                     '_wpnonce': ajax_script_object.delete_data_nonce,
-                    'wp_elv_datatable_deleteid': wp_elv_datatable_deleteid
+                    'elvwp_datatable_deleteid': elvwp_datatable_deleteid
                 },
                 success: function(data) {
                     if (data.success == 1) {
@@ -221,49 +218,48 @@ $(document).ready(function() {
 });
 /*deactivation*/
 (function($) {
-    // alert('dd');
+    
     $(function() {
         var pluginSlug = 'error-log-viewer-wp';
         // Code to fire when the DOM is ready.
         $(document).on('click', 'tr[data-slug="' + pluginSlug + '"] .deactivate', function(e) {
             e.preventDefault();
-            $('.wp_elv-popup-overlay').addClass('wp_elv-active');
-            $('body').addClass('wp_elv-hidden');
+            $('.elvwp-popup-overlay').addClass('elvwp-active');
+            $('body').addClass('elvwp-hidden');
         });
-        $(document).on('click', '.wp_elv-popup-button-close', function() {
+        $(document).on('click', '.elvwp-popup-button-close', function() {
             close_popup();
         });
-        $(document).on('click', ".wp_elv-serveypanel,tr[data-slug='" + pluginSlug + "'] .deactivate", function(e) {
+        $(document).on('click', ".elvwp-serveypanel,tr[data-slug='" + pluginSlug + "'] .deactivate", function(e) {
             e.stopPropagation();
         });
         $(document).click(function() {
             close_popup();
         });
-        $('.wp_elv-reason label').on('click', function() {
+        $('.elvwp-reason label').on('click', function() {
             if ($(this).find('input[type="radio"]').is(':checked')) {
-                //$('.wp_elv-anonymous').show();
-                $(this).next().next('.wp_elv-reason-input').show().end().end().parent().siblings().find('.wp_elv-reason-input').hide();
+                $(this).next().next('.elvwp-reason-input').show().end().end().parent().siblings().find('.elvwp-reason-input').hide();
             }
         });
-        $('input[type="radio"][name="wp_elv-selected-reason"]').on('click', function(event) {
-            $(".wp_elv-popup-allow-deactivate").removeAttr('disabled');
-            $(".wp_elv-popup-skip-feedback").removeAttr('disabled');
+        $('input[type="radio"][name="elvwp-selected-reason"]').on('click', function(event) {
+            $(".elvwp-popup-allow-deactivate").removeAttr('disabled');
+            $(".elvwp-popup-skip-feedback").removeAttr('disabled');
             $('.message.error-message').hide();
-            $('.wp_elv-pro-message').hide();
+            $('.elvwp-pro-message').hide();
         });
-        $('.wp_elv-reason-pro label').on('click', function() {
+        $('.elvwp-reason-pro label').on('click', function() {
             if ($(this).find('input[type="radio"]').is(':checked')) {
-                $(this).next('.wp_elv-pro-message').show().end().end().parent().siblings().find('.wp_elv-reason-input').hide();
-                $(this).next('.wp_elv-pro-message').show()
-                $('.wp_elv-popup-allow-deactivate').attr('disabled', 'disabled');
-                $('.wp_elv-popup-skip-feedback').attr('disabled', 'disabled');
+                $(this).next('.elvwp-pro-message').show().end().end().parent().siblings().find('.elvwp-reason-input').hide();
+                $(this).next('.elvwp-pro-message').show()
+                $('.elvwp-popup-allow-deactivate').attr('disabled', 'disabled');
+                $('.elvwp-popup-skip-feedback').attr('disabled', 'disabled');
             }
         });
-        $(document).on('submit', '#wp_elv-deactivate-form', function(event) {
+        $(document).on('submit', '#elvwp-deactivate-form', function(event) {
             event.preventDefault();
-            var _reason = $('input[type="radio"][name="wp_elv-selected-reason"]:checked').val();
+            var _reason = $('input[type="radio"][name="elvwp-selected-reason"]:checked').val();
             var _reason_details = '';
-            var deactivate_nonce = $('.wp_elv_error_log_deactivation_nonce').val();
+            var deactivate_nonce = $('.elvwp_deactivation_nonce').val();
             if (_reason == 2) {
                 _reason_details = $(this).find("input[type='text'][name='better_plugin']").val();
             } else if (_reason == 7) {
@@ -277,40 +273,39 @@ $(document).ready(function() {
                 url: ajax_script_object.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'wp_elv_error_log_deactivation',
+                    action: 'elvwp_error_log_deactivation',
                     reason: _reason,
                     reason_detail: _reason_details,
-                    wp_elv_error_log_deactivation_nonce: deactivate_nonce
+                    elvwp_deactivation_nonce: deactivate_nonce
                 },
                 beforeSend: function() {
-                    $(".wp_elv-spinner").show();
-                    $(".wp_elv-popup-allow-deactivate").attr("disabled", "disabled");
+                    $(".elvwp-spinner").show();
+                    $(".elvwp-popup-allow-deactivate").attr("disabled", "disabled");
                 }
             }).done(function() {
-                $(".wp_elv-spinner").hide();
-                $(".wp_elv-popup-allow-deactivate").removeAttr("disabled");
+                $(".elvwp-spinner").hide();
+                $(".elvwp-popup-allow-deactivate").removeAttr("disabled");
                 window.location.href = $("tr[data-slug='" + pluginSlug + "'] .deactivate a").attr('href');
             });
         });
-        $('.wp_elv-popup-skip-feedback').on('click', function(e) {
-            // e.preventDefault();
+        $('.elvwp-popup-skip-feedback').on('click', function(e) {
             window.location.href = $("tr[data-slug='" + pluginSlug + "'] .deactivate a").attr('href');
         })
 
         function close_popup() {
-            $('.wp_elv-popup-overlay').removeClass('wp_elv-active');
-            $('#wp_elv-deactivate-form').trigger("reset");
-            $(".wp_elv-popup-allow-deactivate").attr('disabled', 'disabled');
-            $(".wp_elv-reason-input").hide();
-            $('body').removeClass('wp_elv-hidden');
+            $('.elvwp-popup-overlay').removeClass('elvwp-active');
+            $('#elvwp-deactivate-form').trigger("reset");
+            $(".elvwp-popup-allow-deactivate").attr('disabled', 'disabled');
+            $(".elvwp-reason-input").hide();
+            $('body').removeClass('elvwp-hidden');
             $('.message.error-message').hide();
-            $('.wp_elv-pro-message').hide();
+            $('.elvwp-pro-message').hide();
         }
     });
 })(jQuery);
 
 function visible() {
-    var vis = jQuery('#wp_elv_error_list').find('article').filter(':not(.hide)');
+    var vis = jQuery('#elvwp_error_list').find('article').filter(':not(.hide)');
     var len = vis.length;
     if (len == 0) {
         jQuery('#nothingToShow').removeClass('hide');
@@ -323,8 +318,8 @@ function visible() {
             jQuery('.log_entries').text(len + ' distinct entr' + (len == 1 ? 'y' : 'ies') + ' showing (' + (script_object.total - len) + ' filtered out)');
         }
     }
-    jQuery('#wp_elv_type_filter').find('label span').each(function() {
-        var count = (jQuery('#wp_elv_path_filter').find('input').val() == '' ? jQuery(this).data('total') : jQuery(this).data('current') + '/' + jQuery(this).data('total'));
+    jQuery('#elvwp_type_filter').find('label span').each(function() {
+        var count = (jQuery('#elvwp_path_filter').find('input').val() == '' ? jQuery(this).data('total') : jQuery(this).data('current') + '/' + jQuery(this).data('total'));
         jQuery(this).text(count);
     });
     stripe();
@@ -337,11 +332,11 @@ if (script_object.error_type) {
         a.addClass(checkedvalue);
         jQuery('.'+script_object.error_type).prop("checked", true);
         var typeCount = {};
-        var checked = jQuery('#wp_elv_type_filter').find('input:checkbox:checked').map(function() {
+        var checked = jQuery('#elvwp_type_filter').find('input:checkbox:checked').map(function() {
             return jQuery(this).val();
         }).get();
-        var input = jQuery('#wp_elv_path_filter').find('input').val();
-        jQuery('#wp_elv_error_list article').each(function() {
+        var input = jQuery('#elvwp_path_filter').find('input').val();
+        jQuery('#elvwp_error_list article').each(function() {
             var a = jQuery(this);
             var found = a.data('path').toLowerCase().indexOf(input.toLowerCase());
             if ((input.length && found == -1) || (jQuery.inArray(a.data('type'), checked) == -1)) {
@@ -358,13 +353,13 @@ if (script_object.error_type) {
             }
             jQuery("input[type=checkbox]").change(function() {
                 if (jQuery(this).is(":checked")) {
-                    jQuery('#wp_elv_skip_to_top').show();
+                    jQuery('#elvwp_skip_to_top').show();
                 } else if (jQuery(this).is(":not(:checked)")) {
-                    jQuery('#wp_elv_skip_to_top').hide();
+                    jQuery('#elvwp_skip_to_top').hide();
                 }
             });
         });
-        jQuery('#wp_elv_type_filter').find('label').each(function() {
+        jQuery('#elvwp_type_filter').find('label').each(function() {
             var type = jQuery(this).attr('class');
             if (typeCount.hasOwnProperty(type)) {
                 jQuery('span', jQuery(this)).data('current', typeCount[type]);
