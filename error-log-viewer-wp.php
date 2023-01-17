@@ -41,22 +41,53 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          * @since       1.0.0
          */
         private static $instance;
-        private $message        = '';
-        private $messageError   = FALSE;
-        
+
+        /**
+         * Holds `wp-config.php` file path.
+         *
+         * @var string
+         */
+        protected static $wp_config_path;
+
+        /**
+         * Holds Error Log Directory.
+         *
+         * @var string
+         */
+        protected $log_directory;
+
+        /**
+         * Holds Plugin Permalink.
+         *
+         * @var string
+         */
+        protected $elvwp_permalink;
+
         
         public function __construct() {
-            
-            $log_directory_folder  = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp';
-            $elvwp_htaccess        = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/.htaccess';
-            $elvwp_index           = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/index.php';
-            
-            if ( ! is_dir( $log_directory_folder ) ) {
-                mkdir( $log_directory_folder );
+
+            self::$wp_config_path               = $this->get_wp_config_path();
+
+            $this->elvwp_permalink              = 'error-log-viewer-wp';
+            $this->log_directory                = WP_CONTENT_DIR . '/uploads/' . $elvwp_permalink;
+
+            $elvwp_log_directory_htaccess       = $this->log_directory . '/.htaccess';
+            $elvwp_log_directory_index          = $this->log_directory . '/index.php';
+
+            if ( ! is_writable( self::$wp_config_path ) ) {
+                echo '<div class="error notice is-dismissible"><p>';
+                echo wp_kses_post( __( 'The <strong>Error Log Viewer</strong> plugin must have a <code>wp-config.php</code> file that is writable by the filesystem.', 'error-log-viewer-wp' ) );
+                echo '</p></div>';
+
+                return false;
             }
             
-            if ( ! file_exists( $elvwp_index ) ) {
-                $elvwp_file_index = fopen( $elvwp_index, 'w' ) or die( 'Unable to open file!' );
+            if ( ! is_dir( $this->log_directory ) ) {
+                mkdir( $this->log_directory );
+            }
+            
+            if ( ! file_exists( $elvwp_log_directory_index ) ) {
+                $elvwp_file_index = fopen( $elvwp_log_directory_index, 'w' ) or die( 'Unable to open file!' );
                 
                 $txt = "<?php // Exit if accessed directly.
                     if ( ! defined( 'ABSPATH' ) ) {
@@ -79,13 +110,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 fclose( $elvwp_file_index );
             }
             
-            if ( ! file_exists( $elvwp_htaccess ) ) {
-                $elvwp_htaccess = fopen( $elvwp_htaccess, 'w' ) or die( 'Unable to open file!' );
-                $txt = 'RewriteCond %{REQUEST_FILENAME} -s
-                      RewriteRule ^(.*)$ /index.php?error-log-viewer-wp=$1 [QSA,L]';
+            if ( ! file_exists( $elvwp_log_directory_htaccess ) ) {
+                $elvwp_log_directory_htaccess = fopen( $elvwp_log_directory_htaccess, 'w' ) or die( 'Unable to open file!' );
+                $rule = 'RewriteCond %{REQUEST_FILENAME} -s
+                      RewriteRule ^(.*)$ /index.php?' . $this->elvwp_permalink . '=$1 [QSA,L]';
                 
-                fwrite( $elvwp_htaccess, $txt );
-                fclose( $elvwp_htaccess );
+                fwrite( $elvwp_log_directory_htaccess, $rule );
+                fclose( $elvwp_log_directory_htaccess );
             }
             
         }
@@ -133,18 +164,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             // Plugin URL
             define( 'ELVWP_URL', plugin_dir_url( __FILE__ ) );
             
-            define( 'ELVWP_SUPPORT_URL', 'https://wordpress.org/support/plugin/error-log-viewer-wp/' );
+            define( 'ELVWP_SUPPORT_URL', 'https://wordpress.org/support/plugin/' . $this->elvwp_permalink );
             
-            define( 'ELVWP_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/error-log-viewer-wp?filter=5' );
+            define( 'ELVWP_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/' . $this->elvwp_permalink . '?filter=5' );
             
-            define( 'ELVWP_DEBUG_LOGFOLDER', WP_CONTENT_DIR . '/uploads/error-log-viewer-wp' );
+            define( 'ELVWP_DEBUG_LOGFOLDER', $this->log_directory );
 
             if ( ! class_exists( 'WP_Config_Transformer' ) ) {
                 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
             }
             
-            $config_path            = ABSPATH . 'wp-config.php';
-            $config_transformer     = new WP_Config_Transformer( $config_path );
+            $config_transformer     = new WP_Config_Transformer( self::$wp_config_path );
                         
             if ( ( defined( WP_DEBUG_LOG ) && WP_DEBUG_LOG == false ) || !defined( WP_DEBUG_LOG ) ) {
                 
@@ -155,7 +185,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 }
             }
 
-            $error_log  = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/log-' . date( 'd-M-Y' ) . '.log';
+            $error_log  = $this->log_directory . '/log-' . date( 'd-M-Y' ) . '.log';
 
             if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
                 $config_transformer->update( 'inivariable', 'log_errors', 'On' );
@@ -196,128 +226,36 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 dbDelta( $sql );
             }
         }
-        
+
         /**
-         * Error Log Details
+         * Internationalization
          *
          * @access      public
          * @since       1.0.0
          * @return      void
-         *
          */
-        public function elvwp_error_log_details( $log_date = '' ) {
-            global $wpdb;
-                                    
-            $count                = 1;
-            $log_directory_folder = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp';
-            $wp_empty_folder      = ( count( glob( "$log_directory_folder/*" ) ) === 0 ) ? 'Empty' : 'Not empty';
+        public function load_textdomain() {
+            // Set filter for language directory
+            $lang_dir       = ELVWP_DIR . '/languages/';
+            $lang_dir       = apply_filters( 'error_log_viewer_wp_languages_directory', $lang_dir );
             
-            if ( 'Empty' === $wp_empty_folder ) {
-                $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
-                
-                if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
-                    $wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) );
-                }
-            }
+            // Traditional WordPress plugin locale filter
+            $locale         = apply_filters( 'plugin_locale', get_locale(), 'error-log-viewer-wp' );
+            $mofile         = sprintf( '%1$s-%2$s.mo', 'error-log-viewer-wp', $locale );
             
-            if ( is_dir( $log_directory_folder ) ) {
-                $scanned_directory = array_diff( scandir( $log_directory_folder, 1 ), array(
-                        '..',
-                        '.', 
-                    ) );
-                $elvwp_table             = $wpdb->prefix . 'elvwp_error_logs';
-                
-                if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
-                    
-                    foreach ( $scanned_directory as $key => $value ) {
-                        $count              = 1;
-                        $file_name          = $value;
-                        $elvwp_table              = $wpdb->prefix . 'elvwp_error_logs';
-                        
-                        $elvwp_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table}" ) );
-                        
-                        foreach ( $elvwp_table_data as $elvwp_tablekey => $elvwp_tablevalue ) {
-                            $elvwp_database_file = $elvwp_tablevalue->file_name;
-                            
-                            if ( $elvwp_database_file == $file_name ) {
-                                $count             = 0;
-                            } else {
-                                $elvwp_checkfile   = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $elvwp_database_file;
-                            }
-                        }
-                        
-                        if ( 1 === $count ) {
-                            $current_date           = date( 'Y-m-d', strtotime( substr( $file_name, 4, 11 ) ) );
-                            $elvwp_coneverted_date  = date( 'd-M-Y', strtotime( $current_date ) );
-                            $log_details            = $this->elvwp_log_details( $elvwp_coneverted_date );
-                            
-                            if ( $log_details ) {
-                                $elvwp_serialize_data  = serialize( $log_details['typecount'] );
-                                $log_path              = $log_details['error_log'];
-
-                                if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
-                                    $data   = array(
-                                      'file_name'   => $file_name,
-                                      'details'     => $elvwp_serialize_data,
-                                      'created_at'  => $current_date,
-                                      'log_path'    => $log_path,
-                                    );
-                                    $format = array(
-                                      '%s',
-                                      '%s',
-                                      '%s',
-                                      '%s', 
-                                    );
-                                    $wpdb->insert( $elvwp_table, $data, $format );
-                                }
-                            }
-                        }
-                        
-                        if ( 0 === $count ) {
-                            $current_date           = date( 'Y-m-d', strtotime( substr( $file_name, 4, 11 ) ) );
-                            $elvwp_coneverted_date  = date( 'd-M-Y', strtotime( $current_date ) );
-                            $log_details            = $this->elvwp_log_details( $elvwp_coneverted_date );
-                            $elvwp_serialize_data   = serialize( $log_details['typecount'] );
-                            $log_path               = $log_details['error_log'];
-                            
-                            if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
-                                $data          = array(
-                                    'details'       => $elvwp_serialize_data,
-                                    'created_at'    => $current_date,
-                                    'log_path'      => $log_path,
-                                );
-                                $format        = array(
-                                    '%s',
-                                    '%s',
-                                    '%s',
-                                );
-                                $wherefilename = array(
-                                    'file_name' => $file_name,
-                                );
-
-                                $wpdb->update( $elvwp_table, $data, $wherefilename, $format );
-                            }
-                        }
-                    }
-                }
-            }
+            // Setup paths to current locale file
+            $mofile_local   = $lang_dir . $mofile;
+            $mofile_global  = WP_LANG_DIR . '/elvwp/' . $mofile;
             
-            $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
-            
-            if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
-
-                $elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT file_name FROM {$elvwp_table}" ) );
-                
-                foreach ( $elvwp_table_data as $key => $value ) {
-                    $elvwp_database_file = $value->file_name;
-                    $elvwp_checkfile     = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $elvwp_database_file;
-                    
-                    if ( ! file_exists( $elvwp_checkfile ) ) {
-                        $wpdb->delete( $elvwp_table, array(
-                            'file_name' => $elvwp_database_file, 
-                        ) );
-                    }
-                }
+            if ( file_exists( $mofile_global ) ) {
+                // Look in global /wp-content/languages/elvwp/ folder
+                load_textdomain( 'error-log-viewer-wp', $mofile_global );
+            } elseif ( file_exists( $mofile_local ) ) {
+                // Look in local /wp-content/plugins/elvwp/languages/ folder
+                load_textdomain( 'error-log-viewer-wp', $mofile_local );
+            } else {
+                // Load the default language files
+                load_plugin_textdomain( 'error-log-viewer-wp', false, $lang_dir );
             }
         }
         
@@ -408,6 +346,158 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             }
             
         }
+
+        /**
+         * Get the `wp-config.php` file path.
+         *
+         * The config file may reside one level above ABSPATH but is not part of another installation.
+         *
+         * @see wp-load.php#L26-L42
+         *
+         * @return string $wp_config_path
+         */
+
+        public function get_wp_config_path() {
+            $wp_config_path = ABSPATH . 'wp-config.php';
+
+            if ( ! file_exists( $wp_config_path ) ) {
+                if ( @file_exists( dirname( ABSPATH ) . '/wp-config.php' ) && ! @file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
+                    $wp_config_path = dirname( ABSPATH ) . '/wp-config.php';
+                }
+            }
+
+            /**
+             * Filter the config file path.
+             *
+             * @since 1.0.0
+             *
+             * @param string $wp_config_path
+             */
+            return apply_filters( 'elvwp_config_path', $wp_config_path );
+        }
+
+        /**
+         * Error Log Details
+         *
+         * @access      public
+         * @since       1.0.0
+         * @return      void
+         *
+         */
+        public function elvwp_error_log_details( $log_date = '' ) {
+            global $wpdb;
+                                    
+            $count                = 1;
+            $wp_empty_folder      = ( count( glob( $this->log_directory . "/*" ) ) === 0 ) ? 'Empty' : 'Not empty';
+            
+            if ( 'Empty' === $wp_empty_folder ) {
+                $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
+                
+                if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
+                    $wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) );
+                }
+            }
+            
+            if ( is_dir( $this->log_directory ) ) {
+                $scanned_directory = array_diff( scandir( $this->log_directory, 1 ), array(
+                        '..',
+                        '.', 
+                    ) );
+                $elvwp_table             = $wpdb->prefix . 'elvwp_error_logs';
+                
+                if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
+                    
+                    foreach ( $scanned_directory as $key => $value ) {
+                        $count              = 1;
+                        $file_name          = $value;
+                        $elvwp_table              = $wpdb->prefix . 'elvwp_error_logs';
+                        
+                        $elvwp_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table}" ) );
+                        
+                        foreach ( $elvwp_table_data as $elvwp_tablekey => $elvwp_tablevalue ) {
+                            $elvwp_database_file = $elvwp_tablevalue->file_name;
+                            
+                            if ( $elvwp_database_file == $file_name ) {
+                                $count             = 0;
+                            } else {
+                                $elvwp_checkfile   = $this->log_directory . '/' . $elvwp_database_file;
+                            }
+                        }
+                        
+                        if ( 1 === $count ) {
+                            $current_date           = date( 'Y-m-d', strtotime( substr( $file_name, 4, 11 ) ) );
+                            $elvwp_coneverted_date  = date( 'd-M-Y', strtotime( $current_date ) );
+                            $log_details            = $this->elvwp_log_details( $elvwp_coneverted_date );
+                            
+                            if ( $log_details ) {
+                                $elvwp_serialize_data  = serialize( $log_details['typecount'] );
+                                $log_path              = $log_details['error_log'];
+
+                                if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
+                                    $data   = array(
+                                      'file_name'   => $file_name,
+                                      'details'     => $elvwp_serialize_data,
+                                      'created_at'  => $current_date,
+                                      'log_path'    => $log_path,
+                                    );
+                                    $format = array(
+                                      '%s',
+                                      '%s',
+                                      '%s',
+                                      '%s', 
+                                    );
+                                    $wpdb->insert( $elvwp_table, $data, $format );
+                                }
+                            }
+                        }
+                        
+                        if ( 0 === $count ) {
+                            $current_date           = date( 'Y-m-d', strtotime( substr( $file_name, 4, 11 ) ) );
+                            $elvwp_coneverted_date  = date( 'd-M-Y', strtotime( $current_date ) );
+                            $log_details            = $this->elvwp_log_details( $elvwp_coneverted_date );
+                            $elvwp_serialize_data   = serialize( $log_details['typecount'] );
+                            $log_path               = $log_details['error_log'];
+                            
+                            if ( '.htaccess' !== $file_name && 'index.php' !== $file_name ) {
+                                $data          = array(
+                                    'details'       => $elvwp_serialize_data,
+                                    'created_at'    => $current_date,
+                                    'log_path'      => $log_path,
+                                );
+                                $format        = array(
+                                    '%s',
+                                    '%s',
+                                    '%s',
+                                );
+                                $wherefilename = array(
+                                    'file_name' => $file_name,
+                                );
+
+                                $wpdb->update( $elvwp_table, $data, $wherefilename, $format );
+                            }
+                        }
+                    }
+                }
+            }
+            
+            $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
+            
+            if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
+
+                $elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT file_name FROM {$elvwp_table}" ) );
+                
+                foreach ( $elvwp_table_data as $key => $value ) {
+                    $elvwp_database_file = $value->file_name;
+                    $elvwp_checkfile     = $this->log_directory . '/' . $elvwp_database_file;
+                    
+                    if ( ! file_exists( $elvwp_checkfile ) ) {
+                        $wpdb->delete( $elvwp_table, array(
+                            'file_name' => $elvwp_database_file, 
+                        ) );
+                    }
+                }
+            }
+        }
         
         /**
          * To Download Log
@@ -453,7 +543,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     $ps_download_filename = $value;
                 }
                 
-                $elvwp_download_filepath       = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $ps_download_filename;
+                $elvwp_download_filepath       = $this->log_directory . '/' . $ps_download_filename;
                 
                 try {
                     $filename = basename( $elvwp_download_filepath );
@@ -575,7 +665,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 'parent'    => false,
                 'id'        => 'elvwp_admin_bar',
                 'title'     => $link_text . $elvwp_primary_alert,
-                'href'      => admin_url( 'admin.php?page=error-log-viewer-wp' ),
+                'href'      => admin_url( 'admin.php?page=' . $this->elvwp_permalink ),
                 'meta'      => array(
                                     'title' => __( 'Error Log Viewer', 'error-log-viewer-wp' ),
                                ),
@@ -592,7 +682,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          */
         public function elvwp_log_details( $log_date = '', $is_raw_log = false ) {
             
-            $error_log  = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/log-' . $log_date . '.log';
+            $error_log  = $this->log_directory . '/log-' . $log_date . '.log';
             /**
              * @var string|null Path to log cache - must be writable - null for no cache
              */
@@ -836,17 +926,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          */
         public function elvwp_plugin_menu() {
             
-            $menu = add_menu_page( __( 'Error Log Viewer', 'error-log-viewer-wp' ), __( 'Error Log Viewer', 'error-log-viewer-wp' ), 'manage_options', 'error-log-viewer-wp', array(
+            $menu = add_menu_page( __( 'Error Log Viewer', 'error-log-viewer-wp' ), __( 'Error Log Viewer', 'error-log-viewer-wp' ), 'manage_options', $this->elvwp_permalink, array(
                 $this,
                 'elvwp_error_by_date', 
             ) );
 
-            add_submenu_page( 'error-log-viewer-wp', __( 'Error Log Overview', 'error-log-viewer-wp' ), __( 'Error Log Overview', 'error-log-viewer-wp' ), 'manage_options', 'error-log-viewer-wp', array(
+            add_submenu_page( $this->elvwp_permalink, __( 'Error Log Overview', 'error-log-viewer-wp' ), __( 'Error Log Overview', 'error-log-viewer-wp' ), 'manage_options', $this->elvwp_permalink, array(
                 $this,
                 'elvwp_error_by_date', 
             ) );
 
-            $list = add_submenu_page( 'error-log-viewer-wp', __( 'Error Log List', 'error-log-viewer-wp' ), __( 'Error Log List', 'error-log-viewer-wp' ), 'manage_options', 'elvwp-list', array(
+            $list = add_submenu_page( $this->elvwp_permalink, __( 'Error Log List', 'error-log-viewer-wp' ), __( 'Error Log List', $this->elvwp_permalink ), 'manage_options', 'elvwp-list', array(
                 $this,
                 'elvwp_log_list_datatable', 
             ) );
@@ -940,8 +1030,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     $created_at         = $value->created_at;
                     $elvwp_log_path     = $value->log_path;
                     $id                 = $value->id;
-                    $filename           = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $value->file_name;
-                    $elvwp_url          = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
+                    $filename           = $this->log_directory . '/' . $value->file_name;
+                    $elvwp_url          = add_query_arg( 'date', $created_at, admin_url( 'admin.php?page=' . $this->elvwp_permalink ) );
                     $array_rewrite      = array();
                     // Array with the md5 hashes
                     $array              = array();
@@ -969,7 +1059,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                                                             'date' => $created_at,
                                                             'type' => $k1, 
                                                         );
-                                                        $elvwp_error_type_url   = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
+                                                        $elvwp_error_type_url   = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=' . $this->elvwp_permalink ) );
                                                         return '<div class="elvwp_datatable ' . $k1 . '"><a href="' . $elvwp_error_type_url . '">' . ucwords( $k1 . ": " . $v1 ) . '</a></div>';
                                                     }
                                                 }, $v, array_keys( $v ) ) );
@@ -979,7 +1069,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                                             'date' => $created_at,
                                             'type' => $k, 
                                         );
-                                        $elvwp_error_type_url   = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=error-log-viewer-wp' ) );
+                                        $elvwp_error_type_url   = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=' . $this->elvwp_permalink ) );
                                         return '<div class="elvwp_datatable ' . $k . '"><a href="' . $elvwp_error_type_url . '">' . ucwords( $k . ": " . $v ) . '</a></div>';
                                     }
                                 }, $array_hashes, array_keys( $array_hashes ) ) );
@@ -1060,7 +1150,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 if ( ! empty( $elvwp_table_data ) ) {
                     
                     foreach ( $elvwp_table_data as $value ) {
-                        $elvwp_datatable_filename = WP_CONTENT_DIR . '/uploads/error-log-viewer-wp/' . $value;
+                        $elvwp_datatable_filename = $this->log_directory . '/' . $value;
                     }
                     
                     if ( file_exists( $elvwp_datatable_filename ) ) {
@@ -1139,38 +1229,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
                 return 0;
             } );
-        }
-        
-        /**
-         * Internationalization
-         *
-         * @access      public
-         * @since       1.0.0
-         * @return      void
-         */
-        public function load_textdomain() {
-            // Set filter for language directory
-            $lang_dir       = ELVWP_DIR . '/languages/';
-            $lang_dir       = apply_filters( 'error_log_viewer_wp_languages_directory', $lang_dir );
-            
-            // Traditional WordPress plugin locale filter
-            $locale         = apply_filters( 'plugin_locale', get_locale(), 'error-log-viewer-wp' );
-            $mofile         = sprintf( '%1$s-%2$s.mo', 'error-log-viewer-wp', $locale );
-            
-            // Setup paths to current locale file
-            $mofile_local   = $lang_dir . $mofile;
-            $mofile_global  = WP_LANG_DIR . '/elvwp/' . $mofile;
-            
-            if ( file_exists( $mofile_global ) ) {
-                // Look in global /wp-content/languages/elvwp/ folder
-                load_textdomain( 'error-log-viewer-wp', $mofile_global );
-            } elseif ( file_exists( $mofile_local ) ) {
-                // Look in local /wp-content/plugins/elvwp/languages/ folder
-                load_textdomain( 'error-log-viewer-wp', $mofile_local );
-            } else {
-                // Load the default language files
-                load_plugin_textdomain( 'error-log-viewer-wp', false, $lang_dir );
-            }
         }
         
         /**
@@ -1275,12 +1333,12 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             
             if ( empty( $this_plugin ) ) {
                 
-                $this_plugin = 'error-log-viewer-wp/error-log-viewer-wp.php';
+                $this_plugin = $this->elvwp_permalink . '/error-log-viewer-wp.php';
             }
             
             if ( $file == $this_plugin ) {
                 
-                $settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'error-log-viewer-wp' ), '<a href="' . admin_url( 'admin.php?page=error-log-viewer-wp' ) . '">', '</a>' );
+                $settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'error-log-viewer-wp' ), '<a href="' . admin_url( 'admin.php?page=' . $this->elvwp_permalink ) . '">', '</a>' );
                 
                 array_unshift( $links, $settings_link );
                 
@@ -1372,6 +1430,7 @@ function elvwp_load() {
     if ( is_admin() ) {
         require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
     }
+
     return Error_Log_Viewer_WP::instance();
 }
 add_action( 'plugins_loaded', 'elvwp_load' );
@@ -1389,4 +1448,5 @@ add_action( 'plugins_loaded', 'elvwp_load' );
 function elvwp_activation() {
     /* Activation functions here */
 }
+
 register_activation_hook( __FILE__, 'elvwp_activation' );
