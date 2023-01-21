@@ -24,9 +24,15 @@ if ( ! class_exists( 'WP_Config_Transformer' ) ) {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
 }
 
+if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'error-log-viewer-wp.php';
+}
+
 if ( ! function_exists( 'elvwp_remove_data_from_config' ) ) {
     function elvwp_remove_data_from_config() {
-        $config_path            = ABSPATH . 'wp-config.php';
+
+        $object                 = new Error_Log_Viewer_WP();
+        $config_path            = $object->get_wp_config_path();
         $config_transformer     = new WP_Config_Transformer( $config_path );
 
         if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {

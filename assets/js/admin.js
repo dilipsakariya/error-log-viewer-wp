@@ -156,43 +156,44 @@ jQuery(document).ready(function($) {
 });
 $ = jQuery;
 $(document).ready(function() {
-    var elvwp_log_list_table = $('#elvwp_log_list_table').dataTable({
-        "processing": true,
-        "serverSide": true,
-        'serverMethod': 'post',
-        "searching": false,
-        "dataType": "json",
-        "dom": 'Bfrtip',
-        "paging": true,
-        "visible": false,
-        "lengthChange": true,
-        "pageLength": 10,
-        "order": [
-            [0, "desc"]
-        ],
-        "bSort": true,
-        "fnDrawCallback": function(oSettings) {
-            if ($('#elvwp_log_list_table tr').length > 5) {
-                $('.dataTables_paginate').show();
-            }
-        },
-        "ajax": datatable.datatable_ajax_url,
-        columns: [{
-            data: 'created_at'
-        }, {
-            data: 'plugin'
-        }, {
-            data: 'theme'
-        }, {
-            data: 'others'
-        }, {
-            data: 'elvwp_log_path'
-        }, {
-            data: 'action'
-        }],
-        // Needs button container
-    });
-    $('body').on('click', '.elvwp_datatable_delete', function() {
+    if($('#elvwp_log_list_table').length>0){
+        var elvwp_log_list_table = $('#elvwp_log_list_table').dataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            "searching": false,
+            "dataType": "json",
+            "dom": 'Bfrtip',
+            "paging": true,
+            "visible": false,
+            "lengthChange": true,
+            "pageLength": 10,
+            "order": [
+                [0, "desc"]
+            ],
+            "bSort": true,
+            "fnDrawCallback": function(oSettings) {
+                if ($('#elvwp_log_list_table tr').length > 5) {
+                    $('.dataTables_paginate').show();
+                }
+            },
+            "ajax": datatable.datatable_ajax_url,
+            columns: [{
+                data: 'created_at'
+            }, {
+                data: 'plugin'
+            }, {
+                data: 'theme'
+            }, {
+                data: 'others'
+            }, {
+                data: 'elvwp_log_path'
+            }, {
+                data: 'action'
+            }],
+            // Needs button container
+        });
+        $('body').on('click', '.elvwp_datatable_delete', function() {
         var r = confirm("Are you sure want to delete this log?");
         if (r == true) {
             var elvwp_datatable_deleteid = $(this)[0].id;
@@ -215,12 +216,13 @@ $(document).ready(function() {
             });
         }
     });
+    }
 });
 /*deactivation*/
 (function($) {
     
     $(function() {
-        var pluginSlug = 'error-log-viewer-wp';
+        var pluginSlug = 'error-log-viewer-by-wp-guru';
         // Code to fire when the DOM is ready.
         $(document).on('click', 'tr[data-slug="' + pluginSlug + '"] .deactivate', function(e) {
             e.preventDefault();

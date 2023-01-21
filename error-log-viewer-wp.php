@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Error Log Viewer By WP Guru
- * Version:           1.0.0
+ * Version:           1.0.1
  * Plugin URI:        https://wordpress.org/plugins/error-log-viewer-wp/
  * Description:       Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            WP Guru
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             self::$wp_config_path               = $this->get_wp_config_path();
 
             $this->elvwp_permalink              = 'error-log-viewer-wp';
-            $this->log_directory                = WP_CONTENT_DIR . '/uploads/' . $elvwp_permalink;
+            $this->log_directory                = WP_CONTENT_DIR . '/uploads/' . $this->elvwp_permalink;
 
             $elvwp_log_directory_htaccess       = $this->log_directory . '/.htaccess';
             $elvwp_log_directory_index          = $this->log_directory . '/index.php';
@@ -93,18 +93,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     if ( ! defined( 'ABSPATH' ) ) {
                     exit;
                     }
-                    require_once( 'wp-load.php' );
-                    is_user_logged_in() || auth_redirect();
-                    if ( ! user_can( wp_get_current_user(), 'administrator' ) ) {
-                    global $wp_query;
-                    $wp_query->set_403();
-                    status_header( 403 );
-                    get_template_part( 403 );
-                    wp_die( __( 'You are not allowed to access this file.', 'error-log-viewer-wp' ) );
-                    } else {
-                    // insert here your awesome source code
-                    // to serve the requested file
-                    }";
+                    ";
                 
                 fwrite( $elvwp_file_index, $txt );
                 fclose( $elvwp_file_index );
@@ -153,7 +142,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
         private function setup_constants() {
             
             // Plugin version
-            define( 'ELVWP_VER', '1.0.0' );
+            define( 'ELVWP_VER', '1.0.1' );
             
             // Plugin name
             define( 'ELVWP_NAME', 'Error Log Viewer By WP Guru' );
@@ -965,6 +954,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          */
         public function elvwp_admin_enqueue( $hook ) {
 
+
             wp_enqueue_style( 'elvwp_error_log_admin_style', plugins_url( '/assets/css/admin.css', __FILE__ ), array(), ELVWP_VER );
 
             if ( 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook ) {
@@ -982,6 +972,15 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
             if ( 'plugins.php' === $hook || 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook ) {
 
+                wp_enqueue_script( 'elvwp_admin_ui_script', plugins_url( '/assets/js/datepicker.min.js', __FILE__ ), array(
+                     'jquery' 
+                ), ELVWP_VER );
+                
+                wp_enqueue_script( 'elvwp_admin_script', plugins_url( '/assets/js/admin.js', __FILE__ ), array(
+                     'elvwp_admin_ui_script' 
+                ), ELVWP_VER );
+
+
                 wp_localize_script( 'elvwp_admin_script', 'ajax_script_object', array(
                      'ajax_url'                 => admin_url( 'admin-ajax.php' ), 
                      'date_format'              => elvwp_date_formate(), 
@@ -995,15 +994,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                      'datatable_ajax_url' => admin_url( 'admin-ajax.php?action=elvwp_datatable_loglist' ) 
                 ) );
 
-                wp_localize_script( 'wp_elv_admin_script', 'script_object', array() );
+                wp_localize_script( 'elvwp_admin_script', 'script_object', array() );
 
-                wp_enqueue_script( 'elvwp_admin_script', plugins_url( '/assets/js/admin.js', __FILE__ ), array(
-                     'elvwp_admin_ui_script' 
-                ), ELVWP_VER );
-
-                wp_enqueue_script( 'elvwp_admin_ui_script', plugins_url( '/assets/js/datepicker.min.js', __FILE__ ), array(
-                     'jquery' 
-                ), ELVWP_VER );
             }
 
             
