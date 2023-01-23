@@ -63,6 +63,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          */
         protected $elvwp_permalink;
 
+        /**
+         * Plugin Data table.
+         *
+         * @var string
+         */
+        protected $elvwp_error_logs;
+
         
         public function __construct() {
 
@@ -70,6 +77,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
             $this->elvwp_permalink              = 'error-log-viewer-wp';
             $this->log_directory                = WP_CONTENT_DIR . '/uploads/' . $this->elvwp_permalink;
+            $this->elvwp_error_logs             = 'elvwp_error_logs';
 
             $elvwp_log_directory_htaccess       = $this->log_directory . '/.htaccess';
             $elvwp_log_directory_index          = $this->log_directory . '/index.php';
@@ -198,7 +206,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
          */
         private function load_table() {
             global $wpdb;
-            $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
+            $elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
             
             // create database table
             if ( $wpdb->get_var( $wpdb->prepare( "show tables like %s", $elvwp_table ) ) != $elvwp_table ) {
@@ -380,7 +388,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             $wp_empty_folder      = ( count( glob( $this->log_directory . "/*" ) ) === 0 ) ? 'Empty' : 'Not empty';
             
             if ( 'Empty' === $wp_empty_folder ) {
-                $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
+                $elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
                 
                 if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
                     $wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) );
@@ -392,14 +400,14 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                         '..',
                         '.', 
                     ) );
-                $elvwp_table             = $wpdb->prefix . 'elvwp_error_logs';
+                $elvwp_table             = $wpdb->prefix . $this->elvwp_error_logs;
                 
                 if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
                     
                     foreach ( $scanned_directory as $key => $value ) {
                         $count              = 1;
                         $file_name          = $value;
-                        $elvwp_table              = $wpdb->prefix . 'elvwp_error_logs';
+                        $elvwp_table              = $wpdb->prefix . $this->elvwp_error_logs;
                         
                         $elvwp_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table}" ) );
                         
@@ -469,7 +477,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 }
             }
             
-            $elvwp_table = $wpdb->prefix . 'elvwp_error_logs';
+            $elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
             
             if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", '%'.$elvwp_table.'%' ) ) == $elvwp_table ) {
 
@@ -523,7 +531,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             if ( is_admin() && isset( $_POST['elvwp_datatable_log_download'] ) && isset( $_POST['elvwp_datatable_downloadid'] ) && !empty( sanitize_text_field( $_POST['elvwp_datatable_downloadid'] ) ) ) {
 
                 global $wpdb;
-                $elvwp_table                   = $wpdb->prefix . 'elvwp_error_logs';
+                $elvwp_table                   = $wpdb->prefix . $this->elvwp_error_logs;
                 $elvwp_datatable_downloadid    = sanitize_text_field( $_POST['elvwp_datatable_downloadid'] );
 
                 $elvwp_download_table_data     = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from {$elvwp_table} where id=%d", $elvwp_datatable_downloadid ) );
@@ -1003,7 +1011,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
         
         public function elvwp_datatable_loglist() {
             global $wpdb;
-            $elvwp_table            = $wpdb->prefix . 'elvwp_error_logs';
+            $elvwp_table            = $wpdb->prefix . $this->elvwp_error_logs;
             $column_sort_order      = sanitize_text_field( $_POST['order'][ 0 ]['dir'] );
             $draw                   = sanitize_text_field( $_POST['draw'] );
             $row                    = sanitize_text_field( $_POST['start'] );
@@ -1134,7 +1142,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             if ( is_admin() && isset( $_POST['elvwp_datatable_deleteid'] ) && !empty( sanitize_text_field( $_POST['elvwp_datatable_deleteid'] ) ) ) {
                 
                 global $wpdb;
-                $elvwp_table              = $wpdb->prefix . 'elvwp_error_logs';
+                $elvwp_table              = $wpdb->prefix . $this->elvwp_error_logs;
                 $elvwp_datatable_deleteid = sanitize_text_field( $_POST['elvwp_datatable_deleteid'] );
                 
                 $elvwp_table_data         = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table where id=%d", $elvwp_datatable_deleteid ) );
