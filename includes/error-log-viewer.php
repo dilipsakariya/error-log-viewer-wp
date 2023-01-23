@@ -149,7 +149,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
                 <div class="elvwp_log_data_wrap">
                     <span class="log_entries">
                     <strong><?php echo esc_html( $log_details['total'] ); ?></strong> <?php $total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );esc_html( printf( __( 'Distinct Entr%s', 'error-log-viewer-wp' ), esc_html( $total_str ) ) ); ?></span>
-                    <span id="elvwp_file_size"> <?php _e( 'File Size : ', 'error-log-viewer-wp' ); ?><strong><?php echo esc_html( elvwp_file_size_convert( filesize( $log_details['error_log'] ) ) ); ?> </strong></span>
+                    <span id="elvwp_file_size"> <?php _e( 'File Size: ', 'error-log-viewer-wp' ); ?><strong><?php echo esc_html( elvwp_file_size_convert( filesize( $log_details['error_log'] ) ) ); ?> </strong></span>
                 </div>
             </div>
         </p>
