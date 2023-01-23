@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Error Log Viewer By WP Guru
- * Version:           1.0.1
+ * Version:           1.0.1.3
  * Plugin URI:        https://wordpress.org/plugins/error-log-viewer-wp/
  * Description:       Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            WP Guru
@@ -150,7 +150,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
         private function setup_constants() {
             
             // Plugin version
-            define( 'ELVWP_VER', '1.0.1' );
+            define( 'ELVWP_VER', '1.0.1.3' );
             
             // Plugin name
             define( 'ELVWP_NAME', 'Error Log Viewer By WP Guru' );
@@ -516,7 +516,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     header( 'Expires: 0' );
                     header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
                     header( 'Content-Type: application/octet-stream' );
-                    header( 'Content-Disposition: attachment; filename=$filename' );
+                    header( 'Content-Disposition: attachment; filename='.$filename );
                     header( 'Content-Transfer-Encoding: binary' );
                     header( 'Content-Length: ' . filesize( $elvwp_file ) );
                     flush();
@@ -524,7 +524,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     exit;
                 }
                 catch ( Exception $e ) {
-                    $data['error'] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
+                    throw $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
                 }
             }
             
@@ -548,7 +548,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     header( 'Expires: 0' );
                     header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
                     header( 'Content-Type: application/octet-stream' );
-                    header( 'Content-Disposition: attachment; filename=$filename' );
+                    header( 'Content-Disposition: attachment; filename='.$filename );
                     header( 'Content-Transfer-Encoding: binary' );
                     header( 'Content-Length: ' . filesize( $elvwp_download_filepath ) );
                     flush();
@@ -556,7 +556,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     exit;
                 }
                 catch ( Exception $e ) {
-                    $data['error'] = $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
+                    throw $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
                 }
             }
         }
@@ -969,7 +969,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
                 wp_enqueue_script( 'elvwp_datatable', plugins_url( '/assets/js/jquery.dataTables.min.js', __FILE__ ), array(
                      'jquery' 
-                ), ELVWP_VER );
+                ), ELVWP_VER, true );
                 
                 wp_register_style( 'elvwp_datatables_style', plugins_url( '/assets/css/jquery.dataTables.min.css', __FILE__ ), array(), ELVWP_VER );
                 wp_register_style( 'elvwp_ui_style', plugins_url( '/assets/css/datepicker.min.css', __FILE__ ), array(), ELVWP_VER );
@@ -982,11 +982,11 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
                 wp_enqueue_script( 'elvwp_admin_ui_script', plugins_url( '/assets/js/datepicker.min.js', __FILE__ ), array(
                      'jquery' 
-                ), ELVWP_VER );
+                ), ELVWP_VER, true );
                 
                 wp_enqueue_script( 'elvwp_admin_script', plugins_url( '/assets/js/admin.js', __FILE__ ), array(
                      'elvwp_admin_ui_script' 
-                ), ELVWP_VER );
+                ), ELVWP_VER, true );
 
 
                 wp_localize_script( 'elvwp_admin_script', 'ajax_script_object', array(

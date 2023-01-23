@@ -193,29 +193,30 @@ $(document).ready(function() {
             }],
             // Needs button container
         });
-        $('body').on('click', '.elvwp_datatable_delete', function() {
-        var r = confirm("Are you sure want to delete this log?");
-        if (r == true) {
-            var elvwp_datatable_deleteid = $(this)[0].id;
-            jQuery.ajax({
-                type: 'POST',
-                url: ajax_script_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'elvwp_datatable_delete_data',
-                    '_wpnonce': ajax_script_object.delete_data_nonce,
-                    'elvwp_datatable_deleteid': elvwp_datatable_deleteid
-                },
-                success: function(data) {
-                    if (data.success == 1) {
-                        window.location.reload();
-                    } else {
-                        alert(data.msg);
+        $(document).on('click', '.elvwp_datatable_delete', function(e) {
+            e.preventDefault();
+            var r = confirm("Are you sure want to delete this log?");
+            if (r == true) {
+                var elvwp_datatable_deleteid = $(this)[0].id;
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_script_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'elvwp_datatable_delete_data',
+                        'elvwp_nonce': ajax_script_object.delete_data_nonce,
+                        'elvwp_datatable_deleteid': elvwp_datatable_deleteid
+                    },
+                    success: function(data) {
+                        if (data.success == 1) {
+                            window.location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
                     }
-                }
-            });
-        }
-    });
+                });
+            }
+        });
     }
 });
 /*deactivation*/
@@ -326,7 +327,7 @@ function visible() {
     });
     stripe();
 }
-if (script_object.error_type) {
+if ( typeof script_object.error_type !== "undefined" && script_object.error_type ) {
     jQuery('input:checkbox').removeAttr('checked');
     jQuery('input[type=checkbox]').each(function() {
         var a = jQuery(this);
@@ -370,4 +371,6 @@ if (script_object.error_type) {
             }
         });
     });
+
+    visible();
 }
