@@ -167,42 +167,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             
             define( 'ELVWP_DEBUG_LOGFOLDER', $this->log_directory );
 
-            if ( ! class_exists( 'WP_Config_Transformer' ) ) {
-                require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
-            }
-            
-            $config_transformer     = new WP_Config_Transformer( self::$wp_config_path );
-                        
-            if ( ( defined( WP_DEBUG_LOG ) && WP_DEBUG_LOG == false ) || !defined( WP_DEBUG_LOG ) ) {
-                
-                if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {
-                    $config_transformer->update( 'constant', 'WP_DEBUG_LOG', true );
-                } else {
-                    $config_transformer->add( 'constant', 'WP_DEBUG_LOG', true );
-                }
-            }
-
-            $error_log  = $this->log_directory . '/log-' . date( 'd-M-Y' ) . '.log';
-
-            if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
-                
-                if( 'On' !== $config_transformer->get_value( 'inivariable', 'log_errors' ) ) {
-                    $config_transformer->update( 'inivariable', 'log_errors', 'On' );
-                }
-
-            } else {
-                $config_transformer->add( 'inivariable', 'log_errors', 'On' );
-            }
-
-            if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
-
-                if( $error_log !== $config_transformer->get_value( 'inivariable', 'error_log' ) ) {
-                    $config_transformer->update( 'inivariable', 'error_log', $error_log );
-                }
-                
-            } else {
-                $config_transformer->add( 'inivariable', 'error_log', $error_log );
-            }
         }
         
         /**
@@ -326,7 +290,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 ) );
                 add_action( 'init', array(
                     $this,
-                    'elvwp_log_download', 
+                    'elvwp_log_init',
                 ) );
                 add_action( 'wp_ajax_nopriv_elvwp_log_download', array(
                     $this,
@@ -567,6 +531,67 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                     throw $e->getMessage() . ' @ ' . $e->getFile() . ' - ' . $e->getLine();
                 }
             }
+        }
+
+        /**
+         * To set config var
+         *
+         * @access      public
+         * @since       1.0.0
+         * @return      void
+         *
+         */
+        public function elvwp_set_config_variables() {
+
+            if ( ! class_exists( 'WP_Config_Transformer' ) ) {
+                require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
+            }
+            
+            $config_transformer     = new WP_Config_Transformer( self::$wp_config_path );
+                        
+            if ( ( defined( WP_DEBUG_LOG ) && WP_DEBUG_LOG == false ) || !defined( WP_DEBUG_LOG ) ) {
+                
+                if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {
+                    $config_transformer->update( 'constant', 'WP_DEBUG_LOG', true );
+                } else {
+                    $config_transformer->add( 'constant', 'WP_DEBUG_LOG', true );
+                }
+            }
+
+            $error_log  = $this->log_directory . '/log-' . date( 'd-M-Y' ) . '.log';
+
+            if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
+                
+                if( 'On' !== $config_transformer->get_value( 'inivariable', 'log_errors' ) ) {
+                    $config_transformer->update( 'inivariable', 'log_errors', 'On' );
+                }
+
+            } else {
+                $config_transformer->add( 'inivariable', 'log_errors', 'On' );
+            }
+
+            if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
+
+                if( $error_log !== $config_transformer->get_value( 'inivariable', 'error_log' ) ) {
+                    $config_transformer->update( 'inivariable', 'error_log', $error_log );
+                }
+
+            } else {
+                $config_transformer->add( 'inivariable', 'error_log', $error_log );
+            }
+        }
+
+        /**
+         * To call innit
+         *
+         * @access      public
+         * @since       1.0.0
+         * @return      void
+         *
+         */
+        public function elvwp_log_init() {
+            $this->elvwp_set_config_variables();
+            $this->elvwp_log_download();
         }
 
         /**
