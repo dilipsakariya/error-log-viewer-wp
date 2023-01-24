@@ -1483,3 +1483,38 @@ function elvwp_activation() {
 }
 
 register_activation_hook( __FILE__, 'elvwp_activation' );
+
+/**
+ * The deactivation hook is called outside of the singleton because WordPress doesn't
+ * register the call from within the class, since we are preferring the plugins_loaded
+ * hook for compatibility, we also can't reference a function inside the plugin class
+ * for the deactivation function. If you need an deactivation function, put it here.
+ *
+ * @since       1.0.0
+ * @return      void
+ */
+
+function elvwp_deactivation() {
+    
+    if ( ! class_exists( 'WP_Config_Transformer' ) ) {
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
+    }
+
+    $object                 = new Error_Log_Viewer_WP();
+    $config_path            = $object->get_wp_config_path();
+    $config_transformer     = new WP_Config_Transformer( $config_path );
+
+    if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {
+        $config_transformer->remove( 'constant', 'WP_DEBUG_LOG' );
+    }
+
+    if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
+        $config_transformer->remove( 'inivariable', 'log_errors' );
+    }
+
+    if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
+        $config_transformer->remove( 'inivariable', 'error_log' );
+    }
+}
+
+register_deactivation_hook( __FILE__, 'elvwp_deactivation' );
