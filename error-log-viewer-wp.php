@@ -185,13 +185,21 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             $error_log  = $this->log_directory . '/log-' . date( 'd-M-Y' ) . '.log';
 
             if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
-                $config_transformer->update( 'inivariable', 'log_errors', 'On' );
+                
+                if( 'On' !== $config_transformer->get_value( 'inivariable', 'log_errors' ) ) {
+                    $config_transformer->update( 'inivariable', 'log_errors', 'On' );
+                }
+
             } else {
                 $config_transformer->add( 'inivariable', 'log_errors', 'On' );
             }
 
             if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
-                $config_transformer->update( 'inivariable', 'error_log', $error_log );
+
+                if( $error_log !== $config_transformer->get_value( 'inivariable', 'error_log' ) ) {
+                    $config_transformer->update( 'inivariable', 'error_log', $error_log );
+                }
+                
             } else {
                 $config_transformer->add( 'inivariable', 'error_log', $error_log );
             }
