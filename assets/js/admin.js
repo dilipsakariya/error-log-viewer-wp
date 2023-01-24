@@ -1,4 +1,4 @@
-var debounce = function(func, wait, immediate) {
+var elvwp_debounce = function(func, wait, immediate) {
     var timeout;
     wait = wait || 250;
     return function() {
@@ -19,7 +19,7 @@ var debounce = function(func, wait, immediate) {
     };
 };
 
-function parseQueryString(qs) {
+function elvwp_parseQueryString(qs) {
     var query = (qs || '?').substr(1),
         map = {};
     query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function(match, key, value) {
@@ -28,13 +28,13 @@ function parseQueryString(qs) {
     return map;
 }
 
-function stripe() {
+function elvwp_stripe() {
     var errors = jQuery('#elvwp_error_list').find('article');
     errors.removeClass('alternate');
     errors.filter(':not(.hide):odd').addClass('alternate');
 }
 
-function filterSet() {
+function elvwp_filterSet() {
     var typeCount = {};
     var checked = jQuery('#elvwp_type_filter').find('input:checkbox:checked').map(function() {
         return jQuery(this).val();
@@ -66,7 +66,7 @@ function filterSet() {
     });
 }
 
-function sortEntries(type, order) {
+function elvwp_sortEntries(type, order) {
     var aList = jQuery('#elvwp_error_list').find('article');
     aList.sort(function(a, b) {
         if (!isNaN(jQuery(a).data(type))) {
@@ -84,16 +84,15 @@ function sortEntries(type, order) {
     jQuery('section').html(aList);
 }
 jQuery(document).ready(function($) {
-
-    $( "#elvwp_datepicker,#elvwp_select_date" ).datepicker({
+    $("#elvwp_datepicker,#elvwp_select_date").datepicker({
         format: ajax_script_object.date_format
     });
-    $(document).on('change', '#elvwp_datepicker,#elvwp_select_date', function(){
+    $(document).on('change', '#elvwp_datepicker,#elvwp_select_date', function() {
         var date_format_php = ajax_script_object.date_format_php;
         var date_val = $(this).val();
         if (date_format_php == 'F j, Y') {
             var date_val_arr = date_val.split(' ');
-            date_val_arr[0]  = ajax_script_object.months[date_val_arr[0]]
+            date_val_arr[0] = ajax_script_object.months[date_val_arr[0]]
             date_val = date_val_arr.join(' ');
             $(this).val(date_val);
         }
@@ -130,16 +129,16 @@ jQuery(document).ready(function($) {
         }
     });
     $('#elvwp_type_filter').find('input:checkbox').on('change', function() {
-        filterSet();
-        visible();
+        elvwp_filterSet();
+        elvwp_visible();
     });
-    $('#elvwp_path_filter').find('input').on('keyup', debounce(function() {
-        filterSet();
-        visible();
+    $('#elvwp_path_filter').find('input').on('keyup', elvwp_debounce(function() {
+        elvwp_filterSet();
+        elvwp_visible();
     }));
     $('#elvwp_sort_options').find('a').on('click', function() {
-        var qs = parseQueryString($(this).attr('href'));
-        sortEntries(qs.type, qs.order);
+        var qs = elvwp_parseQueryString($(this).attr('href'));
+        elvwp_sortEntries(qs.type, qs.order);
         $(this).attr('href', '?type=' + qs.type + '&order=' + (qs.order == 'asc' ? 'desc' : 'asc'));
         if (qs.type == 'type') {
             $('span', $(this)).text((qs.order == 'asc' ? 'z-a' : 'a-z'));
@@ -152,11 +151,11 @@ jQuery(document).ready(function($) {
         $('#' + $(this).data('for')).toggle();
         return false;
     });
-    stripe();
+    elvwp_stripe();
 });
 $ = jQuery;
 $(document).ready(function() {
-    if($('#elvwp_log_list_table').length>0){
+    if ($('#elvwp_log_list_table').length > 0) {
         var elvwp_log_list_table = $('#elvwp_log_list_table').dataTable({
             "processing": true,
             "serverSide": true,
@@ -165,7 +164,7 @@ $(document).ready(function() {
             "dataType": "json",
             "dom": 'Bfrtip',
             "paging": true,
-            "visible": false,
+            "elvwp_visible": false,
             "lengthChange": true,
             "pageLength": 10,
             "order": [
@@ -221,7 +220,6 @@ $(document).ready(function() {
 });
 /*deactivation*/
 (function($) {
-    
     $(function() {
         var pluginSlug = 'error-log-viewer-by-wp-guru';
         // Code to fire when the DOM is ready.
@@ -231,13 +229,13 @@ $(document).ready(function() {
             $('body').addClass('elvwp-hidden');
         });
         $(document).on('click', '.elvwp-popup-button-close', function() {
-            close_popup();
+            elvwp_close_popup();
         });
         $(document).on('click', ".elvwp-serveypanel,tr[data-slug='" + pluginSlug + "'] .deactivate", function(e) {
             e.stopPropagation();
         });
         $(document).click(function() {
-            close_popup();
+            elvwp_close_popup();
         });
         $('.elvwp-reason label').on('click', function() {
             if ($(this).find('input[type="radio"]').is(':checked')) {
@@ -295,7 +293,7 @@ $(document).ready(function() {
             window.location.href = $("tr[data-slug='" + pluginSlug + "'] .deactivate a").attr('href');
         })
 
-        function close_popup() {
+        function elvwp_close_popup() {
             $('.elvwp-popup-overlay').removeClass('elvwp-active');
             $('#elvwp-deactivate-form').trigger("reset");
             $(".elvwp-popup-allow-deactivate").attr('disabled', 'disabled');
@@ -307,7 +305,7 @@ $(document).ready(function() {
     });
 })(jQuery);
 
-function visible() {
+function elvwp_visible() {
     var vis = jQuery('#elvwp_error_list').find('article').filter(':not(.hide)');
     var len = vis.length;
     if (len == 0) {
@@ -325,15 +323,15 @@ function visible() {
         var count = (jQuery('#elvwp_path_filter').find('input').val() == '' ? jQuery(this).data('total') : jQuery(this).data('current') + '/' + jQuery(this).data('total'));
         jQuery(this).text(count);
     });
-    stripe();
+    elvwp_stripe();
 }
-if ( typeof script_object.error_type !== "undefined" && script_object.error_type ) {
+if (typeof script_object.error_type !== "undefined" && script_object.error_type) {
     jQuery('input:checkbox').removeAttr('checked');
     jQuery('input[type=checkbox]').each(function() {
         var a = jQuery(this);
         var checkedvalue = jQuery(this).val();
         a.addClass(checkedvalue);
-        jQuery('.'+script_object.error_type).prop("checked", true);
+        jQuery('.' + script_object.error_type).prop("checked", true);
         var typeCount = {};
         var checked = jQuery('#elvwp_type_filter').find('input:checkbox:checked').map(function() {
             return jQuery(this).val();
@@ -371,6 +369,5 @@ if ( typeof script_object.error_type !== "undefined" && script_object.error_type
             }
         });
     });
-
-    visible();
+    elvwp_visible();
 }
