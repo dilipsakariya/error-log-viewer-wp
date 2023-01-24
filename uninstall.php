@@ -20,34 +20,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WP_Config_Transformer' ) ) {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
-}
-
 if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
     require_once plugin_dir_path( __FILE__ ) . 'error-log-viewer-wp.php';
-}
-
-if ( ! function_exists( 'elvwp_remove_data_from_config' ) ) {
-    function elvwp_remove_data_from_config() {
-
-        $object                 = new Error_Log_Viewer_WP();
-        $config_path            = $object->get_wp_config_path();
-        $config_transformer     = new WP_Config_Transformer( $config_path );
-
-        if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {
-            $config_transformer->remove( 'constant', 'WP_DEBUG_LOG' );
-        }
-
-        if ( $config_transformer->exists( 'inivariable', 'log_errors' ) ) {
-            $config_transformer->remove( 'inivariable', 'log_errors' );
-        }
-
-        if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
-            $config_transformer->remove( 'inivariable', 'error_log' );
-        }
-
-    }
 }
 
 function elvwp_uninstall(){
@@ -60,7 +34,6 @@ function elvwp_uninstall(){
 
     $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
 
-    elvwp_remove_data_from_config();
 }
 
 elvwp_uninstall();
