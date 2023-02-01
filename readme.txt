@@ -51,11 +51,11 @@ Monitoring PHP errors is something you need to do if you want to keep your WordP
 
 = Where can I find Error Log Files using FTP? =
 
-In Case when WP Admin is blocked due to Error then you may use FTP to check Log files located at /wp-content/uploads/error-log-viewer-wp/ directory.
+In case when WP Admin is blocked due to Error then you may use FTP to check Log files located at /wp-content/uploads/error-log-viewer-wp/ directory.
 
 = Where can I ask for help? =
 
-You may contact our [Support](Report bugs and suggest ideas at: https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
+You may contact our [Support or Report bugs and suggest ideas](https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
 
 = Is this plugin GDPR compliant? =
 
