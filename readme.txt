@@ -7,7 +7,7 @@ Tags: error log, error reporting, log report, debug tool, admin
 Requires at least: 3.9
 Tested up to: 6.1.1
 Requires PHP: 5.6
-Stable Tag: 1.0.0
+Stable Tag: 1.0.1.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -57,7 +57,7 @@ In Case when WP Admin is blocked due to Error then you may use FTP to check Log 
 
 You may contact our [Support](Report bugs and suggest ideas at: https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
 
-= Is this plugin [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) compliant? =
+= Is this plugin GDPR compliant? =
 
 This plugin does not log nor transmit any user data. In fact, it doesn't even do anything on the user-facing part of your website, only in the admin area. This means it should be compliant but I'm not a lawyer.
 
