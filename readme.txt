@@ -55,7 +55,7 @@ In case when WP Admin is blocked due to Error then you may use FTP to check Log 
 
 = Where can I ask for help? =
 
-You may contact our [Support or Report bugs and suggest ideas](https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
+You may contact our [Support or Report Bugs or Suggest Ideas](https://wordpress.org/support/plugin/error-log-viewer-wp/) at any time.
 
 = Is this plugin GDPR compliant? =
 
