@@ -134,6 +134,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 self::$instance->load_table();
                 self::$instance->load_textdomain();
                 self::$instance->hooks();
+
+                $elvwp_version     = get_option( 'elvwp_current_version', '0.0.0' );
+
+                if ( version_compare( $elvwp_version, ELVWP_VER, '<' ) ) {
+                    self::$instance->elvwp_call_install();
+                }
+
                 self::$instance->elvwp_error_log_details();
             }
             
@@ -167,6 +174,68 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
             
             define( 'ELVWP_DEBUG_LOGFOLDER', $this->log_directory );
 
+        }
+
+        /**
+         * Plugin check for update processes
+         * checks to see if there are any update procedures to be run, and if
+         * so runs them
+         *
+         * @access      private
+         * @since       1.0.0
+         * @return      void
+         */
+        private function elvwp_call_install() {
+            
+            $version           = get_option( 'elvwp_current_version', false );
+            if ( ! $version ) {
+                $this->elvwp_new_install();
+            } else {
+
+                if ( version_compare( $version, '1.0.1.4', '<' ) ) {
+                    $this->elvwp_v1014_upgrades();
+                }
+
+            }
+
+            update_option( 'elvwp_current_version', ELVWP_VER );
+
+        }
+
+        /**
+         * New Plugin Install routine
+         * This function installs all of the default
+         * so runs them
+         *
+         * @access      private
+         * @since       1.0.0
+         * @return      void
+         */
+        private function elvwp_new_install() {
+            $admin_email = get_option('admin_email');
+            $emails      = array( $admin_email );
+            $emails      = array_map('trim', $emails);
+            update_option( 'elvwp-on-off-notification', 1 );
+            update_option( 'elvwp-notification-emails', $emails );
+            update_option( 'elvwp_frequency', 'weekly' );
+        }
+
+        /**
+         * Plugin update routine
+         * This function installs all of the default
+         * so runs them
+         *
+         * @access      private
+         * @since       1.0.1.4
+         * @return      void
+         */
+        private function elvwp_v1014_upgrades() {
+            $admin_email = get_option('admin_email');
+            $emails      = array( $admin_email );
+            $emails      = array_map('trim', $emails);
+            update_option( 'elvwp-on-off-notification', 1 );
+            update_option( 'elvwp-notification-emails', $emails );
+            update_option( 'elvwp_frequency', 'weekly' );
         }
         
         /**
@@ -243,11 +312,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 $this,
                 'elvwp_dismiss_review_notice', 
             ) );
-            
+            // $this->elvwp_cron_function_notification_time();
             if ( ! get_option( 'elvwp_review_time' ) ) {
                 $review_time = time() + 7 * DAY_IN_SECONDS;
                 add_option( 'elvwp_review_time', $review_time, '', false );
             }
+
+            add_filter('cron_schedules', array( $this, 'elvwp_cs_cron_fn' ) );
+            add_action( 'elvwp_cron_task_hook_notification_time', array(
+                $this,
+                'elvwp_cron_function_notification_time', 
+            ) );
             
             if ( is_admin() && get_option( 'elvwp_review_time' ) && get_option( 'elvwp_review_time' ) < time() && !get_option( 'elvwp_dismiss_review_notice' ) ) {
                 add_action( 'admin_notices', array(
@@ -314,6 +389,233 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 ) );
             }
             
+        }
+
+        /**
+         * cronjob scheduler.
+         *
+         * coming in elvwp.
+         *
+         * @since 1.0.9
+         * @access public
+         *
+         * @return void
+         */
+        public function elvwp_cs_cron_fn( $schedules ){
+            $on_of_notificaation = get_option( 'elvwp-on-off-notification' );
+            $elvwp_frequency     = get_option( 'elvwp_frequency' );
+
+            if ( ! empty( $elvwp_frequency ) && ! empty ( $on_of_notificaation ) ) {
+                $cron_time = 0;
+
+                if ( 'daily' === $elvwp_frequency ) {
+                    $cron_time = ( 24 * 60 * 60 );
+                } elseif ( 'weekly' === $elvwp_frequency ) {
+                    $cron_time = ( 7 * 24 * 60 * 60 );
+                } elseif ( 'monthly' === $elvwp_frequency ) {
+                    $cron_time = ( 30 * 24 * 60 * 60 );
+                }
+
+                if ( !empty( $cron_time ) ) {
+                    $schedules['elvwp_notification_time'] = array(
+                        'interval' => $cron_time,
+                        'display'  => __( 'Once every ' . $elvwp_frequency ), 
+                    );
+                }
+            }
+            return $schedules;
+        }
+
+        /**
+         * cronjob scheduler run method.
+         *
+         * send reminder account
+         * coming in elvwp.
+         *
+         * @since 1.0.9
+         * @access public
+         *
+         * @return void
+         */
+        public function elvwp_cron_function_notification_time() {
+            global $wpdb;
+            $elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
+            $on_of_notificaation = get_option( 'elvwp-on-off-notification' );
+            $elvwp_frequency     = get_option( 'elvwp_frequency' );
+            $emails              = get_option( 'elvwp-notification-emails' );
+
+            if ( ! empty( $elvwp_frequency ) && ! empty ( $on_of_notificaation ) && ! empty( $emails ) ) {
+
+                if ( 'daily' === $elvwp_frequency ) {
+                    $interval_day = 1;
+                } elseif ( 'weekly' === $elvwp_frequency ) {
+                    $interval_day = 7;
+                } elseif ( 'monthly' === $elvwp_frequency ) {
+                    $interval_day = 30;
+                }
+
+                $from_date          = date( 'Y-m-d', strtotime( '-' . $interval_day . ' days' ) );
+                $end_date           = date( 'Y-m-d' );
+                
+                $from_name          = get_option( 'from_name', get_bloginfo( 'name' ) );
+                $from_email         = get_option( 'admin_email', get_bloginfo( 'admin_email' ) );
+                $elvwp_table_data   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table} where created_at > %s AND created_at <= %s", $from_date, $end_date ) );
+                if ( $elvwp_table_data ) {
+                    $reports = array();
+
+                    foreach ( $elvwp_table_data as $elvwp_tablekey => $elvwp_tablevalue ) {
+                        $log_details = unserialize($elvwp_tablevalue->details);
+
+                        if ( $log_details ) {
+
+                            foreach ( $log_details as $logkey => $logvalue ) {
+
+                                if ( is_array( $logvalue ) ) {
+                                    
+                                    foreach ( $logvalue as $folderkey => $foldervalue ) {
+                                        
+                                        if ( is_array( $foldervalue ) ) {
+                                            
+                                            foreach ( $foldervalue as $ekey => $evalue ) {
+
+                                                if ( isset( $reports[$logkey][$folderkey][$ekey] ) ) {
+                                                    $reports[$logkey][$folderkey][$ekey] += $evalue;
+                                                } else {
+                                                    $reports[$logkey][$folderkey][$ekey] = $evalue;
+                                                }
+                                            }   
+                                        } else {
+
+                                            if ( isset( $reports[$logkey][$folderkey] ) ) {
+                                                $reports[$logkey][$folderkey] += $foldervalue;
+                                            } else {
+                                                $reports[$logkey][$folderkey] = $foldervalue;
+                                            }
+                                        }
+                                    }
+                                } else {
+
+                                    if ( isset( $reports[$logkey] ) ) {
+                                        $reports[$logkey] += $logvalue;
+                                    } else {
+                                        $reports[$logkey] = $logvalue;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    
+                    if ( $reports ) {
+                        $report_list = '';
+                        foreach ( $reports as $rkey => $rvalue ) {
+                            
+                            if ( 'plugin' === $rkey || 'theme' === $rkey || 'other' === $rkey ) {
+
+                                if ( is_array( $rvalue ) ) {
+                                    $error_count_str = '';
+
+                                    foreach ($rvalue as $subkey => $subvalue) {
+
+                                        if ( is_array( $subvalue ) ) {
+                                            $error_count_log_str = '';
+
+                                            foreach ($subvalue as $sublogkey => $sublogvalue) {
+                                                $error_count_log_str .= '<tr>
+                                                    <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="66.66666666666667%">
+                                                        <table border="0" cellpadding="0" cellspacing="0" class="text_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+                                                            <tr>
+                                                                <td class="pad" style="padding-bottom:5px;padding-left:35px;padding-right:20px;padding-top:15px;">
+                                                                    <div style="font-family: Arial, sans-serif">
+                                                                        <div class="" style="font-size: 12px; font-family: \'Roboto Slab\', Arial, \'Helvetica Neue\', Helvetica, sans-serif; mso-line-height-alt: 18px; color: #3a4848; line-height: 1.5;">
+                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 22.5px; margin-left: 10px">
+                                                                                <span style="font-size:15px;">
+                                                                                    '. ucfirst( $sublogkey ) .'
+                                                                                </span>
+                                                                            </p>
+                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 18px;">
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="33.333333333333336%">
+                                                        <table border="0" cellpadding="0" cellspacing="0" class="text_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+                                                            <tr>
+                                                                <td class="pad" style="padding-bottom:5px;padding-left:35px;padding-right:20px;padding-top:15px;">
+                                                                    <div style="font-family: Arial, sans-serif">
+                                                                        <div class="" style="font-size: 12px; font-family: \'Oswald\', Arial, \'Helvetica Neue\', Helvetica, sans-serif; mso-line-height-alt: 18px; color: #3a4848; line-height: 1.5;">
+                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 24px;">
+                                                                                <span style="font-size:16px;">
+                                                                                    '. $sublogvalue .'
+                                                                                </span>
+                                                                            </p>
+                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 18px;">
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>';
+                                            }
+                                        }
+
+                                        $error_count_str .= '<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 680px;" width="680">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="pad" style="padding-bottom:5px;padding-left:35px;padding-right:20px;padding-top:15px;">
+                                                        <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 22.5px; line-height: 1.5;font-family: \'Roboto Slab\', Arial, \'Helvetica Neue\', Helvetica, sans-serif; margin-left: 5px;">
+                                                            <span style="font-size:15px;">
+                                                                '. $subkey .'
+                                                            </span>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                '. $error_count_log_str .'
+                                            </tbody>
+                                        </table>';
+                                    }
+                                }
+                                $report_list .= '<tr>
+                                    <td>
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 680px;" width="680">
+                                            <tr>
+                                                <td class="pad" style="padding-bottom:5px;padding-left:35px;padding-right:20px;padding-top:15px;">
+                                                    <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 30px;">
+                                                        <span style="font-size:20px;color:#44b4b8;">
+                                                            '. ucfirst( $rkey ) .'
+                                                        </span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        '.$error_count_str.'
+                                    </td>
+                                </tr>';
+                            }
+                        }
+                        $message_to_send    = file_get_contents(ELVWP_DIR.'templates/email.html');
+                        $message_to_send    = str_replace('{{head_image}}', ELVWP_URL.'templates/images/job.png', $message_to_send);
+                        $message_to_send    = str_replace('{{error_log_count_list}}', $report_list, $message_to_send);
+                        
+                        $subject            = 'Error Log Report';
+
+                        $headers            = array();
+                        $headers[]          = 'From: ' . $from_name . ' <' . $from_email . '>';
+                        $headers[]          = 'Reply-To: {' . $from_email . "}\r\n";
+                        $headers[]          = 'Content-Type: text/html; charset=UTF-8';
+                        $issend = wp_mail( $emails, $subject, $message_to_send, $headers ); 
+                        /*var_dump($issend);
+                        exit;*/
+                    }
+                }
+            }
+
+
         }
 
         /**
@@ -970,6 +1272,11 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 $this,
                 'elvwp_log_list_datatable', 
             ) );
+
+            $list = add_submenu_page( $this->elvwp_permalink, __( 'Error Notification', 'error-log-viewer-wp' ), __( 'Error Log Notification', $this->elvwp_permalink ), 'manage_options', 'elvwp-notification', array(
+                $this,
+                'elvwp_log_list_notification', 
+            ) );
             
             add_action( 'admin_enqueue_scripts', array(
                  $this,
@@ -979,6 +1286,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
         
         public function elvwp_log_list_datatable() {
             require_once( ELVWP_DIR . 'includes/error-log-list-template.php' );
+        }
+
+        public function elvwp_log_list_notification() {
+            require_once( ELVWP_DIR . 'includes/error-log-notification-template.php' );
         }
         
         public function elvwp_error_by_date() {
@@ -998,7 +1309,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
             wp_enqueue_style( 'elvwp_error_log_admin_style', plugins_url( '/assets/css/admin.css', __FILE__ ), array(), ELVWP_VER );
 
-            if ( 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook ) {
+            if ( 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook || 'error-log-viewer_page_elvwp-notification' === $hook ) {
 
                 wp_enqueue_script( 'elvwp_datatable', plugins_url( '/assets/js/jquery.dataTables.min.js', __FILE__ ), array(
                      'jquery' 
@@ -1011,7 +1322,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 wp_enqueue_style( 'elvwp_ui_style' );                
             }
 
-            if ( 'plugins.php' === $hook || 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook ) {
+            if ( 'plugins.php' === $hook || 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook || 'error-log-viewer_page_elvwp-notification' === $hook ) {
 
                 wp_enqueue_script( 'elvwp_admin_ui_script', plugins_url( '/assets/js/datepicker.min.js', __FILE__ ), array(
                      'jquery' 
@@ -1480,6 +1791,9 @@ add_action( 'plugins_loaded', 'elvwp_load' );
 
 function elvwp_activation() {
     /* Activation functions here */
+    if ( ! wp_next_scheduled( 'elvwp_cron_task_hook_notification_time' ) ) {
+        wp_schedule_event( time(), 'elvwp_notification_time', 'elvwp_cron_task_hook_notification_time' );
+    }
 }
 
 register_activation_hook( __FILE__, 'elvwp_activation' );
@@ -1515,6 +1829,48 @@ function elvwp_deactivation() {
     if ( $config_transformer->exists( 'inivariable', 'error_log' ) ) {
         $config_transformer->remove( 'inivariable', 'error_log' );
     }
+
+    wp_clear_scheduled_hook( 'elvwp_cron_task_hook_notification_time' );
 }
 
 register_deactivation_hook( __FILE__, 'elvwp_deactivation' );
+
+
+function elvwp_submit_notification_setting(){
+    $setting_page_url = admin_url( 'admin.php?page=elvwp-notification' );
+    // Activate License
+    if ( isset( $_POST['elvwp_frequency'] ) ) {
+
+        if ( ! check_admin_referer( 'elvwp_notification_setting_nonce', 'elvwp_notification_setting_nonce' ) ) {
+            return;
+        }
+        
+        if ( isset( $_POST['elvwp-on-off-notification'] ) ) {
+            update_option( 'elvwp-on-off-notification', $_POST['elvwp-on-off-notification'] );
+        } else {
+            update_option( 'elvwp-on-off-notification', '' );
+        }
+        
+        if ( isset( $_POST['elvwp-notification-emails'] ) && ! empty( $_POST['elvwp-notification-emails'] ) ) {
+            $emails = explode( ',', $_POST['elvwp-notification-emails'] );
+            $emails = array_map('trim', $emails);
+            update_option( 'elvwp-notification-emails', $emails );
+        } else {
+            $admin_email = get_option('admin_email');
+            $emails      = array( $admin_email );
+            $emails      = array_map('trim', $emails);
+            update_option( 'elvwp-notification-emails', $emails );
+        }
+
+        if ( isset( $_POST['elvwp_frequency'] ) ) {
+            update_option( 'elvwp_frequency', $_POST['elvwp_frequency'] );
+        } else {
+            update_option( 'elvwp_frequency', 'weekly' );
+        }
+
+        wp_redirect( $setting_page_url );
+        exit();
+    }
+
+}
+add_action( 'admin_action_elvwp_submit_notification_setting', 'elvwp_submit_notification_setting' );

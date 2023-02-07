@@ -591,3 +591,7 @@ div.elvwp_datatable.notice a, div.elvwp_datatable.fatal.error a, div.elvwp_datat
 .elvwp_type_error {
     margin-bottom: 10px;
 }
+#elvwp-notification-emails{
+    min-width: 400px;
+    min-height: 150px;
+}
