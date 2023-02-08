@@ -312,7 +312,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                 $this,
                 'elvwp_dismiss_review_notice', 
             ) );
-            // $this->elvwp_cron_function_notification_time();
+            
             if ( ! get_option( 'elvwp_review_time' ) ) {
                 $review_time = time() + 7 * DAY_IN_SECONDS;
                 add_option( 'elvwp_review_time', $review_time, '', false );
@@ -609,8 +609,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
                         $headers[]          = 'Reply-To: {' . $from_email . "}\r\n";
                         $headers[]          = 'Content-Type: text/html; charset=UTF-8';
                         $issend = wp_mail( $emails, $subject, $message_to_send, $headers ); 
-                        /*var_dump($issend);
-                        exit;*/
                     }
                 }
             }
