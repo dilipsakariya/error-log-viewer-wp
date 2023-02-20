@@ -21,19 +21,19 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
-    require_once plugin_dir_path( __FILE__ ) . 'error-log-viewer-wp.php';
+	require_once plugin_dir_path( __FILE__ ) . 'error-log-viewer-wp.php';
 }
 
 function elvwp_uninstall(){
 
-    global $wpdb;
+	global $wpdb;
 
 	delete_option( 'elvwp_error_log_details' );
-    delete_option( 'elvwp_dismiss_review_notice' );
-    delete_option( 'elvwp_review_time' );
-    delete_option( 'elvwp_frequency' );
+	delete_option( 'elvwp_dismiss_review_notice' );
+	delete_option( 'elvwp_review_time' );
+	delete_option( 'elvwp_frequency' );
 
-    $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
+	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
 
 }
 
