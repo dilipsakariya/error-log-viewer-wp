@@ -145,7 +145,6 @@ jQuery( document ).ready(
 								'elvwp_error_log': elvwp_error_log
 							},
 							success: function(data) {
-								// alert(data);
 								if (data.success == 1) {
 									window.location.reload();
 								} else {
@@ -237,7 +236,6 @@ $( document ).ready(
 					}, {
 						data: 'action'
 					}],
-					// Needs button container
 				}
 			);
 			$( document ).on(

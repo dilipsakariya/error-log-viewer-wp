@@ -277,13 +277,13 @@
 	width: 64%;
 }
 .elvwp_er_type .dashicons-before {
-  margin-right: 2px;
+	margin-right: 2px;
 }
 .fatalerror i.dashicons-before::before {
-  transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 .elvwp_logoverview_static .dashicons-before {
-  margin-right: 4px;
+	margin-right: 4px;
 }
 .elvwp_filter_heading{
 	margin-top: 0px;
