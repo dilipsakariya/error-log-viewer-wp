@@ -1,18 +1,19 @@
 <?php
 /**
  * Error_Log_Viewer_WP deactivation Content.
+ *
  * @package Error_Log_Viewer_WP
  * @version 1.0.0
  */
 
-$elvwp_deactivation_nonce = wp_create_nonce( 'elvwp_deactivation_nonce' ); 
+$elvwp_deactivation_nonce = wp_create_nonce( 'elvwp_deactivation_nonce' );
 ?>
 <div class="elvwp-popup-overlay">
 	<div class="elvwp-serveypanel">
 		<form action="#" id="elvwp-deactivate-form" method="post">
 			<div class="elvwp-popup-header">
 				<h2>
-					<?php _e( 'Quick feedback about '.ELVWP_NAME, 'error-log-viewer-wp' ); ?>
+					<?php _e( 'Quick feedback about ' . ELVWP_NAME, 'error-log-viewer-wp' ); ?>
 				</h2>
 			</div>
 			<div class="elvwp-popup-body">
@@ -132,12 +133,12 @@ $elvwp_deactivation_nonce = wp_create_nonce( 'elvwp_deactivation_nonce' );
 					<input type="checkbox"/>
 					<?php _e( 'Anonymous feedback', 'error-log-viewer-wp' ); ?>
 				</label>
-				<input class="button button-secondary button-skip elvwp-popup-skip-feedback" type="button" value="<?php _e( 'Skip & Deactivate', 'error-log-viewer-wp'); ?>">
+				<input class="button button-secondary button-skip elvwp-popup-skip-feedback" type="button" value="<?php _e( 'Skip & Deactivate', 'error-log-viewer-wp' ); ?>">
 					<div class="elvwp_action-btns">
 						<span class="elvwp-spinner">
 							<img alt="" src="<?php echo esc_url( admin_url( '/images/spinner.gif' ) ); ?>"/>
 						</span>
-						<input class="button button-secondary button-deactivate elvwp-popup-allow-deactivate" disabled="disabled" type="submit" value="<?php _e( 'Submit & Deactivate', 'error-log-viewer-wp'); ?>">
+						<input class="button button-secondary button-deactivate elvwp-popup-allow-deactivate" disabled="disabled" type="submit" value="<?php _e( 'Submit & Deactivate', 'error-log-viewer-wp' ); ?>">
 							<a class="button button-primary elvwp-popup-button-close" href="#">
 								<?php _e( 'Cancel', 'error-log-viewer-wp' ); ?>
 							</a>

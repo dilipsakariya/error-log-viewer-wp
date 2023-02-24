@@ -26,7 +26,7 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 	<hr>
 	<form action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" method="post">
 		<input type="hidden" name="action" value="elvwp_submit_notification_setting" />
-		<?php wp_nonce_field( 'elvwp_notification_setting_nonce' , 'elvwp_notification_setting_nonce' ); ?>
+		<?php wp_nonce_field( 'elvwp_notification_setting_nonce', 'elvwp_notification_setting_nonce' ); ?>
 		<table class="form-table">
 			<table class="form-table" role="presentation">
 				<tbody>
@@ -35,7 +35,7 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 							<?php _e( 'Enable Notification', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<input class="" id="elvwp-on-off-notification" name="elvwp-on-off-notification" type="checkbox" value="1" <?php echo ( ! empty( $on_of_notificaation ) ) ? 'checked' : '' ; ?>>
+							<input class="" id="elvwp-on-off-notification" name="elvwp-on-off-notification" type="checkbox" value="1" <?php echo ( ! empty( $on_of_notificaation ) ) ? 'checked' : ''; ?>>
 							<label for="elvwp-on-off-notification">
 								<?php _e( 'Turn ON/OFF Enable Email Notification', 'error-log-viewer-wp' ); ?>
 							</label>
@@ -46,7 +46,7 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 							<?php _e( 'Notify Email', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<textarea class="" id="elvwp-notification-emails" name="elvwp-notification-emails" ><?php echo ( is_array( $emails ) ) ? implode( ', ', $emails ) : $emails ; ?></textarea>
+							<textarea class="" id="elvwp-notification-emails" name="elvwp-notification-emails" ><?php echo ( is_array( $emails ) ) ? implode( ', ', $emails ) : $emails; ?></textarea>
 							<br>
 							<label for="elvwp-on-off-notification-toggle">
 								<?php _e( 'Enter (,) sapreted email ids', 'error-log-viewer-wp' ); ?>
@@ -59,13 +59,13 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 						</th>
 						<td>
 							<select class="elvwp-select-chosen" data-placeholder="<?php _e( 'Select a Frequency', 'error-log-viewer-wp' ); ?>" id="elvwp_frequency" name="elvwp_frequency">
-								<option value="daily" <?php echo ( 'daily' === $elvwp_frequency ) ? 'selected' : '' ; ?>>
+								<option value="daily" <?php echo ( 'daily' === $elvwp_frequency ) ? 'selected' : ''; ?>>
 									<?php _e( 'Daily', 'error-log-viewer-wp' ); ?>
 								</option>
-								<option value="weekly" <?php echo ( 'weekly' === $elvwp_frequency ) ? 'selected' : '' ; ?>>
+								<option value="weekly" <?php echo ( 'weekly' === $elvwp_frequency ) ? 'selected' : ''; ?>>
 									<?php _e( 'Weekly', 'error-log-viewer-wp' ); ?>
 								</option>
-								<option value="monthly" <?php echo ( 'monthly' === $elvwp_frequency ) ? 'selected' : '' ; ?>>
+								<option value="monthly" <?php echo ( 'monthly' === $elvwp_frequency ) ? 'selected' : ''; ?>>
 									<?php _e( 'Monthly', 'error-log-viewer-wp' ); ?>
 								</option>
 							</select>

@@ -24,7 +24,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 	require_once plugin_dir_path( __FILE__ ) . 'error-log-viewer-wp.php';
 }
 
-function elvwp_uninstall(){
+function elvwp_uninstall() {
 
 	global $wpdb;
 
