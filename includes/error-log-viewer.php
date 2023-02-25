@@ -41,7 +41,7 @@ if ( isset( $_POST['date'] ) && isset( $_POST['elvwp_nonce'] ) && ! empty( sanit
 
 	$log_date = date( 'd-M-Y', strtotime( sanitize_text_field( wp_unslash( $_POST['date'] ) ) ) );
 
-} elseif ( ! isset( $_GET['date'] ) && empty( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) && ! isset( $_GET['type'] ) && empty( sanitize_text_field( wp_unslash( $_GET['type'] ) ) ) ) {
+} elseif ( ( ! isset( $_GET['date'] ) || empty( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) ) && ( ! isset( $_GET['type'] ) || empty( sanitize_text_field( wp_unslash( $_GET['type'] ) ) ) ) ) {
 
 	$last_log = elvwp_get_last_log();
 

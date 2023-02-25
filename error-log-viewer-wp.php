@@ -1078,6 +1078,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			 * @var array Array of log types
 			 */
 			$types = array();
+			/**
+			 * @var array Array of log typecount
+			 */
+			$typecount = array();
 
 			/**
 			 * https://gist.github.com/amnuts/8633684
