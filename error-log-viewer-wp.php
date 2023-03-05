@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Error Log Viewer By WP Guru
- * Version:           1.0.1.3
+ * Version:           1.0.2
  * Plugin URI:        https://wordpress.org/plugins/error-log-viewer-wp/
  * Description:       Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            WP Guru
@@ -157,7 +157,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		private function setup_constants() {
 
 			// Plugin version
-			define( 'ELVWP_VER', '1.0.1.3' );
+			define( 'ELVWP_VER', '1.0.2' );
 
 			// Plugin name
 			define( 'ELVWP_NAME', 'Error Log Viewer By WP Guru' );

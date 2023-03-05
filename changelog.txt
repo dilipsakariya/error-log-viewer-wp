@@ -1,2 +1,7 @@
-= Version 1.0.0 - June 05, 2020 =
-* Initial release
+= Version 1.0.2 - Mar 05, 2023 =
+* New: Error Log report by Email Notification
+* Fix: WP Standards
+* Fix: Minor bugs
+
+= Version 1.0.0 : December 25, 2022 =
+* Plugin Release
