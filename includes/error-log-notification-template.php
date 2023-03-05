@@ -46,7 +46,7 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 							<?php esc_html_e( 'Notify Email', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<textarea class="" id="elvwp-notification-emails" name="elvwp-notification-emails" ><?php echo ( is_array( $emails ) ) ? implode( ', ', $emails ) : $emails; ?></textarea>
+							<textarea class="" id="elvwp-notification-emails" name="elvwp-notification-emails" ><?php echo esc_html( is_array( $emails ) ) ? implode( ', ', $emails ) : esc_attr( $emails ); ?></textarea>
 							<br>
 							<label for="elvwp-on-off-notification-toggle">
 								<?php esc_html_e( 'Enter (,) sapreted email ids', 'error-log-viewer-wp' ); ?>

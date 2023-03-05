@@ -6,7 +6,6 @@
  * @since       1.0.0
  */
 
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'elvwp_file_size_convert' ) ) {
 
 	function elvwp_file_size_convert( $bytes ) {
-		$bytes       = floatval( $bytes );
-			$arBytes = array(
+		$bytes        = floatval( $bytes );
+			$ar_bytes = array(
 				0 => array(
 					'UNIT'  => 'TB',
 					'VALUE' => pow( 1024, 4 ),
@@ -40,11 +39,11 @@ if ( ! function_exists( 'elvwp_file_size_convert' ) ) {
 				),
 			);
 
-			foreach ( $arBytes as $arItem ) {
+			foreach ( $ar_bytes as $ar_item ) {
 
-				if ( $bytes >= $arItem['VALUE'] ) {
-					$result = $bytes / $arItem['VALUE'];
-					$result = str_replace( '.', ',', strval( round( $result, 2 ) ) ) . ' ' . $arItem['UNIT'];
+				if ( $bytes >= $ar_item['VALUE'] ) {
+					$result = $bytes / $ar_item['VALUE'];
+					$result = str_replace( '.', ',', strval( round( $result, 2 ) ) ) . ' ' . $ar_item['UNIT'];
 
 					break;
 				}

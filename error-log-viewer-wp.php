@@ -95,7 +95,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 
 			if ( ! file_exists( $elvwp_log_directory_index ) ) {
-				$elvwp_file_index = fopen( $elvwp_log_directory_index, 'w' ) or die( 'Unable to open file!' );
+				$elvwp_file_index = fopen( $elvwp_log_directory_index, 'w' );
 
 				$txt = "<?php // Exit if accessed directly.
 					if ( ! defined( 'ABSPATH' ) ) {
@@ -108,7 +108,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 
 			if ( ! file_exists( $elvwp_log_directory_htaccess ) ) {
-				$elvwp_log_directory_htaccess = fopen( $elvwp_log_directory_htaccess, 'w' ) or die( 'Unable to open file!' );
+				$elvwp_log_directory_htaccess = fopen( $elvwp_log_directory_htaccess, 'w' );
 				$rule                         = 'RewriteCond %{REQUEST_FILENAME} -s
 					  RewriteRule ^(.*)$ /index.php?' . $this->elvwp_permalink . '=$1 [QSA,L]';
 
@@ -469,7 +469,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				if ( ! empty( $cron_time ) ) {
 					$schedules['elvwp_notification_time'] = array(
 						'interval' => $cron_time,
-						'display'  => __( 'Once every ' . $elvwp_frequency ),
+						'display'  => __( 'Once every ' ) . $elvwp_frequency,
 					);
 				}
 			}
@@ -673,7 +673,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 *
 		 * @return string $wp_config_path
 		 */
-
 		public function get_wp_config_path() {
 			$wp_config_path = ABSPATH . 'wp-config.php';
 
@@ -736,7 +735,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						foreach ( $elvwp_table_data as $elvwp_tablekey => $elvwp_tablevalue ) {
 							$elvwp_database_file = $elvwp_tablevalue->file_name;
 
-							if ( $elvwp_database_file == $file_name ) {
+							if ( $elvwp_database_file === $file_name ) {
 								$count = 0;
 							} else {
 								$elvwp_checkfile = $this->log_directory . '/' . $elvwp_database_file;
@@ -898,7 +897,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$config_transformer = new WP_Config_Transformer( self::$wp_config_path );
 
-			if ( ( defined( WP_DEBUG_LOG ) && WP_DEBUG_LOG == false ) || ! defined( WP_DEBUG_LOG ) ) {
+			if ( ( defined( WP_DEBUG_LOG ) && false === WP_DEBUG_LOG ) || ! defined( WP_DEBUG_LOG ) ) {
 
 				if ( $config_transformer->exists( 'constant', 'WP_DEBUG_LOG' ) ) {
 					$config_transformer->update( 'constant', 'WP_DEBUG_LOG', true );
@@ -1103,7 +1102,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				} catch ( RuntimeException $e ) {
 				}
 
-				if ( $cache !== null && file_exists( $cache ) ) {
+				if ( null !== $cache && file_exists( $cache ) ) {
 					$cache_data = unserialize( file_get_contents( $cache ) );
 					extract( $cache_data );
 					$log->fseek( $seek );
@@ -1113,7 +1112,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				while ( ! $log->eof() ) {
 
 					if ( preg_match( '/stack trace:$/i', $log->current() ) ) {
-						$stack_trace = $parts = array();
+						$stack_trace = array();
+						$parts       = array();
 						$log->next();
 
 						while ( ( preg_match( '!^\[(?P<time>[^\]]*)\] PHP\s+(?P<msg>\d+\. .*)$!', $log->current(), $parts ) || preg_match( '!^(?P<msg>#\d+ .*)$!', $log->current(), $parts ) && ! $log->eof() ) ) {
@@ -1121,7 +1121,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							$log->next();
 						}
 
-						if ( substr( $stack_trace[0], 0, 2 ) == '#0' ) {
+						if ( '#0' === substr( $stack_trace[0], 0, 2 ) ) {
 							$stack_trace_str = $log->current();
 							array_push( $stack_trace, $stack_trace_str );
 							$log->next();
@@ -1145,9 +1145,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					if ( preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|Error|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current(), $parts ) ) {
 
-						$parts['type'] = ( $parts['typea'] ?: $parts['typeb'] );
+						$parts['type'] = ( $parts['typea'] ? '' : $parts['typeb'] );
 
-						if ( $parts[3] == 'ojs2: ' || $parts[6] == 'ojs2' ) {
+						if ( 'ojs2: ' === $parts[3] || 'ojs2' === $parts[6] ) {
 							$parts['type'] = 'ojs2 application';
 						}
 
@@ -1263,7 +1263,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 				}
 
-				if ( $cache !== null ) {
+				if ( null !== $cache ) {
 					$cache_data = serialize(
 						array(
 							'seek'      => $log->getSize(),
@@ -1340,7 +1340,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$list = add_submenu_page(
 				$this->elvwp_permalink,
 				__( 'Error Log List', 'error-log-viewer-wp' ),
-				__( 'Error Log List', $this->elvwp_permalink ),
+				__( 'Error Log List', 'error-log-viewer-wp' ),
 				'manage_options',
 				'elvwp-list',
 				array(
@@ -1352,7 +1352,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$list = add_submenu_page(
 				$this->elvwp_permalink,
 				__( 'Error Notification', 'error-log-viewer-wp' ),
-				__( 'Error Log Notification', $this->elvwp_permalink ),
+				__( 'Error Log Notification', 'error-log-viewer-wp' ),
 				'manage_options',
 				'elvwp-notification',
 				array(
@@ -1523,15 +1523,15 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 													function( $v1, $k1 ) use ( $created_at ) {
 
 														if ( is_array( $v1 ) ) {
-																  return '<div class="elvwp_datatable ' . $k1 . '">' . $k1 . '[]: ' . implode( '&' . $k1 . '[]: ', $v1 ) . '</div>';
+															return '<div class="elvwp_datatable ' . $k1 . '">' . $k1 . '[]: ' . implode( '&' . $k1 . '[]: ', $v1 ) . '</div>';
 														} else {
 
-																$elvwp_date_url_array = array(
-																	'date' => $created_at,
-																	'type' => $k1,
-																);
-																$elvwp_error_type_url = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=' . $this->elvwp_permalink ) );
-																return '<div class="elvwp_datatable ' . $k1 . '"><a href="' . $elvwp_error_type_url . '">' . ucwords( $k1 . ': ' . $v1 ) . '</a></div>';
+															$elvwp_date_url_array = array(
+																'date' => $created_at,
+																'type' => $k1,
+															);
+															$elvwp_error_type_url = add_query_arg( $elvwp_date_url_array, admin_url( 'admin.php?page=' . $this->elvwp_permalink ) );
+															return '<div class="elvwp_datatable ' . $k1 . '"><a href="' . $elvwp_error_type_url . '">' . ucwords( $k1 . ': ' . $v1 ) . '</a></div>';
 														}
 													},
 													$v,
@@ -1715,8 +1715,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						$a_prop = $collapse( $a, $k );
 						$b_prop = $collapse( $b, $k );
 
-						if ( $a_prop != $b_prop ) {
-							return ( $v == SORT_ASC ) ? strnatcasecmp( $a_prop, $b_prop ) : strnatcasecmp( $b_prop, $a_prop );
+						if ( $a_prop !== $b_prop ) {
+							return ( SORT_ASC === $v ) ? strnatcasecmp( $a_prop, $b_prop ) : strnatcasecmp( $b_prop, $a_prop );
 						}
 					}
 
@@ -1742,7 +1742,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 *
 		 * @since  1.0.0
 		 */
-
 		public function elvwp_error_log_deactivation() {
 
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['elvwp_deactivation_nonce'] ) ), 'elvwp_deactivation_nonce' );
@@ -1751,7 +1750,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				wp_die();
 			}
 
-			$reason_id = sanitize_text_field( wp_unslash( $_POST['reason'] ) );
+			$reason_id = intval( sanitize_text_field( wp_unslash( $_POST['reason'] ) ) );
 
 			if ( empty( $reason_id ) ) {
 				wp_die();
@@ -1759,19 +1758,19 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$reason_info = sanitize_text_field( wp_unslash( $_POST['reason_detail'] ) );
 
-			if ( '1' == $reason_id ) {
+			if ( 1 === $reason_id ) {
 				$reason_text = __( 'I only needed the plugin for a short period', 'error-log-viewer-wp' );
-			} elseif ( '2' == $reason_id ) {
+			} elseif ( 2 === $reason_id ) {
 				$reason_text = __( 'I found a better plugin', 'error-log-viewer-wp' );
-			} elseif ( '3' == $reason_id ) {
+			} elseif ( 3 === $reason_id ) {
 				$reason_text = __( 'The plugin broke my site', 'error-log-viewer-wp' );
-			} elseif ( '4' == $reason_id ) {
+			} elseif ( 4 === $reason_id ) {
 				$reason_text = __( 'The plugin suddenly stopped working', 'error-log-viewer-wp' );
-			} elseif ( '5' == $reason_id ) {
+			} elseif ( 5 === $reason_id ) {
 				$reason_text = __( 'I no longer need the plugin', 'error-log-viewer-wp' );
-			} elseif ( '6' == $reason_id ) {
+			} elseif ( 6 === $reason_id ) {
 				$reason_text = __( 'It\'s a temporary deactivation. I\'m just debugging an issue.', 'error-log-viewer-wp' );
-			} elseif ( '7' == $reason_id ) {
+			} elseif ( 7 === $reason_id ) {
 				$reason_text = __( 'Other', 'error-log-viewer-wp' );
 			}
 
@@ -1831,7 +1830,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			if ( $file === $this_plugin ) {
 
-				$settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'error-log-viewer-wp' ), '<a href="' . admin_url( 'admin.php?page=' . $this->elvwp_permalink ) . '">', '</a>' );
+				$settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'error-log-viewer-wp' ), '<a href="' . esc_url( admin_url( 'admin.php?page=' . $this->elvwp_permalink ) ) . '">', '</a>' );
 
 				array_unshift( $links, $settings_link );
 
@@ -1847,9 +1846,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @param array  $plugin_meta
 		 * @param string $plugin_file
 		 */
-
 		public function elvwp_add_action_links( $plugin_meta, $plugin_file ) {
-			if ( $plugin_file == plugin_basename( __FILE__ ) ) {
+			if ( plugin_basename( __FILE__ ) === $plugin_file ) {
 
 				$plugin_meta_str = '<a href="' . ELVWP_SUPPORT_URL . '" target="_blank">' . __( 'Support', 'error-log-viewer-wp' ) . '</a>';
 				array_push( $plugin_meta, $plugin_meta_str );
@@ -1937,7 +1935,6 @@ add_action( 'plugins_loaded', 'elvwp_load' );
  * @since       1.0.0
  * @return      void
  */
-
 function elvwp_activation() {
 	/* Activation functions here */
 	if ( ! wp_next_scheduled( 'elvwp_cron_task_hook_notification_time' ) ) {
@@ -1956,7 +1953,6 @@ register_activation_hook( __FILE__, 'elvwp_activation' );
  * @since       1.0.0
  * @return      void
  */
-
 function elvwp_deactivation() {
 
 	if ( ! class_exists( 'WP_Config_Transformer' ) ) {
@@ -2017,7 +2013,7 @@ function elvwp_submit_notification_setting() {
 			update_option( 'elvwp_frequency', 'weekly' );
 		}
 
-		wp_redirect( $setting_page_url );
+		wp_safe_redirect( $setting_page_url );
 		exit();
 	}
 

@@ -41,7 +41,7 @@ if ( isset( $_POST['date'] ) && isset( $_POST['elvwp_nonce'] ) && ! empty( sanit
 
 	$log_date = date( 'd-M-Y', strtotime( sanitize_text_field( wp_unslash( $_POST['date'] ) ) ) );
 
-} elseif ( ( ! isset( $_GET['date'] ) || empty( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) ) && ( ! isset( $_GET['type'] ) || empty( sanitize_text_field( wp_unslash( $_GET['type'] ) ) ) ) ) {
+} else {
 
 	$last_log = elvwp_get_last_log();
 
@@ -73,6 +73,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 				<fieldset id="elvwp_path_filter">
 					<input type="hidden" value="">
 				</fieldset>
+				
 				<?php if ( ! $is_raw_log ) { ?>
 				<fieldset id="elvwp_type_filter">
 					<p> 
@@ -163,8 +164,9 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 					<span class="log_entries">
 						<strong><?php echo esc_html( $log_details['total'] ); ?></strong>
 						<?php
-							$total_str = ( 1 == $log_details['total'] ? 'y' : 'ies' );
-							esc_html( printf( __( 'Distinct Entr%s', 'error-log-viewer-wp' ), esc_html( $total_str ) ) );
+							$total_str = ( 1 === (int) $log_details['total'] ? 'y' : 'ies' );
+							/* translators: %s: Number of entries */
+							sprintf( esc_html__( 'Distinct Entr%s', 'error-log-viewer-wp' ), esc_html( $total_str ) );
 						?>
 					</span>
 					<span id="elvwp_file_size"> <?php esc_html_e( 'File Size: ', 'error-log-viewer-wp' ); ?><strong><?php echo esc_html( elvwp_file_size_convert( filesize( $log_details['error_log'] ) ) ); ?> </strong></span>
@@ -174,16 +176,16 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 		<p id="logfilesize">
 		</p>
 		<div class="elvwp_type_error">
-			<?php foreach ( $log_details['types'] as $type => $class ) { ?>
+			<?php foreach ( $log_details['types'] as $log_type => $class ) { ?>
 				<div class="elvwp_logoverview_static 
 				<?php
 				if ( ! empty( $class ) ) {
 					echo esc_attr( $class );
 				} else {
-					echo esc_attr( $type ); }
+					echo esc_attr( $log_type ); }
 				?>
 				">
-					<div><strong><i class="dashicons-before dashicons-info<?php echo ( esc_attr( 'warning' === $type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( $type ) ); ?>: </strong><?php echo esc_html( $log_details['typecount'][ $type ] ); ?> <?php esc_html_e( 'Entries - ', 'error-log-viewer-wp' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $type ] / $log_details['total'], 2 ) ); ?>%</span></div>
+					<div><strong><i class="dashicons-before dashicons-info<?php echo ( esc_attr( 'warning' === $log_type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( $log_type ) ); ?>: </strong><?php echo esc_html( $log_details['typecount'][ $log_type ] ); ?> <?php esc_html_e( 'Entries - ', 'error-log-viewer-wp' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $log_type ] / $log_details['total'], 2 ) ); ?>%</span></div>
 				</div>
 			<?php } ?>
 		</div>
@@ -235,7 +237,8 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 									<?php endif; ?>
 									<?php esc_html_e( 'Last seen:', 'error-log-viewer-wp' ); ?> <?php echo esc_html( date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ) ); ?>, <strong><?php echo esc_html( $log->hits ); ?></strong> 
 										<?php
-											$hit_str = ( 1 == $log->hits ? '' : 's' );
+											$hit_str = ( 1 === (int) $log->hits ? '' : 's' );
+											/* translators: %s: Number of hites */
 											printf( esc_html__( 'Hit%s', 'error-log-viewer-wp' ), esc_attr( $hit_str ) );
 										?>
 									<br />
