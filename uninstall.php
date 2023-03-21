@@ -34,7 +34,6 @@ function elvwp_uninstall() {
 	delete_option( 'elvwp_frequency' );
 
 	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
-
 }
 
 elvwp_uninstall();

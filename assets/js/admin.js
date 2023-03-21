@@ -275,11 +275,11 @@ $( document ).ready(
 (function($) {
 	$(
 		function() {
-			var pluginSlug = 'error-log-viewer-by-wp-guru';
+			var plugin_slug = 'error-log-viewer-wp';
 			// Code to fire when the DOM is ready.
 			$( document ).on(
 				'click',
-				'tr[data-slug="' + pluginSlug + '"] .deactivate',
+				'tr[data-slug="' + plugin_slug + '"] .deactivate',
 				function(e) {
 					e.preventDefault();
 					$( '.elvwp-popup-overlay' ).addClass( 'elvwp-active' );
@@ -295,7 +295,7 @@ $( document ).ready(
 			);
 			$( document ).on(
 				'click',
-				".elvwp-serveypanel,tr[data-slug='" + pluginSlug + "'] .deactivate",
+				".elvwp-serveypanel,tr[data-slug='" + plugin_slug + "'] .deactivate",
 				function(e) {
 					e.stopPropagation();
 				}
@@ -369,7 +369,7 @@ $( document ).ready(
 						function() {
 							$( ".elvwp-spinner" ).hide();
 							$( ".elvwp-popup-allow-deactivate" ).removeAttr( "disabled" );
-							window.location.href = $( "tr[data-slug='" + pluginSlug + "'] .deactivate a" ).attr( 'href' );
+							window.location.href = $( "tr[data-slug='" + plugin_slug + "'] .deactivate a" ).attr( 'href' );
 						}
 					);
 				}
@@ -377,7 +377,7 @@ $( document ).ready(
 			$( '.elvwp-popup-skip-feedback' ).on(
 				'click',
 				function(e) {
-					window.location.href = $( "tr[data-slug='" + pluginSlug + "'] .deactivate a" ).attr( 'href' );
+					window.location.href = $( "tr[data-slug='" + plugin_slug + "'] .deactivate a" ).attr( 'href' );
 				}
 			)
 

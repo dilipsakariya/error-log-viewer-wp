@@ -115,7 +115,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				fwrite( $elvwp_log_directory_htaccess, $rule );
 				fclose( $elvwp_log_directory_htaccess );
 			}
-
 		}
 
 
@@ -173,7 +172,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			define( 'ELVWP_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/' . $this->elvwp_permalink . '?filter=5' );
 
 			define( 'ELVWP_DEBUG_LOGFOLDER', $this->log_directory );
-
 		}
 
 		/**
@@ -190,15 +188,12 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$version = get_option( 'elvwp_current_version', false );
 			if ( ! $version ) {
 				$this->elvwp_new_install();
-			} else {
+			} elseif ( version_compare( $version, '1.0.1.4', '<' ) ) {
 
-				if ( version_compare( $version, '1.0.1.4', '<' ) ) {
 					$this->elvwp_v1014_upgrades();
-				}
 			}
 
 			update_option( 'elvwp_current_version', ELVWP_VER );
-
 		}
 
 		/**
@@ -438,7 +433,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					)
 				);
 			}
-
 		}
 
 		/**
@@ -534,22 +528,18 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 													$reports[ $logkey ][ $folderkey ][ $ekey ] = $evalue;
 												}
 											}
-										} else {
+										} elseif ( isset( $reports[ $logkey ][ $folderkey ] ) ) {
 
-											if ( isset( $reports[ $logkey ][ $folderkey ] ) ) {
 												$reports[ $logkey ][ $folderkey ] += $foldervalue;
-											} else {
-												$reports[ $logkey ][ $folderkey ] = $foldervalue;
-											}
+										} else {
+											$reports[ $logkey ][ $folderkey ] = $foldervalue;
 										}
 									}
-								} else {
+								} elseif ( isset( $reports[ $logkey ] ) ) {
 
-									if ( isset( $reports[ $logkey ] ) ) {
 										$reports[ $logkey ] += $logvalue;
-									} else {
-										$reports[ $logkey ] = $logvalue;
-									}
+								} else {
+									$reports[ $logkey ] = $logvalue;
 								}
 							}
 						}
@@ -661,7 +651,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					}
 				}
 			}
-
 		}
 
 		/**
@@ -1471,7 +1460,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				wp_localize_script( 'elvwp_admin_script', 'script_object', array() );
 
 			}
-
 		}
 
 		public function elvwp_datatable_loglist() {
@@ -2016,6 +2004,5 @@ function elvwp_submit_notification_setting() {
 		wp_safe_redirect( $setting_page_url );
 		exit();
 	}
-
 }
 add_action( 'admin_action_elvwp_submit_notification_setting', 'elvwp_submit_notification_setting' );
