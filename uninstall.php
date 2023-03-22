@@ -32,6 +32,8 @@ function elvwp_uninstall() {
 	delete_option( 'elvwp_dismiss_review_notice' );
 	delete_option( 'elvwp_review_time' );
 	delete_option( 'elvwp_frequency' );
+	delete_option( 'elvwp_notification_status' );
+	delete_option( 'elvwp_notification_emails' );
 
 	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ) );
 }

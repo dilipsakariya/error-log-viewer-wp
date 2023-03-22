@@ -16,8 +16,8 @@
  * @var string|null Path to error log file or null to get from ini settings
  */
 
-$on_of_notificaation = get_option( 'elvwp-on-off-notification' );
-$emails              = get_option( 'elvwp-notification-emails' );
+$on_of_notificaation = get_option( 'elvwp_notification_status' );
+$emails              = get_option( 'elvwp_notification_emails' );
 $elvwp_frequency     = get_option( 'elvwp_frequency' );
 ?>
 
@@ -35,8 +35,8 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 							<?php esc_html_e( 'Enable Notification', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<input class="" id="elvwp-on-off-notification" name="elvwp-on-off-notification" type="checkbox" value="1" <?php echo ( ! empty( $on_of_notificaation ) ) ? 'checked' : ''; ?>>
-							<label for="elvwp-on-off-notification">
+							<input class="" id="elvwp_notification_status" name="elvwp_notification_status" type="checkbox" value="1" <?php echo ( ! empty( $on_of_notificaation ) ) ? 'checked' : ''; ?>>
+							<label for="elvwp_notification_status">
 								<?php esc_html_e( 'Turn ON/OFF Enable Email Notification', 'error-log-viewer-wp' ); ?>
 							</label>
 						</td>
@@ -46,9 +46,9 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 							<?php esc_html_e( 'Notify Email', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<textarea class="" id="elvwp-notification-emails" name="elvwp-notification-emails" ><?php echo esc_html( is_array( $emails ) ) ? implode( ', ', $emails ) : esc_attr( $emails ); ?></textarea>
+							<textarea class="" id="elvwp_notification_emails" name="elvwp_notification_emails" ><?php echo esc_html( is_array( $emails ) ) ? implode( ', ', $emails ) : esc_attr( $emails ); ?></textarea>
 							<br>
-							<label for="elvwp-on-off-notification-toggle">
+							<label for="elvwp_notification_status_toggle">
 								<?php esc_html_e( 'Enter (,) sapreted email ids', 'error-log-viewer-wp' ); ?>
 							</label>
 						</td>
@@ -69,7 +69,7 @@ $elvwp_frequency     = get_option( 'elvwp_frequency' );
 									<?php esc_html_e( 'Monthly', 'error-log-viewer-wp' ); ?>
 								</option>
 							</select>
-							<label for="elvwp-on-off-notification-toggle">
+							<label for="elvwp_notification_status_toggle">
 								<?php esc_html_e( 'This setting is used to notification frequency', 'error-log-viewer-wp' ); ?>
 							</label>
 						</td>

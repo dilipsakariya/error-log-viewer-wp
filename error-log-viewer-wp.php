@@ -209,8 +209,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$admin_email = get_option( 'admin_email' );
 			$emails      = array( $admin_email );
 			$emails      = array_map( 'trim', $emails );
-			update_option( 'elvwp-on-off-notification', 1 );
-			update_option( 'elvwp-notification-emails', $emails );
+			update_option( 'elvwp_notification_status', 1 );
+			update_option( 'elvwp_notification_emails', $emails );
 			update_option( 'elvwp_frequency', 'weekly' );
 		}
 
@@ -227,8 +227,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$admin_email = get_option( 'admin_email' );
 			$emails      = array( $admin_email );
 			$emails      = array_map( 'trim', $emails );
-			update_option( 'elvwp-on-off-notification', 1 );
-			update_option( 'elvwp-notification-emails', $emails );
+			update_option( 'elvwp_notification_status', 1 );
+			update_option( 'elvwp_notification_emails', $emails );
 			update_option( 'elvwp_frequency', 'weekly' );
 		}
 
@@ -446,7 +446,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @return void
 		 */
 		public function elvwp_cs_cron_fn( $schedules ) {
-			$on_of_notificaation = get_option( 'elvwp-on-off-notification' );
+			$on_of_notificaation = get_option( 'elvwp_notification_status' );
 			$elvwp_frequency     = get_option( 'elvwp_frequency' );
 
 			if ( ! empty( $elvwp_frequency ) && ! empty( $on_of_notificaation ) ) {
@@ -484,9 +484,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		public function elvwp_cron_function_notification_time() {
 			global $wpdb;
 			$elvwp_table         = $wpdb->prefix . $this->elvwp_error_logs;
-			$on_of_notificaation = get_option( 'elvwp-on-off-notification' );
+			$on_of_notificaation = get_option( 'elvwp_notification_status' );
 			$elvwp_frequency     = get_option( 'elvwp_frequency' );
-			$emails              = get_option( 'elvwp-notification-emails' );
+			$emails              = get_option( 'elvwp_notification_emails' );
 
 			if ( ! empty( $elvwp_frequency ) && ! empty( $on_of_notificaation ) && ! empty( $emails ) ) {
 
@@ -1764,20 +1764,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$cuurent_user = wp_get_current_user();
 
-			$options = array(
-				'plugin_name'       => ELVWP_NAME,
-				'plugin_version'    => ELVWP_VER,
-				'reason_id'         => $reason_id,
-				'reason_text'       => $reason_text,
-				'reason_info'       => $reason_info,
-				'display_name'      => $cuurent_user->display_name,
-				'email'             => get_option( 'admin_email' ),
-				'website'           => get_site_url(),
-				'blog_language'     => get_bloginfo( 'language' ),
-				'wordpress_version' => get_bloginfo( 'version' ),
-				'php_version'       => PHP_VERSION,
-			);
-
 			$to      = 'info@wpguru.co';
 			$subject = 'Plugin Uninstallation';
 
@@ -1978,21 +1964,21 @@ function elvwp_submit_notification_setting() {
 			return;
 		}
 
-		if ( isset( $_POST['elvwp-on-off-notification'] ) ) {
-			update_option( 'elvwp-on-off-notification', sanitize_text_field( wp_unslash( $_POST['elvwp-on-off-notification'] ) ) );
+		if ( isset( $_POST['elvwp_notification_status'] ) ) {
+			update_option( 'elvwp_notification_status', sanitize_text_field( wp_unslash( $_POST['elvwp_notification_status'] ) ) );
 		} else {
-			update_option( 'elvwp-on-off-notification', '' );
+			update_option( 'elvwp_notification_status', '' );
 		}
 
-		if ( isset( $_POST['elvwp-notification-emails'] ) && ! empty( $_POST['elvwp-notification-emails'] ) ) {
-			$emails = explode( ',', $_POST['elvwp-notification-emails'] );
+		if ( isset( $_POST['elvwp_notification_emails'] ) && ! empty( $_POST['elvwp_notification_emails'] ) ) {
+			$emails = explode( ',', $_POST['elvwp_notification_emails'] );
 			$emails = array_map( 'trim', $emails );
-			update_option( 'elvwp-notification-emails', $emails );
+			update_option( 'elvwp_notification_emails', $emails );
 		} else {
 			$admin_email = get_option( 'admin_email' );
 			$emails      = array( $admin_email );
 			$emails      = array_map( 'trim', $emails );
-			update_option( 'elvwp-notification-emails', $emails );
+			update_option( 'elvwp_notification_emails', $emails );
 		}
 
 		if ( isset( $_POST['elvwp_frequency'] ) ) {

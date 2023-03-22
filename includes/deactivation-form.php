@@ -15,9 +15,8 @@ $elvwp_deactivation_nonce = wp_create_nonce( 'elvwp_deactivation_nonce' );
 				<h2>
 					<?php
 						/* translators: %s: Plugin Name */
-						sprintf( esc_html__( 'Quick feedback about %s', 'error-log-viewer-wp' ), ELVWP_NAME );
+						echo sprintf( esc_html__( 'Quick feedback about %s', 'error-log-viewer-wp' ), esc_attr( ELVWP_NAME ) );
 					?>
-
 				</h2>
 			</div>
 			<div class="elvwp-popup-body">
