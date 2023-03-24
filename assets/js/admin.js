@@ -416,6 +416,7 @@ function elvwp_visible() {
 	);
 	elvwp_stripe();
 }
+
 if (typeof script_object.error_type !== "undefined" && script_object.error_type) {
 	jQuery( 'input:checkbox' ).removeAttr( 'checked' );
 	jQuery( 'input[type=checkbox]' ).each(
@@ -472,3 +473,14 @@ if (typeof script_object.error_type !== "undefined" && script_object.error_type)
 	);
 	elvwp_visible();
 }
+
+jQuery(document).on('click', '#elvwp-review .notice-dismiss', function() {
+	var elvwp_review_data = {
+		action: 'elvwp_review_notice'
+	};
+	jQuery.post(ajax_script_object.ajax_url, elvwp_review_data, function(response) {
+		if (response) {
+			console.log(response);
+		}
+	});
+});

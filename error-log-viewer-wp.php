@@ -244,7 +244,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
 			// create database table
-			if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $elvwp_table ) ) != $elvwp_table ) {
+			if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $elvwp_table ) ) !== $elvwp_table ) {
 				$sql = 'CREATE TABLE ' . $elvwp_table . ' (
 				  `id` INT(11) NOT NULL AUTO_INCREMENT,
 				  `file_name` varchar(100) NOT NULL,
@@ -329,13 +329,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					array(
 						$this,
 						'elvwp_notice_review',
-					)
-				);
-				add_action(
-					'admin_footer',
-					array(
-						$this,
-						'elvwp_notice_review_script',
 					)
 				);
 
@@ -440,16 +433,16 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 *
 		 * coming in elvwp.
 		 *
-		 * @since 1.0.9
+		 * @since 1.0.2
 		 * @access public
 		 *
-		 * @return void
+		 * @return array
 		 */
 		public function elvwp_cs_cron_fn( $schedules ) {
-			$on_of_notificaation = get_option( 'elvwp_notification_status' );
-			$elvwp_frequency     = get_option( 'elvwp_frequency' );
+			$elvwp_notification_status = get_option( 'elvwp_notification_status' );
+			$elvwp_frequency           = get_option( 'elvwp_frequency' );
 
-			if ( ! empty( $elvwp_frequency ) && ! empty( $on_of_notificaation ) ) {
+			if ( ! empty( $elvwp_frequency ) && ! empty( $elvwp_notification_status ) ) {
 				$cron_time = 0;
 
 				if ( 'daily' === $elvwp_frequency ) {
@@ -483,12 +476,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_cron_function_notification_time() {
 			global $wpdb;
-			$elvwp_table         = $wpdb->prefix . $this->elvwp_error_logs;
-			$on_of_notificaation = get_option( 'elvwp_notification_status' );
-			$elvwp_frequency     = get_option( 'elvwp_frequency' );
-			$emails              = get_option( 'elvwp_notification_emails' );
 
-			if ( ! empty( $elvwp_frequency ) && ! empty( $on_of_notificaation ) && ! empty( $emails ) ) {
+			$elvwp_table               = $wpdb->prefix . $this->elvwp_error_logs;
+			$elvwp_notification_status = get_option( 'elvwp_notification_status' );
+			$elvwp_frequency           = get_option( 'elvwp_frequency' );
+			$emails                    = get_option( 'elvwp_notification_emails' );
+
+			if ( ! empty( $elvwp_frequency ) && ! empty( $elvwp_notification_status ) && ! empty( $emails ) ) {
 
 				if ( 'daily' === $elvwp_frequency ) {
 					$interval_day = 1;
@@ -697,7 +691,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			if ( 'Empty' === $wp_empty_folder ) {
 				$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
-				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) == $elvwp_table ) {
+				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
 					$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) );
 				}
 			}
@@ -712,7 +706,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				);
 				$elvwp_table       = $wpdb->prefix . $this->elvwp_error_logs;
 
-				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) == $elvwp_table ) {
+				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
 
 					foreach ( $scanned_directory as $key => $value ) {
 						$count       = 1;
@@ -789,7 +783,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
-			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) == $elvwp_table ) {
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
 
 				$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT file_name FROM {$elvwp_table}" ) );
 
@@ -937,7 +931,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_purge_log() {
 			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
-				echo json_encode(
+				echo wp_json_encode(
 					array(
 						'success' => '0',
 						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
@@ -948,7 +942,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 
 			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['elvwp_nonce'] ) ), 'elvwp_purge_log_nonce' ) ) {
-				echo json_encode(
+				echo wp_json_encode(
 					array(
 						'success' => '0',
 						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
@@ -963,9 +957,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 				if ( file_exists( $elvwp_error_log ) ) {
 
-					unlink( $elvwp_error_log );
+					wp_delete_file( $elvwp_error_log );
 
-					echo json_encode(
+					echo wp_json_encode(
 						array(
 							'success' => '1',
 							'msg'     => __( 'Log file deleted successfully.', 'error-log-viewer-wp' ),
@@ -974,7 +968,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					wp_die();
 				} else {
-					echo json_encode(
+					echo wp_json_encode(
 						array(
 							'success' => '0',
 							'msg'     => __( 'Log file deleted failed. Please try again after reloading page.', 'error-log-viewer-wp' ),
@@ -1583,13 +1577,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				);
 			}
 
-			echo json_encode( $json_data );
+			echo wp_json_encode( $json_data );
 			wp_die();
 		}
 
 		public function elvwp_datatable_delete_data() {
 			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
-				echo json_encode(
+				echo wp_json_encode(
 					array(
 						'success' => '0',
 						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
@@ -1600,7 +1594,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 
 			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['elvwp_nonce'] ) ), 'elvwp_delete_data_nonce' ) ) {
-				echo json_encode(
+				echo wp_json_encode(
 					array(
 						'success' => '0',
 						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
@@ -1635,9 +1629,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 						if ( $elvwp_delete_data ) {
 
-							unlink( $elvwp_datatable_filename );
+							wp_delete_file( $elvwp_datatable_filename );
 
-							echo json_encode(
+							echo wp_json_encode(
 								array(
 									'success' => '1',
 									'msg'     => __( 'Log file deleted successfully.', 'error-log-viewer-wp' ),
@@ -1646,7 +1640,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 							wp_die();
 						} else {
-							echo json_encode(
+							echo wp_json_encode(
 								array(
 									'success' => '0',
 									'msg'     => __( 'Log file deleted Failed.', 'error-log-viewer-wp' ),
@@ -1656,7 +1650,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							wp_die();
 						}
 					} else {
-						echo json_encode(
+						echo wp_json_encode(
 							array(
 								'success' => '0',
 								'msg'     => __( 'Log file deleted Failed.', 'error-log-viewer-wp' ),
@@ -1669,14 +1663,14 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 		}
 
-		public function elvwp_error_log_osort( &$array, $properties ) {
+		public function elvwp_error_log_osort( &$input_array, $properties ) {
 			if ( is_string( $properties ) ) {
 				$properties = array(
 					$properties => SORT_ASC,
 				);
 			}
 			uasort(
-				$array,
+				$input_array,
 				function( $a, $b ) use ( $properties ) {
 					foreach ( $properties as $k => $v ) {
 
@@ -1738,13 +1732,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				wp_die();
 			}
 
-			$reason_id = intval( sanitize_text_field( wp_unslash( $_POST['reason'] ) ) );
+			$reason_id = isset( $_POST['reason'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['reason'] ) ) ) : 7;
 
 			if ( empty( $reason_id ) ) {
 				wp_die();
 			}
 
-			$reason_info = sanitize_text_field( wp_unslash( $_POST['reason_detail'] ) );
+			$reason_info = isset( $_POST['reason_detail'] ) ? sanitize_text_field( wp_unslash( $_POST['reason_detail'] ) ) : '';
 
 			if ( 1 === $reason_id ) {
 				$reason_text = __( 'I only needed the plugin for a short period', 'error-log-viewer-wp' );
@@ -1803,7 +1797,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			}
 
 			if ( $file === $this_plugin ) {
-
+				/* translators: 1: settings link start, 2: settings link end. */
 				$settings_link = sprintf( esc_html__( '%1$s Log Viewer %2$s', 'error-log-viewer-wp' ), '<a href="' . esc_url( admin_url( 'admin.php?page=' . $this->elvwp_permalink ) ) . '">', '</a>' );
 
 				array_unshift( $links, $settings_link );
@@ -1839,20 +1833,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			global $current_user;
 			wp_get_current_user();
 
-			$user_n = '';
+			$user_name = '';
 
 			if ( ! empty( $current_user->display_name ) ) {
-				$user_n = ' ' . $current_user->display_name;
+				$user_name = ' ' . $current_user->display_name;
 			}
 
-			echo '<div id="elvwp-review" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'Hi%s, Thank you for using <b>' . ELVWP_NAME . '</b>. Please don\'t forget to rate our plugin. We sincerely appreciate your feedback.', 'error-log-viewer-wp' ), esc_html( $user_n ) ) . '<br><a target="_blank" href="' . ELVWP_REVIEW_URL . '" class="button-secondary">' . esc_html__( 'Post Review', 'error-log-viewer-wp' ) . '</a>' . '</p></div>';
-		}
-
-		/**
-		 * Loads the inline script to dismiss the review notice.
-		 */
-		public function elvwp_notice_review_script() {
-			echo "<script> jQuery(document).on('click', '#elvwp-review .notice-dismiss', function() {\n" . "\tvar elvwp_review_data = {\n" . "\t\taction: 'elvwp_review_notice',\n" . "\t};\n" . "\tjQuery.post(ajaxurl, elvwp_review_data, function(response) {\n" . "\t\tif (response) {\n" . "\t\t\tconsole.log(response);\n" . "\t\t}\n" . "\t});\n" . '});</script>';
+			echo '<div id="elvwp-review" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'Hi%s, Thank you for using <b>' . esc_html( ELVWP_NAME ) . '</b>. Please don\'t forget to rate our plugin. We sincerely appreciate your feedback.', 'error-log-viewer-wp' ), esc_html( $user_name ) ) . '<br><a target="_blank" href="' . esc_url( ELVWP_REVIEW_URL ) . '" class="button-secondary">' . esc_html__( 'Post Review', 'error-log-viewer-wp' ) . '</a>' . '</p></div>';
 		}
 
 		/**
@@ -1868,10 +1855,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param string $text  The default footer text.
-		 * @return string $text Amended footer text.
+		 * @return string Amended footer text.
 		 */
-		public function elvwp_admin_footer_text( $text ) {
+		public function elvwp_admin_footer_text() {
 			return __( 'If you like <strong><ins>' . ELVWP_NAME . '</ins></strong> please leave us a <a target="_blank" style="color:#f9b918" href="' . ELVWP_REVIEW_URL . '">★★★★★</a> rating. A huge thank you in advance!', 'error-log-viewer-wp' );
 		}
 
@@ -1957,7 +1943,7 @@ register_deactivation_hook( __FILE__, 'elvwp_deactivation' );
 
 function elvwp_submit_notification_setting() {
 	$setting_page_url = admin_url( 'admin.php?page=elvwp-notification' );
-	// Activate License
+
 	if ( isset( $_POST['elvwp_frequency'] ) ) {
 
 		if ( ! check_admin_referer( 'elvwp_notification_setting_nonce', 'elvwp_notification_setting_nonce' ) ) {
