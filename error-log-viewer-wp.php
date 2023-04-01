@@ -1157,14 +1157,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 								$data['code'] = '';
 
 								try {
-									$file = new SplFileObject( str_replace( 'zend.view://', '', $subparts['path'] ) );
-									$file->seek( $subparts['line'] - 4 );
-									$i = 7;
 
-									do {
-										$data['code'] .= $file->current();
-										$file->next();
-									} while ( --$i && ! $file->eof() );
+									if( isset( $subparts['line'] ) && 4 >= $subparts['line'] ) {
+										$file = new SplFileObject( str_replace( 'zend.view://', '', $subparts['path'] ) );
+										$file->seek( $subparts['line'] - 4 );
+										$i = 7;
+
+										do {
+											$data['code'] .= $file->current();
+											$file->next();
+										} while ( --$i && ! $file->eof() );
+									}
 								} catch ( Exception $e ) {
 								}
 							}
