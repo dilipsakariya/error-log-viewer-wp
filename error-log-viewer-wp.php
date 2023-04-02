@@ -1152,15 +1152,15 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 							if ( preg_match( '!(?<core> in (?P<path>(/|zend)[^ :]*)(?: on line |:)(?P<line>\d+))$!', $msg, $subparts ) ) {
 								$data['path'] = $subparts['path'];
-								$data['line'] = $subparts['line'];
+								$data['line'] = intval( $subparts['line'] );
 								$data['core'] = str_replace( $subparts['core'], '', $data['msg'] );
 								$data['code'] = '';
 
 								try {
 
-									if( isset( $subparts['line'] ) && 4 >= $subparts['line'] ) {
+									if ( isset( $data['line'] ) && 4 <= $data['line'] ) {
 										$file = new SplFileObject( str_replace( 'zend.view://', '', $subparts['path'] ) );
-										$file->seek( $subparts['line'] - 4 );
+										$file->seek( $data['line'] - 4 );
 										$i = 7;
 
 										do {
