@@ -601,7 +601,7 @@ div.elvwp_datatable.notice a, div.elvwp_datatable.fatal.error a, div.elvwp_datat
 	margin-top: 0px;
 }
 .elvwp_log_overview{
-		background-color: #fff;
+	background-color: #fff;
 	padding: 1em 1em 1em 1em;
 	margin: 1em 1em 0 0;
 }
@@ -618,7 +618,6 @@ div.elvwp_datatable.notice a, div.elvwp_datatable.fatal.error a, div.elvwp_datat
 	box-shadow: 0 0 0 1px #ed0e0e;
 	border-color: #ed0e0e;
 }
-
 .elvwp_notification_setting td label{
 	font-style: italic;
 }
