@@ -425,6 +425,14 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						'elvwp_datatable_delete_data',
 					)
 				);
+
+				add_action(
+					'wp_ajax_elvwp_datatable_delete_all_logs',
+					array(
+						$this,
+						'elvwp_datatable_delete_all_logs',
+					)
+				);
 			}
 		}
 
@@ -1441,8 +1449,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							'11' => 'November',
 							'12' => 'December',
 						),
-						'delete_data_nonce' => wp_create_nonce( 'elvwp_delete_data_nonce' ),
-						'purge_log_nonce'   => wp_create_nonce( 'elvwp_purge_log_nonce' ),
+						'delete_data_nonce' 	=> wp_create_nonce( 'elvwp_delete_data_nonce' ),
+						'purge_log_nonce'   	=> wp_create_nonce( 'elvwp_purge_log_nonce' ),
+						'delete_all_log_nonce'  => wp_create_nonce( 'elvwp_delete_all_log_nonce' ),
 					)
 				);
 
@@ -1657,6 +1666,83 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							array(
 								'success' => '0',
 								'msg'     => __( 'Log file deleted Failed.', 'error-log-viewer-wp' ),
+							)
+						);
+
+						wp_die();
+					}
+				}
+			}
+		}
+
+		public function elvwp_datatable_delete_all_logs() {
+			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
+				echo wp_json_encode(
+					array(
+						'success' => '0',
+						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+					)
+				);
+
+				wp_die();
+			}
+
+			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['elvwp_nonce'] ) ), 'elvwp_delete_all_log_nonce' ) ) {
+				echo wp_json_encode(
+					array(
+						'success' => '0',
+						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+					)
+				);
+
+				wp_die();
+			}
+
+			if ( is_admin() ) {
+
+				global $wpdb;
+				$elvwp_table        = $wpdb->prefix . $this->elvwp_error_logs;
+				$is_success 		= false;
+				$elvwp_table_data   = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) );
+
+				if ( ! empty( $elvwp_table_data ) ) {
+
+					foreach ( $elvwp_table_data as $value ) {
+						$elvwp_datatable_filename = $this->log_directory . '/' . $value;
+						
+						if ( file_exists( $elvwp_datatable_filename ) ) {
+							$elvwp_datatable_basename = basename( $value );
+							$elvwp_delete_data        = $wpdb->delete(
+								$elvwp_table,
+								array(
+									'file_name' => $elvwp_datatable_basename,
+								)
+							);
+
+							if ( $elvwp_delete_data ) {
+
+								wp_delete_file( $elvwp_datatable_filename );
+
+								$is_success = true;
+							}
+						}
+					}
+
+					if ( $is_success ) {
+
+						echo wp_json_encode(
+							array(
+								'success' => '1',
+								'msg'     => __( 'All logs deleted successfully.', 'error-log-viewer-wp' ),
+							)
+						);
+
+						wp_die();
+					} else {
+						echo wp_json_encode(
+							array(
+								'success' => '0',
+								'msg'     => __( 'All logs delete Failed.', 'error-log-viewer-wp' ),
 							)
 						);
 

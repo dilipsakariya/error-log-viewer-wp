@@ -268,6 +268,35 @@ $( document ).ready(
 					}
 				}
 			);
+
+			$( document ).on(
+				'click',
+				'#elvwp_delete_all_logs',
+				function(e) {
+					e.preventDefault();
+					var r = confirm( "Are you sure want to delete all log?" );
+					if (r == true) {
+						jQuery.ajax(
+							{
+								type: 'POST',
+								url: ajax_script_object.ajax_url,
+								dataType: "json",
+								data: {
+									'action': 'elvwp_datatable_delete_all_logs',
+									'elvwp_nonce': ajax_script_object.delete_all_log_nonce,
+								},
+								success: function(data) {
+									if (data.success == 1) {
+										window.location.reload();
+									} else {
+										alert( data.msg );
+									}
+								}
+							}
+						);
+					}
+				}
+			);
 		}
 	}
 );

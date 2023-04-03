@@ -595,3 +595,15 @@ div.elvwp_datatable.notice a, div.elvwp_datatable.fatal.error a, div.elvwp_datat
 	min-width: 400px;
 	min-height: 150px;
 }
+.button.button-delete-logs {
+  background: #de1818;
+  color: #fff;
+  border-color: #de1818;
+  margin-left: 20px;
+}
+.button.button-delete-logs:hover, .button.button-delete-logs:focus {
+  background: #ed0e0e;
+  color: #fff;
+  box-shadow: 0 0 0 1px #ed0e0e;
+  border-color: #ed0e0e;
+}
