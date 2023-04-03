@@ -1,5 +1,7 @@
 <div class="elvwp_log_overview">
-	<h1><?php esc_html_e( 'Error Log List', 'error-log-viewer-wp' ); ?> <button type="button" id="elvwp_delete_all_logs" class="button button-delete-logs"><?php esc_html_e( 'Delete All', 'error-log-viewer-wp' );?></button> </h1>
+	<h1><?php esc_html_e( 'Error Log List', 'error-log-viewer-wp' ); ?> </h1>
+	<button type="button" id="elvwp_delete_all_logs" class="button button-delete-logs"><?php esc_html_e( 'Purge All Logs', 'error-log-viewer-wp' ); ?></button>
+	<div class="clear"></div>
 	<hr>
 	<div class="elvwp_log_table">
 		<table class="elvwp_log_list_table row-border hover" id="elvwp_log_list_table">

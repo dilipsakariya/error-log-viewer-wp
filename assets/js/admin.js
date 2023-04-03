@@ -1,18 +1,22 @@
 var elvwp_debounce = function(func, wait, immediate) {
 	var timeout;
 	wait = wait || 250;
+
 	return function() {
 		var context = this,
 			args    = arguments;
 		var later   = function() {
 			timeout = null;
+
 			if ( ! immediate) {
 				func.apply( context, args );
 			}
 		};
+
 		var callNow = immediate && ! timeout;
 		clearTimeout( timeout );
 		timeout = setTimeout( later, wait );
+
 		if (callNow) {
 			func.apply( context, args );
 		}
@@ -22,16 +26,18 @@ var elvwp_debounce = function(func, wait, immediate) {
 function elvwp_parseQueryString(qs) {
 	var query = (qs || '?').substr( 1 ),
 		map   = {};
+
 	query.replace(
 		/([^&=]+)=?([^&]*)(?:&+|$)/g,
 		function(match, key, value) {
 			(map[key] = map[key] || value);
 		}
 	);
+
 	return map;
 }
 
-function elvwp_stripe() {
+function elvwp_alternate() {
 	var errors = jQuery( '#elvwp_error_list' ).find( 'article' );
 	errors.removeClass( 'alternate' );
 	errors.filter( ':not(.hide):odd' ).addClass( 'alternate' );
@@ -44,17 +50,22 @@ function elvwp_filterSet() {
 			return jQuery( this ).val();
 		}
 	).get();
-	var input     = jQuery( '#elvwp_path_filter' ).find( 'input' ).val();
+
+	var input = jQuery( '#elvwp_path_filter' ).find( 'input' ).val();
+
 	jQuery( '#elvwp_error_list article' ).each(
 		function() {
 			var a     = jQuery( this );
 			var found = a.data( 'path' ).toLowerCase().indexOf( input.toLowerCase() );
+
 			if ((input.length && found == -1) || (jQuery.inArray( a.data( 'type' ), checked ) == -1)) {
 				a.addClass( 'hide' );
 			} else {
 				a.removeClass( 'hide' );
 			}
+
 			if (found != -1) {
+
 				if (typeCount.hasOwnProperty( a.data( 'type' ) )) {
 					++typeCount[a.data( 'type' )];
 				} else {
@@ -63,9 +74,11 @@ function elvwp_filterSet() {
 			}
 		}
 	);
+
 	jQuery( '#elvwp_type_filter' ).find( 'label' ).each(
 		function() {
 			var type = jQuery( this ).attr( 'class' );
+
 			if (typeCount.hasOwnProperty( type )) {
 				jQuery( 'span', jQuery( this ) ).data( 'current', typeCount[type] );
 			} else {
@@ -77,8 +90,10 @@ function elvwp_filterSet() {
 
 function elvwp_sortEntries(type, order) {
 	var aList = jQuery( '#elvwp_error_list' ).find( 'article' );
+
 	aList.sort(
 		function(a, b) {
+
 			if ( ! isNaN( jQuery( a ).data( type ) )) {
 				var entryA = parseInt( jQuery( a ).data( type ) );
 				var entryB = parseInt( jQuery( b ).data( type ) );
@@ -86,9 +101,11 @@ function elvwp_sortEntries(type, order) {
 				var entryA = jQuery( a ).data( type );
 				var entryB = jQuery( b ).data( type );
 			}
+
 			if (order == 'asc') {
 				return (entryA < entryB) ? -1 : (entryA > entryB) ? 1 : 0;
 			}
+
 			return (entryB < entryA) ? -1 : (entryB > entryA) ? 1 : 0;
 		}
 	);
@@ -101,12 +118,14 @@ jQuery( document ).ready(
 				format: ajax_script_object.date_format
 			}
 		);
+
 		$( document ).on(
 			'change',
 			'#elvwp_datepicker,#elvwp_select_date',
 			function() {
 				var date_format_php = ajax_script_object.date_format_php;
 				var date_val        = $( this ).val();
+
 				if (date_format_php == 'F j, Y') {
 					var date_val_arr = date_val.split( ' ' );
 					date_val_arr[0]  = ajax_script_object.months[date_val_arr[0]]
@@ -115,12 +134,14 @@ jQuery( document ).ready(
 				}
 			}
 		);
+
 		$( '#elvwp_skip_to_bottom' ).on(
 			'click',
 			function() {
 				$( document ).scrollTop( $( document ).height() );
 			}
 		);
+
 		$( '#elvwp_skip_to_top' ).on(
 			'click',
 			function() {
@@ -128,10 +149,12 @@ jQuery( document ).ready(
 				document.documentElement.scrollTop = 0;
 			}
 		);
+
 		$( '#elvwp_error_log_purge' ).on(
 			'click',
 			function() {
-				var r = confirm( "Are you sure want to delete this log?" );
+				var r = confirm( "Would you like to purge this log?" );
+
 				if (r == true) {
 					var elvwp_error_log = $( '#elvwp_error_log' ).val();
 					jQuery.ajax(
@@ -156,6 +179,7 @@ jQuery( document ).ready(
 				}
 			}
 		);
+
 		$( '#elvwp_type_filter' ).find( 'input:checkbox' ).on(
 			'change',
 			function() {
@@ -163,6 +187,7 @@ jQuery( document ).ready(
 				elvwp_visible();
 			}
 		);
+
 		$( '#elvwp_path_filter' ).find( 'input' ).on(
 			'keyup',
 			elvwp_debounce(
@@ -172,12 +197,14 @@ jQuery( document ).ready(
 				}
 			)
 		);
+
 		$( '#elvwp_sort_options' ).find( 'a' ).on(
 			'click',
 			function() {
 				var qs = elvwp_parseQueryString( $( this ).attr( 'href' ) );
 				elvwp_sortEntries( qs.type, qs.order );
 				$( this ).attr( 'href', '?type=' + qs.type + '&order=' + (qs.order == 'asc' ? 'desc' : 'asc') );
+
 				if (qs.type == 'type') {
 					$( 'span', $( this ) ).text( (qs.order == 'asc' ? 'z-a' : 'a-z') );
 				} else {
@@ -186,6 +213,7 @@ jQuery( document ).ready(
 				return false;
 			}
 		);
+
 		$( document ).on(
 			'click',
 			'a.codeblock, a.traceblock',
@@ -194,12 +222,14 @@ jQuery( document ).ready(
 				return false;
 			}
 		);
-		elvwp_stripe();
+		elvwp_alternate();
 	}
 );
+
 $ = jQuery;
 $( document ).ready(
 	function() {
+
 		if ($( '#elvwp_log_list_table' ).length > 0) {
 			var elvwp_log_list_table = $( '#elvwp_log_list_table' ).dataTable(
 				{
@@ -238,12 +268,14 @@ $( document ).ready(
 					}],
 				}
 			);
+
 			$( document ).on(
 				'click',
 				'.elvwp_datatable_delete',
 				function(e) {
 					e.preventDefault();
-					var r = confirm( "Are you sure want to delete this log?" );
+					var r = confirm( "Would you like to purge this log?" );
+
 					if (r == true) {
 						var elvwp_datatable_deleteid = $( this )[0].id;
 						jQuery.ajax(
@@ -274,7 +306,8 @@ $( document ).ready(
 				'#elvwp_delete_all_logs',
 				function(e) {
 					e.preventDefault();
-					var r = confirm( "Are you sure want to delete all log?" );
+					var r = confirm( "Are you sure you want to purge all logs?" );
+
 					if (r == true) {
 						jQuery.ajax(
 							{
@@ -300,11 +333,13 @@ $( document ).ready(
 		}
 	}
 );
+
 /*deactivation*/
 (function($) {
 	$(
 		function() {
 			var plugin_slug = 'error-log-viewer-wp';
+
 			// Code to fire when the DOM is ready.
 			$( document ).on(
 				'click',
@@ -315,6 +350,7 @@ $( document ).ready(
 					$( 'body' ).addClass( 'elvwp-hidden' );
 				}
 			);
+
 			$( document ).on(
 				'click',
 				'.elvwp-popup-button-close',
@@ -322,6 +358,7 @@ $( document ).ready(
 					elvwp_close_popup();
 				}
 			);
+
 			$( document ).on(
 				'click',
 				".elvwp-serveypanel,tr[data-slug='" + plugin_slug + "'] .deactivate",
@@ -329,11 +366,13 @@ $( document ).ready(
 					e.stopPropagation();
 				}
 			);
+
 			$( document ).click(
 				function() {
 					elvwp_close_popup();
 				}
 			);
+
 			$( '.elvwp-reason label' ).on(
 				'click',
 				function() {
@@ -342,6 +381,7 @@ $( document ).ready(
 					}
 				}
 			);
+
 			$( 'input[type="radio"][name="elvwp-selected-reason"]' ).on(
 				'click',
 				function(event) {
@@ -351,6 +391,7 @@ $( document ).ready(
 					$( '.elvwp-pro-message' ).hide();
 				}
 			);
+
 			$( '.elvwp-reason-pro label' ).on(
 				'click',
 				function() {
@@ -362,6 +403,7 @@ $( document ).ready(
 					}
 				}
 			);
+
 			$( document ).on(
 				'submit',
 				'#elvwp-deactivate-form',
@@ -370,15 +412,18 @@ $( document ).ready(
 					var _reason          = $( 'input[type="radio"][name="elvwp-selected-reason"]:checked' ).val();
 					var _reason_details  = '';
 					var deactivate_nonce = $( '.elvwp_deactivation_nonce' ).val();
+
 					if (_reason == 2) {
 						_reason_details = $( this ).find( "input[type='text'][name='better_plugin']" ).val();
 					} else if (_reason == 7) {
 						_reason_details = $( this ).find( "input[type='text'][name='other_reason']" ).val();
 					}
+
 					if ((_reason == 7 || _reason == 2) && _reason_details == '') {
 						$( '.message.error-message' ).show();
 						return;
 					}
+
 					$.ajax(
 						{
 							url: ajax_script_object.ajax_url,
@@ -403,6 +448,7 @@ $( document ).ready(
 					);
 				}
 			);
+
 			$( '.elvwp-popup-skip-feedback' ).on(
 				'click',
 				function(e) {
@@ -426,6 +472,7 @@ $( document ).ready(
 function elvwp_visible() {
 	var vis = jQuery( '#elvwp_error_list' ).find( 'article' ).filter( ':not(.hide)' );
 	var len = vis.length;
+
 	if (len == 0) {
 		jQuery( '#nothingToShow' ).removeClass( 'hide' );
 		jQuery( '.log_entries' ).text( '0 entries showing (' + script_object.total + ' filtered out)' );
@@ -437,39 +484,48 @@ function elvwp_visible() {
 			jQuery( '.log_entries' ).text( len + ' distinct entr' + (len == 1 ? 'y' : 'ies') + ' showing (' + (script_object.total - len) + ' filtered out)' );
 		}
 	}
+
 	jQuery( '#elvwp_type_filter' ).find( 'label span' ).each(
 		function() {
 			var count = (jQuery( '#elvwp_path_filter' ).find( 'input' ).val() == '' ? jQuery( this ).data( 'total' ) : jQuery( this ).data( 'current' ) + '/' + jQuery( this ).data( 'total' ));
 			jQuery( this ).text( count );
 		}
 	);
-	elvwp_stripe();
+
+	elvwp_alternate();
 }
 
 if (typeof script_object.error_type !== "undefined" && script_object.error_type) {
 	jQuery( 'input:checkbox' ).removeAttr( 'checked' );
+
 	jQuery( 'input[type=checkbox]' ).each(
 		function() {
 			var a            = jQuery( this );
 			var checkedvalue = jQuery( this ).val();
+
 			a.addClass( checkedvalue );
 			jQuery( '.' + script_object.error_type ).prop( "checked", true );
+
 			var typeCount = {};
 			var checked   = jQuery( '#elvwp_type_filter' ).find( 'input:checkbox:checked' ).map(
 				function() {
 					return jQuery( this ).val();
 				}
 			).get();
-			var input     = jQuery( '#elvwp_path_filter' ).find( 'input' ).val();
+
+			var input = jQuery( '#elvwp_path_filter' ).find( 'input' ).val();
+
 			jQuery( '#elvwp_error_list article' ).each(
 				function() {
 					var a     = jQuery( this );
 					var found = a.data( 'path' ).toLowerCase().indexOf( input.toLowerCase() );
+
 					if ((input.length && found == -1) || (jQuery.inArray( a.data( 'type' ), checked ) == -1)) {
 						a.addClass( 'hide' );
 					} else {
 						a.removeClass( 'hide' );
 					}
+
 					if (found != -1) {
 						if (typeCount.hasOwnProperty( a.data( 'type' ) )) {
 							++typeCount[a.data( 'type' )];
@@ -477,8 +533,10 @@ if (typeof script_object.error_type !== "undefined" && script_object.error_type)
 							typeCount[a.data( 'type' )] = 1;
 						}
 					}
+
 					jQuery( "input[type=checkbox]" ).change(
 						function() {
+
 							if (jQuery( this ).is( ":checked" )) {
 								jQuery( '#elvwp_skip_to_top' ).show();
 							} else if (jQuery( this ).is( ":not(:checked)" )) {
@@ -491,6 +549,7 @@ if (typeof script_object.error_type !== "undefined" && script_object.error_type)
 			jQuery( '#elvwp_type_filter' ).find( 'label' ).each(
 				function() {
 					var type = jQuery( this ).attr( 'class' );
+
 					if (typeCount.hasOwnProperty( type )) {
 						jQuery( 'span', jQuery( this ) ).data( 'current', typeCount[type] );
 					} else {
@@ -503,13 +562,21 @@ if (typeof script_object.error_type !== "undefined" && script_object.error_type)
 	elvwp_visible();
 }
 
-jQuery(document).on('click', '#elvwp-review .notice-dismiss', function() {
-	var elvwp_review_data = {
-		action: 'elvwp_review_notice'
-	};
-	jQuery.post(ajax_script_object.ajax_url, elvwp_review_data, function(response) {
-		if (response) {
-			console.log(response);
-		}
-	});
-});
+jQuery( document ).on(
+	'click',
+	'#elvwp-review .notice-dismiss',
+	function() {
+		var elvwp_review_data = {
+			action: 'elvwp_review_notice'
+		};
+		jQuery.post(
+			ajax_script_object.ajax_url,
+			elvwp_review_data,
+			function(response) {
+				if (response) {
+					console.log( response );
+				}
+			}
+		);
+	}
+);

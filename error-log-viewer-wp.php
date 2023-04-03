@@ -942,7 +942,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -953,7 +953,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -970,7 +970,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					echo wp_json_encode(
 						array(
 							'success' => '1',
-							'msg'     => __( 'Log file deleted successfully.', 'error-log-viewer-wp' ),
+							'msg'     => __( 'Log file was purged successfully.', 'error-log-viewer-wp' ),
 						)
 					);
 
@@ -979,7 +979,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					echo wp_json_encode(
 						array(
 							'success' => '0',
-							'msg'     => __( 'Log file deleted failed. Please try again after reloading page.', 'error-log-viewer-wp' ),
+							'msg'     => __( 'Failed to purge Log file. Please try again after reloading page.', 'error-log-viewer-wp' ),
 						)
 					);
 
@@ -1432,10 +1432,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					'elvwp_admin_script',
 					'ajax_script_object',
 					array(
-						'ajax_url'          => admin_url( 'admin-ajax.php' ),
-						'date_format'       => elvwp_date_formate(),
-						'date_format_php'   => get_option( 'date_format' ),
-						'months'            => array(
+						'ajax_url'             => admin_url( 'admin-ajax.php' ),
+						'date_format'          => elvwp_date_formate(),
+						'date_format_php'      => get_option( 'date_format' ),
+						'months'               => array(
 							'01' => 'January',
 							'02' => 'February',
 							'03' => 'March',
@@ -1449,9 +1449,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							'11' => 'November',
 							'12' => 'December',
 						),
-						'delete_data_nonce' 	=> wp_create_nonce( 'elvwp_delete_data_nonce' ),
-						'purge_log_nonce'   	=> wp_create_nonce( 'elvwp_purge_log_nonce' ),
-						'delete_all_log_nonce'  => wp_create_nonce( 'elvwp_delete_all_log_nonce' ),
+						'delete_data_nonce'    => wp_create_nonce( 'elvwp_delete_data_nonce' ),
+						'purge_log_nonce'      => wp_create_nonce( 'elvwp_purge_log_nonce' ),
+						'delete_all_log_nonce' => wp_create_nonce( 'elvwp_delete_all_log_nonce' ),
 					)
 				);
 
@@ -1598,7 +1598,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -1609,7 +1609,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -1646,7 +1646,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							echo wp_json_encode(
 								array(
 									'success' => '1',
-									'msg'     => __( 'Log file deleted successfully.', 'error-log-viewer-wp' ),
+									'msg'     => __( 'Log file was purged successfully.', 'error-log-viewer-wp' ),
 								)
 							);
 
@@ -1655,7 +1655,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							echo wp_json_encode(
 								array(
 									'success' => '0',
-									'msg'     => __( 'Log file deleted Failed.', 'error-log-viewer-wp' ),
+									'msg'     => __( 'Failed to purge Log file.', 'error-log-viewer-wp' ),
 								)
 							);
 
@@ -1665,7 +1665,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						echo wp_json_encode(
 							array(
 								'success' => '0',
-								'msg'     => __( 'Log file deleted Failed.', 'error-log-viewer-wp' ),
+								'msg'     => __( 'Failed to purge Log file.', 'error-log-viewer-wp' ),
 							)
 						);
 
@@ -1680,7 +1680,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -1691,7 +1691,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				echo wp_json_encode(
 					array(
 						'success' => '0',
-						'msg'     => __( 'Security Error.', 'error-log-viewer-wp' ),
+						'msg'     => __( 'Nonce verification failed, Please try again.', 'error-log-viewer-wp' ),
 					)
 				);
 
@@ -1701,15 +1701,15 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			if ( is_admin() ) {
 
 				global $wpdb;
-				$elvwp_table        = $wpdb->prefix . $this->elvwp_error_logs;
-				$is_success 		= false;
-				$elvwp_table_data   = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) );
+				$elvwp_table      = $wpdb->prefix . $this->elvwp_error_logs;
+				$is_success       = false;
+				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) );
 
 				if ( ! empty( $elvwp_table_data ) ) {
 
 					foreach ( $elvwp_table_data as $value ) {
 						$elvwp_datatable_filename = $this->log_directory . '/' . $value;
-						
+
 						if ( file_exists( $elvwp_datatable_filename ) ) {
 							$elvwp_datatable_basename = basename( $value );
 							$elvwp_delete_data        = $wpdb->delete(
@@ -1733,7 +1733,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						echo wp_json_encode(
 							array(
 								'success' => '1',
-								'msg'     => __( 'All logs deleted successfully.', 'error-log-viewer-wp' ),
+								'msg'     => __( 'All Logs were purged successfully.', 'error-log-viewer-wp' ),
 							)
 						);
 
@@ -1742,7 +1742,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						echo wp_json_encode(
 							array(
 								'success' => '0',
-								'msg'     => __( 'All logs delete Failed.', 'error-log-viewer-wp' ),
+								'msg'     => __( 'Failed to purge Logs.', 'error-log-viewer-wp' ),
 							)
 						);
 
