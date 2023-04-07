@@ -17,8 +17,8 @@
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       error-log-viewer-wp
- * Requires at least: 3.9
- * Tested up to:      6.1.1
+ * Requires at least: 5.4
+ * Tested up to:      6.2
  * Domain Path:       /languages
  */
 

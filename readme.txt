@@ -4,8 +4,8 @@ Author URI: https://www.wpguru.co
 Plugin URI: https://wordpress.org/plugins/error-log-viewer-wp/
 Contributors: wpguruin
 Tags: error log, error reporting, log report, debug tool, admin
-Requires at least: 3.9
-Tested up to: 6.1.1
+Requires at least: 5.4
+Tested up to: 6.2
 Requires PHP: 5.6
 Stable Tag: 1.0.2
 License: GPLv3 or later
