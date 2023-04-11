@@ -1,13 +1,13 @@
 <?php
 
 class Elvwp_Dashboard_Widget {
-	protected $widget_id = 'elvwp_error_log';
+	protected $widget_id           = 'elvwp_error_log';
 	protected $required_capability = 'manage_options';
-	protected $widget_css_path = 'assets/css/dashboard-widget.css';
+	protected $widget_css_path     = 'assets/css/dashboard-widget.css';
 
 	protected function __construct() {
-		add_action('wp_dashboard_setup', array($this, 'elvwp_register_widget'));
-		add_action('wp_network_dashboard_setup', array($this, 'elvwp_register_widget'));
+		add_action( 'wp_dashboard_setup', array( $this, 'elvwp_register_widget' ) );
+		add_action( 'wp_network_dashboard_setup', array( $this, 'elvwp_register_widget' ) );
 	}
 
 	public function elvwp_register_widget() {
@@ -15,8 +15,8 @@ class Elvwp_Dashboard_Widget {
 			wp_add_dashboard_widget(
 				$this->widget_id,
 				/* translators: Dashboard widget name */
-				__('PHP Error Log', 'error-log-viewer-wp'),
-				array($this, 'elvwp_display_widget_contents'),
+				__( 'PHP Error Log', 'error-log-viewer-wp' ),
+				array( $this, 'elvwp_display_widget_contents' ),
 				false
 			);
 
@@ -25,25 +25,25 @@ class Elvwp_Dashboard_Widget {
 	}
 
 	private function elvwp_user_can_see_widget() {
-		return apply_filters('elvwp_show_dashboard_widget', current_user_can($this->required_capability));
+		return apply_filters( 'elvwp_show_dashboard_widget', current_user_can( $this->required_capability ) );
 	}
 
 	private function elvwp_user_can_clear_log() {
-		return $this->elvwp_user_can_see_widget() && current_user_can('install_plugins');
+		return $this->elvwp_user_can_see_widget() && current_user_can( 'install_plugins' );
 	}
 
 	public function elvwp_enqueue_widget_dependencies( $hook ) {
 		if ( $hook === 'index.php' ) {
 			wp_enqueue_script(
 				'elvwp-dashboard-widget-script',
-				plugins_url('assets/js/dashboard-widget.js', ELVWP_FILE ),
-				array('jquery'),
+				plugins_url( 'assets/js/dashboard-widget.js', ELVWP_FILE ),
+				array( 'jquery' ),
 				ELVWP_VER
 			);
 
 			wp_enqueue_style(
 				'elvwp-dashboard-widget-styles',
-				plugins_url($this->widget_css_path, ELVWP_FILE ),
+				plugins_url( $this->widget_css_path, ELVWP_FILE ),
 				array(),
 				ELVWP_VER
 			);
@@ -51,9 +51,9 @@ class Elvwp_Dashboard_Widget {
 	}
 
 	public function elvwp_display_widget_contents() {
-		
-		if ( isset($_GET['elvwp-log-cleared']) && !empty($_GET['elvwp-log-cleared']) ) {
-			printf('<p><strong>%s</strong></p>', __('Log cleared.', 'error-log-viewer-wp'));
+
+		if ( isset( $_GET['elvwp-log-cleared'] ) && ! empty( $_GET['elvwp-log-cleared'] ) ) {
+			printf( '<p><strong>%s</strong></p>', __( 'Log cleared.', 'error-log-viewer-wp' ) );
 		}
 
 		$last_log = elvwp_get_last_log();
@@ -68,7 +68,7 @@ class Elvwp_Dashboard_Widget {
 
 		$log_details = elvwp_load()->elvwp_log_details( $log_date, $is_raw_log, 10 );
 		echo '<div class="elvwp-dashboard-widget-main">
-				<a href="'. esc_url( admin_url( 'admin.php?page=error-log-viewer-wp' ) ) .'" class="elvwp-view-log-link">' . __( 'View Full Log', 'error-log-viewer-wp' ) . '</a>';
+				<a href="' . esc_url( admin_url( 'admin.php?page=error-log-viewer-wp' ) ) . '" class="elvwp-view-log-link">' . __( 'View Full Log', 'error-log-viewer-wp' ) . '</a>';
 		foreach ( $log_details['logs'] as $log ) : ?>
 			<article class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>">
 				<div class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>">
@@ -112,11 +112,12 @@ class Elvwp_Dashboard_Widget {
 					</div>
 				</div>
 			</article>
-		<?php endforeach;
+			<?php
+		endforeach;
 
 		echo '</div>';
 
-		do_action('elvwp_after_widget_footer');
+		do_action( 'elvwp_after_widget_footer' );
 	}
 
 	public static function elvwp_get_instance() {

@@ -188,7 +188,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @return      void
 		 */
 		private function includes() {
-			require_once plugin_dir_path( __FILE__ ) . 'includes/class-elvwp-dashboard-widget.php';
+			require_once ELVWP_DIR . 'includes/class-elvwp-dashboard-widget.php';
 		}
 
 		/**
@@ -331,7 +331,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				add_option( 'elvwp_review_time', $review_time, '', false );
 			}
 
-			add_filter( 'cron_schedules', array( $this, 'elvwp_cs_cron_fn' ) );
+			add_filter( 'cron_schedules', array( $this, 'elvwp_cron_schedules' ) );
 			add_action(
 				'elvwp_cron_task_hook_notification_time',
 				array(
@@ -456,14 +456,12 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		/**
 		 * cronjob scheduler.
 		 *
-		 * coming in elvwp.
-		 *
 		 * @since 1.0.2
 		 * @access public
 		 *
 		 * @return array
 		 */
-		public function elvwp_cs_cron_fn( $schedules ) {
+		public function elvwp_cron_schedules( $schedules ) {
 			$elvwp_notification_status = get_option( 'elvwp_notification_status' );
 			$elvwp_frequency           = get_option( 'elvwp_frequency' );
 
@@ -900,7 +898,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		public function elvwp_set_config_variables() {
 
 			if ( ! class_exists( 'WP_Config_Transformer' ) ) {
-				require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-config-transformer.php';
+				require_once ELVWP_DIR . 'includes/class-wp-config-transformer.php';
 			}
 
 			$config_transformer = new WP_Config_Transformer( self::$wp_config_path );
@@ -1275,7 +1273,6 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					if ( $line_limit && count( $logs ) >= $line_limit ) {
 						break;
 					}
-
 				}
 
 				if ( null !== $cache ) {
@@ -1406,13 +1403,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_admin_enqueue( $hook ) {
 
-			wp_enqueue_style( 'elvwp_error_log_admin_style', plugins_url( '/assets/css/admin.css', __FILE__ ), array(), ELVWP_VER );
+			wp_enqueue_style( 'elvwp_error_log_admin_style', plugins_url( '/assets/css/admin.css', ELVWP_FILE ), array(), ELVWP_VER );
 
 			if ( 'toplevel_page_error-log-viewer-wp' === $hook || 'error-log-viewer_page_elvwp-list' === $hook || 'error-log-viewer_page_elvwp-notification' === $hook ) {
 
 				wp_enqueue_script(
 					'elvwp_datatable',
-					plugins_url( '/assets/js/jquery.dataTables.min.js', __FILE__ ),
+					plugins_url( '/assets/js/jquery.dataTables.min.js', ELVWP_FILE ),
 					array(
 						'jquery',
 					),
@@ -1420,8 +1417,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					true
 				);
 
-				wp_register_style( 'elvwp_datatables_style', plugins_url( '/assets/css/jquery.dataTables.min.css', __FILE__ ), array(), ELVWP_VER );
-				wp_register_style( 'elvwp_ui_style', plugins_url( '/assets/css/datepicker.min.css', __FILE__ ), array(), ELVWP_VER );
+				wp_register_style( 'elvwp_datatables_style', plugins_url( '/assets/css/jquery.dataTables.min.css', ELVWP_FILE ), array(), ELVWP_VER );
+				wp_register_style( 'elvwp_ui_style', plugins_url( '/assets/css/datepicker.min.css', ELVWP_FILE ), array(), ELVWP_VER );
 
 				wp_enqueue_style( 'elvwp_datatables_style' );
 				wp_enqueue_style( 'elvwp_ui_style' );
@@ -1431,7 +1428,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 				wp_enqueue_script(
 					'elvwp_admin_ui_script',
-					plugins_url( '/assets/js/datepicker.min.js', __FILE__ ),
+					plugins_url( '/assets/js/datepicker.min.js', ELVWP_FILE ),
 					array(
 						'jquery',
 					),
@@ -1441,7 +1438,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 				wp_enqueue_script(
 					'elvwp_admin_script',
-					plugins_url( '/assets/js/admin.js', __FILE__ ),
+					plugins_url( '/assets/js/admin.js', ELVWP_FILE ),
 					array(
 						'elvwp_admin_ui_script',
 					),
@@ -1925,7 +1922,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @param string $plugin_file
 		 */
 		public function elvwp_add_action_links( $plugin_meta, $plugin_file ) {
-			if ( plugin_basename( __FILE__ ) === $plugin_file ) {
+			if ( plugin_basename( ELVWP_FILE ) === $plugin_file ) {
 
 				$plugin_meta_str = '<a href="' . ELVWP_SUPPORT_URL . '" target="_blank">' . __( 'Support', 'error-log-viewer-wp' ) . '</a>';
 				array_push( $plugin_meta, $plugin_meta_str );
@@ -1989,7 +1986,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 function elvwp_load() {
 
 	if ( is_admin() ) {
-		require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
+		require_once plugin_dir_path( ELVWP_FILE ) . 'includes/functions.php';
 	}
 
 	return Error_Log_Viewer_WP::instance();
@@ -2012,7 +2009,7 @@ function elvwp_activation() {
 	}
 }
 
-register_activation_hook( __FILE__, 'elvwp_activation' );
+register_activation_hook( ELVWP_FILE, 'elvwp_activation' );
 
 /**
  * The deactivation hook is called outside of the singleton because WordPress doesn't
