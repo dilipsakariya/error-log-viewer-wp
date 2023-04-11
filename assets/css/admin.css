@@ -191,16 +191,16 @@
 	width: 21%;
 	vertical-align: top;
 }
-.fatalerror .elvwp_er_type {
+.fatalerror .elvwp_er_type, .fatalerror .elvwp-type-color {
 	color: #db3236 !important;
 }
-.warning .elvwp_er_type {
+.warning .elvwp_er_type, .warning .elvwp-type-color {
 	color: #f4c20d !important;
 }
-.notice .elvwp_er_type {
+.notice .elvwp_er_type, .notice .elvwp-type-color {
 	color: #4885ed !important;
 }
-.parseerror .elvwp_er_type {
+.parseerror .elvwp_er_type, .parseerror .elvwp-type-color {
 	color: #aa66cc !important;
 }
 .elvwp_logoverview_static {

@@ -53,6 +53,7 @@ if ( isset( $_POST['date'] ) && isset( $_POST['elvwp_nonce'] ) && ! empty( sanit
 }
 
 $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
+
 ?>
 
 <div id="elvwp_err_container">
@@ -84,8 +85,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 							<?php
 							if ( ! empty( $class ) ) {
 								echo esc_attr( $class );
-							} else {
-								echo esc_attr( $type ); }
+							}
 							?>
 						">
 							<input type="checkbox" value="<?php echo esc_attr( $class ); ?>" checked="checked" /> 

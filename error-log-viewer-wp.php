@@ -131,6 +131,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				self::$instance = new Error_Log_Viewer_WP();
 				self::$instance->setup_constants();
 				self::$instance->load_table();
+				self::$instance->includes();
 				self::$instance->load_textdomain();
 				self::$instance->hooks();
 
@@ -141,6 +142,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				}
 
 				self::$instance->elvwp_error_log_details();
+
+				Elvwp_Dashboard_Widget::elvwp_get_instance();
 			}
 
 			return self::$instance;
@@ -167,11 +170,25 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			// Plugin URL
 			define( 'ELVWP_URL', plugin_dir_url( __FILE__ ) );
 
+			// Plugin File
+			define( 'ELVWP_FILE', __FILE__ );
+
 			define( 'ELVWP_SUPPORT_URL', 'https://wordpress.org/support/plugin/' . $this->elvwp_permalink );
 
 			define( 'ELVWP_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/' . $this->elvwp_permalink . '?filter=5' );
 
 			define( 'ELVWP_DEBUG_LOGFOLDER', $this->log_directory );
+		}
+
+		/**
+		 * Load plugin files
+		 *
+		 * @access      private
+		 * @since       1.0.0
+		 * @return      void
+		 */
+		private function includes() {
+			require_once plugin_dir_path( __FILE__ ) . 'includes/class-elvwp-dashboard-widget.php';
 		}
 
 		/**
@@ -1053,7 +1070,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @since       1.0.0
 		 * @return      array
 		 */
-		public function elvwp_log_details( $log_date = '', $is_raw_log = false ) {
+		public function elvwp_log_details( $log_date = '', $is_raw_log = false, $line_limit = false ) {
 
 			$error_log = $this->log_directory . '/log-' . $log_date . '.log';
 			/**
@@ -1136,7 +1153,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					if ( preg_match( '!^\[(?P<time>[^\]]*)\] ((PHP|ojs2: )(?P<typea>.*?):|(?P<typeb>(WordPress|Error|ojs2|\w has produced)\s{1,}\w+ \w+))\s+(?P<msg>.*)$!', $log->current(), $parts ) ) {
 
-						$parts['type'] = ( $parts['typea'] ? '' : $parts['typeb'] );
+						$parts['type'] = ( $parts['typea'] ? $parts['typea'] : $parts['typeb'] );
 
 						if ( 'ojs2: ' === $parts[3] || 'ojs2' === $parts[6] ) {
 							$parts['type'] = 'ojs2 application';
@@ -1254,6 +1271,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					}
 
 					$log->next();
+
+					if ( $line_limit && count( $logs ) >= $line_limit ) {
+						break;
+					}
 
 				}
 
