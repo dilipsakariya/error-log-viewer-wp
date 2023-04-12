@@ -82,13 +82,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$elvwp_log_directory_htaccess = $this->log_directory . '/.htaccess';
 			$elvwp_log_directory_index    = $this->log_directory . '/index.php';
 
-			if ( ! is_writable( self::$wp_config_path ) ) {
-				echo '<div class="error notice is-dismissible"><p>';
-				echo wp_kses_post( __( 'The <strong>Error Log Viewer</strong> plugin must have a <code>wp-config.php</code> file that is writable by the filesystem.', 'error-log-viewer-wp' ) );
-				echo '</p></div>';
-
-				return false;
-			}
+			$this->check_config_is_writable();
 
 			if ( ! is_dir( $this->log_directory ) ) {
 				mkdir( $this->log_directory );
@@ -261,7 +255,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
 			// create database table
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $elvwp_table ) ) !== $elvwp_table ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
 				$sql = 'CREATE TABLE ' . $elvwp_table . ' (
 				  `id` INT(11) NOT NULL AUTO_INCREMENT,
 				  `file_name` varchar(100) NOT NULL,
@@ -348,15 +344,15 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						'elvwp_notice_review',
 					)
 				);
-
-				add_filter(
-					'admin_footer_text',
-					array(
-						$this,
-						'elvwp_admin_footer_text',
-					)
-				);
 			}
+
+			add_filter(
+				'admin_footer_text',
+				array(
+					$this,
+					'elvwp_admin_footer_text',
+				)
+			);
 
 			add_action(
 				'plugin_row_meta',
@@ -520,7 +516,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 				$from_name        = get_option( 'from_name', get_bloginfo( 'name' ) );
 				$from_email       = get_option( 'admin_email', get_bloginfo( 'admin_email' ) );
-				$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table} where created_at > %s AND created_at <= %s", $from_date, $end_date ) );
+				$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table} where created_at > %s AND created_at <= %s", $from_date, $end_date ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 				if ( $elvwp_table_data ) {
 					$reports = array();
 
@@ -698,6 +695,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			return apply_filters( 'elvwp_config_path', $wp_config_path );
 		}
 
+		private function check_config_is_writable() {
+
+			if ( ! is_writable( self::$wp_config_path ) ) {
+				echo '<div class="error notice is-dismissible"><p>';
+				echo wp_kses_post( __( 'The <strong>Error Log Viewer</strong> plugin must have a <code>wp-config.php</code> file that is writable by the filesystem.', 'error-log-viewer-wp' ) );
+				echo '</p></div>';
+
+				return false;
+			}
+		}
+
 		/**
 		 * Error Log Details
 		 *
@@ -715,7 +723,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
 				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
-					$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) );
+					$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE $elvwp_table" ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				}
 			}
 
@@ -729,14 +737,14 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				);
 				$elvwp_table       = $wpdb->prefix . $this->elvwp_error_logs;
 
-				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
+				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 					foreach ( $scanned_directory as $key => $value ) {
 						$count       = 1;
 						$file_name   = $value;
 						$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
-						$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table}" ) );
+						$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$elvwp_table}" ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 						foreach ( $elvwp_table_data as $elvwp_tablekey => $elvwp_tablevalue ) {
 							$elvwp_database_file = $elvwp_tablevalue->file_name;
@@ -770,7 +778,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 										'%s',
 										'%s',
 									);
-									$wpdb->insert( $elvwp_table, $data, $format );
+									$wpdb->insert( $elvwp_table, $data, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 								}
 							}
 						}
@@ -797,7 +805,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 									'file_name' => $file_name,
 								);
 
-								$wpdb->update( $elvwp_table, $data, $wherefilename, $format );
+								$wpdb->update( $elvwp_table, $data, $wherefilename, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 							}
 						}
 					}
@@ -806,15 +814,16 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$elvwp_table = $wpdb->prefix . $this->elvwp_error_logs;
 
-			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) {
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $elvwp_table . '%' ) ) === $elvwp_table ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-				$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT file_name FROM {$elvwp_table}" ) );
+				$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT file_name FROM {$elvwp_table}" ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				foreach ( $elvwp_table_data as $key => $value ) {
 					$elvwp_database_file = $value->file_name;
 					$elvwp_checkfile     = $this->log_directory . '/' . $elvwp_database_file;
 
 					if ( ! file_exists( $elvwp_checkfile ) ) {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->delete(
 							$elvwp_table,
 							array(
@@ -835,9 +844,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_log_download() {
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			if ( is_admin() && isset( $_POST['elvwp_error_log_download'] ) && isset( $_POST['elvwp_error_log'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) ) ) ) {
 
-				$elvwp_file = sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) );
+				$elvwp_file = sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				try {
 					$filename = basename( $elvwp_file );
@@ -856,13 +866,13 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				}
 			}
 
-			if ( is_admin() && isset( $_POST['elvwp_datatable_log_download'] ) && isset( $_POST['elvwp_datatable_downloadid'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ) ) ) {
+			if ( is_admin() && isset( $_POST['elvwp_datatable_log_download'] ) && isset( $_POST['elvwp_datatable_downloadid'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				global $wpdb;
 				$elvwp_table                = $wpdb->prefix . $this->elvwp_error_logs;
-				$elvwp_datatable_downloadid = sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) );
+				$elvwp_datatable_downloadid = sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-				$elvwp_download_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from {$elvwp_table} where id=%d", $elvwp_datatable_downloadid ) );
+				$elvwp_download_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from {$elvwp_table} where id=%d", $elvwp_datatable_downloadid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				foreach ( $elvwp_download_table_data as $key => $value ) {
 					$ps_download_filename = $value;
@@ -1012,8 +1022,9 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_register_admin_bar() {
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			if ( isset( $_POST['date'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['date'] ) ) ) ) {
-				$log_date = date( 'd-M-Y', strtotime( sanitize_text_field( wp_unslash( $_POST['date'] ) ) ) );
+				$log_date = date( 'd-M-Y', strtotime( sanitize_text_field( wp_unslash( $_POST['date'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			} else {
 				$log_date = date( 'd-M-Y' );
 			}
@@ -1094,7 +1105,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			$total = 0;
 
-			if ( $error_log === null ) {
+			if ( null === $error_log ) {
 				$error_log = ini_get( 'error_log' );
 			}
 
@@ -1106,6 +1117,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					$log = new SplFileObject( $error_log );
 					$log->setFlags( SplFileObject::DROP_NEW_LINE );
 				} catch ( RuntimeException $e ) {
+					// Nothing to return.
 				}
 
 				if ( null !== $cache && file_exists( $cache ) ) {
@@ -1113,6 +1125,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					extract( $cache_data );
 					$log->fseek( $seek );
 				}
+
 				$prev_error = new stdClass();
 
 				while ( ! $log->eof() ) {
@@ -1132,6 +1145,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 							array_push( $stack_trace, $stack_trace_str );
 							$log->next();
 						}
+
 						$prev_error->trace = join( "\n", $stack_trace );
 					}
 
@@ -1192,6 +1206,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 										} while ( --$i && ! $file->eof() );
 									}
 								} catch ( Exception $e ) {
+									// Nothing to return.
 								}
 							}
 
@@ -1488,15 +1503,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 		public function elvwp_datatable_loglist() {
 			global $wpdb;
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
 			$elvwp_table       = $wpdb->prefix . $this->elvwp_error_logs;
 			$column_sort_order = sanitize_text_field( wp_unslash( $_POST['order'][0]['dir'] ) );
 			$draw              = sanitize_text_field( wp_unslash( $_POST['draw'] ) );
 			$row               = sanitize_text_field( wp_unslash( $_POST['start'] ) );
 			$row_per_page      = sanitize_text_field( wp_unslash( $_POST['length'] ) ); // Rows display per page
 			$column_index      = sanitize_text_field( wp_unslash( $_POST['order'][0]['column'] ) ); // Column index
-			$columnName        = sanitize_text_field( wp_unslash( $_POST['columns'][ $column_index ]['data'] ) );
+			$column_name       = sanitize_text_field( wp_unslash( $_POST['columns'][ $column_index ]['data'] ) );
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
 
-			$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$elvwp_table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) );
+			$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$elvwp_table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			$data        = array();
 			$date_format = get_option( 'date_format' );
@@ -1581,7 +1598,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					);
 					array_push( $data, $data_ar );
 
-					$total_record = $wpdb->get_var( $wpdb->prepare( "SELECT count(file_name) as filecount from {$elvwp_table}" ) );
+					$total_record = $wpdb->get_var( $wpdb->prepare( "SELECT count(file_name) as filecount from {$elvwp_table}" ) );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 					$json_data = array(
 						'draw'                 => intval( $draw ),
@@ -1640,7 +1657,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				$elvwp_table              = $wpdb->prefix . $this->elvwp_error_logs;
 				$elvwp_datatable_deleteid = sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_deleteid'] ) );
 
-				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table where id=%d", $elvwp_datatable_deleteid ) );
+				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table where id=%d", $elvwp_datatable_deleteid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				if ( ! empty( $elvwp_table_data ) ) {
 
@@ -1650,7 +1667,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					if ( file_exists( $elvwp_datatable_filename ) ) {
 						$elvwp_datatable_basename = basename( $value );
-						$elvwp_delete_data        = $wpdb->delete(
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
+						$elvwp_delete_data = $wpdb->delete(
 							$elvwp_table,
 							array(
 								'file_name' => $elvwp_datatable_basename,
@@ -1721,7 +1739,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				global $wpdb;
 				$elvwp_table      = $wpdb->prefix . $this->elvwp_error_logs;
 				$is_success       = false;
-				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) );
+				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 				if ( ! empty( $elvwp_table_data ) ) {
 
@@ -1730,7 +1748,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 						if ( file_exists( $elvwp_datatable_filename ) ) {
 							$elvwp_datatable_basename = basename( $value );
-							$elvwp_delete_data        = $wpdb->delete(
+							// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+							$elvwp_delete_data = $wpdb->delete(
 								$elvwp_table,
 								array(
 									'file_name' => $elvwp_datatable_basename,
@@ -1833,7 +1852,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 */
 		public function elvwp_error_log_deactivation() {
 
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['elvwp_deactivation_nonce'] ) ), 'elvwp_deactivation_nonce' );
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			if ( empty( $_REQUEST['elvwp_deactivation_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_REQUEST['elvwp_deactivation_nonce'] ), 'elvwp_deactivation_nonce' ) ) {
+				wp_die();
+			}
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die();
@@ -1939,14 +1961,18 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		public function elvwp_notice_review() {
 			global $current_user;
 			wp_get_current_user();
-
 			$user_name = '';
 
 			if ( ! empty( $current_user->display_name ) ) {
 				$user_name = ' ' . $current_user->display_name;
 			}
 
-			echo '<div id="elvwp-review" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'Hi%s, Thank you for using <b>' . esc_html( ELVWP_NAME ) . '</b>. Please don\'t forget to rate our plugin. We sincerely appreciate your feedback.', 'error-log-viewer-wp' ), esc_html( $user_name ) ) . '<br><a target="_blank" href="' . esc_url( ELVWP_REVIEW_URL ) . '" class="button-secondary">' . esc_html__( 'Post Review', 'error-log-viewer-wp' ) . '</a>' . '</p></div>';
+			echo "<div id='elvwp-review' class='notice notice-info is-dismissible'><p>" .
+
+			sprintf( esc_html__( "Hi %1\$s, Thank you for using %2\$s. Please don't forget to rate our plugin. We sincerely appreciate your feedback.", 'psupsellmaster' ), esc_attr( $user_name ), '<b>' . esc_attr( ELVWP_NAME ) . '</b>' )
+			.
+			'<br><a target="_blank" href="' . esc_url( ELVWP_REVIEW_URL ) . '" class="button-secondary">' . esc_html__( 'Post Review', 'psupsellmaster' ) . '</a>' .
+			'</p></div>';
 		}
 
 		/**
@@ -1965,7 +1991,12 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @return string Amended footer text.
 		 */
 		public function elvwp_admin_footer_text() {
-			return __( 'If you like <strong><ins>' . ELVWP_NAME . '</ins></strong> please leave us a <a target="_blank" style="color:#f9b918" href="' . ELVWP_REVIEW_URL . '">★★★★★</a> rating. A huge thank you in advance!', 'error-log-viewer-wp' );
+			return sprintf(
+				/* translators: 1: Plugin Name, 3: Plugin review URL */
+				__( 'If you like <strong><ins>%1$s</ins></strong>. please leave us a <a target="_blank" style="color:#f9b918" href="%2$s">★★★★★</a> rating. A huge thank you in advance!', 'error-log-viewer-wp' ),
+				esc_attr( ELVWP_NAME ),
+				esc_url_raw( ELVWP_REVIEW_URL ),
+			);
 		}
 
 	}
@@ -1986,7 +2017,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 function elvwp_load() {
 
 	if ( is_admin() ) {
-		require_once plugin_dir_path( ELVWP_FILE ) . 'includes/functions.php';
+		require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
 	}
 
 	return Error_Log_Viewer_WP::instance();
@@ -2009,7 +2040,7 @@ function elvwp_activation() {
 	}
 }
 
-register_activation_hook( ELVWP_FILE, 'elvwp_activation' );
+register_activation_hook( __FILE__, 'elvwp_activation' );
 
 /**
  * The deactivation hook is called outside of the singleton because WordPress doesn't
@@ -2053,8 +2084,9 @@ function elvwp_submit_notification_setting() {
 
 	if ( isset( $_POST['elvwp_frequency'] ) ) {
 
-		if ( ! check_admin_referer( 'elvwp_notification_setting_nonce', 'elvwp_notification_setting_nonce' ) ) {
-			return;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( empty( $_REQUEST['elvwp_notification_setting_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_REQUEST['elvwp_notification_setting_nonce'] ), 'elvwp_notification_setting_nonce' ) ) {
+			wp_die();
 		}
 
 		if ( isset( $_POST['elvwp_notification_status'] ) ) {
@@ -2064,7 +2096,7 @@ function elvwp_submit_notification_setting() {
 		}
 
 		if ( isset( $_POST['elvwp_notification_emails'] ) && ! empty( $_POST['elvwp_notification_emails'] ) ) {
-			$emails = explode( ',', $_POST['elvwp_notification_emails'] );
+			$emails = explode( ',', sanitize_textarea_field( wp_unslash( $_POST['elvwp_notification_emails'] ) ) );
 			$emails = array_map( 'trim', $emails );
 			update_option( 'elvwp_notification_emails', $emails );
 		} else {
