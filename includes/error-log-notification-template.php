@@ -46,7 +46,7 @@ $elvwp_frequency           = get_option( 'elvwp_frequency' );
 							<?php esc_html_e( 'Send Email to', 'error-log-viewer-wp' ); ?>
 						</th>
 						<td>
-							<textarea class="" id="elvwp_notification_emails" name="elvwp_notification_emails" ><?php echo esc_html( is_array( $elvwp_notification_emails ) ) ? implode( ', ', $elvwp_notification_emails ) : esc_attr( $elvwp_notification_emails ); ?></textarea>
+							<textarea class="" id="elvwp_notification_emails" name="elvwp_notification_emails" ><?php echo esc_textarea( is_array( $elvwp_notification_emails ) ) ? implode( ', ', esc_attr( $elvwp_notification_emails ) ) : esc_attr( $elvwp_notification_emails ); ?></textarea>
 							<br>
 							<label for="elvwp_notification_emails">
 								<?php esc_html_e( 'Enter (,) separated email addresses', 'error-log-viewer-wp' ); ?>

@@ -1516,7 +1516,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$column_name       = sanitize_text_field( wp_unslash( $_POST['columns'][ $column_index ]['data'] ) );
 			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
 
-			$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$elvwp_table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$elvwp_table} ORDER BY created_at {$column_sort_order} LIMIT %d,%d", $row, $row_per_page ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			$data        = array();
 			$date_format = get_option( 'date_format' );
@@ -1602,7 +1602,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					);
 					array_push( $data, $data_ar );
 
-					$total_record = $wpdb->get_var( $wpdb->prepare( "SELECT count(file_name) as filecount from {$elvwp_table}" ) );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$total_record = $wpdb->get_var( $wpdb->prepare( "SELECT count(file_name) as filecount from {$elvwp_table}" ) );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 					$json_data = array(
 						'draw'                 => intval( $draw ),
@@ -1662,7 +1662,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				$elvwp_table              = $wpdb->prefix . $this->elvwp_error_logs;
 				$elvwp_datatable_deleteid = sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_deleteid'] ) );
 
-				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table where id=%d", $elvwp_datatable_deleteid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table where id=%d", $elvwp_datatable_deleteid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				if ( ! empty( $elvwp_table_data ) ) {
 
@@ -1672,7 +1672,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					if ( file_exists( $elvwp_datatable_filename ) ) {
 						$elvwp_datatable_basename = basename( $value );
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 						$elvwp_delete_data = $wpdb->delete(
 							$elvwp_table,
 							array(
@@ -1745,7 +1745,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				global $wpdb;
 				$elvwp_table      = $wpdb->prefix . $this->elvwp_error_logs;
 				$is_success       = false;
-				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$elvwp_table_data = $wpdb->get_col( $wpdb->prepare( "SELECT file_name from $elvwp_table " ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 				if ( ! empty( $elvwp_table_data ) ) {
 
