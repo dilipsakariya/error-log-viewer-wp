@@ -197,11 +197,11 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		private function elvwp_call_install() {
 
 			$version = get_option( 'elvwp_current_version', false );
+
 			if ( ! $version ) {
 				$this->elvwp_new_install();
 			} elseif ( version_compare( $version, '1.0.1.4', '<' ) ) {
-
-					$this->elvwp_v1014_upgrades();
+				$this->elvwp_v1014_upgrades();
 			}
 
 			update_option( 'elvwp_current_version', ELVWP_VER );
@@ -561,6 +561,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 					if ( $reports ) {
 						$report_list = '';
+
 						foreach ( $reports as $rkey => $rvalue ) {
 
 							if ( 'plugin' === $rkey || 'theme' === $rkey || 'other' === $rkey ) {
@@ -680,6 +681,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			$wp_config_path = ABSPATH . 'wp-config.php';
 
 			if ( ! file_exists( $wp_config_path ) ) {
+
 				if ( @file_exists( dirname( ABSPATH ) . '/wp-config.php' ) && ! @file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
 					$wp_config_path = dirname( ABSPATH ) . '/wp-config.php';
 				}
@@ -963,6 +965,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @return      void
 		 */
 		public function elvwp_purge_log() {
+
 			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
 				echo wp_json_encode(
 					array(
@@ -1546,6 +1549,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 									function( $v, $k ) use ( $created_at ) {
 
 										if ( is_array( $v ) ) {
+
 											return '<b>' . $k . '</b><br>' . implode(
 												'',
 												array_map(
@@ -1629,6 +1633,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		}
 
 		public function elvwp_datatable_delete_data() {
+
 			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
 				echo wp_json_encode(
 					array(
@@ -1712,6 +1717,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		}
 
 		public function elvwp_datatable_delete_all_logs() {
+
 			if ( ! isset( $_POST['elvwp_nonce'] ) ) {
 				echo wp_json_encode(
 					array(
@@ -1790,14 +1796,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		}
 
 		public function elvwp_error_log_osort( &$input_array, $properties ) {
+
 			if ( is_string( $properties ) ) {
 				$properties = array(
 					$properties => SORT_ASC,
 				);
 			}
+
 			uasort(
 				$input_array,
 				function( $a, $b ) use ( $properties ) {
+
 					foreach ( $properties as $k => $v ) {
 
 						if ( is_int( $k ) ) {
@@ -1944,6 +1953,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		 * @param string $plugin_file
 		 */
 		public function elvwp_add_action_links( $plugin_meta, $plugin_file ) {
+
 			if ( plugin_basename( ELVWP_FILE ) === $plugin_file ) {
 
 				$plugin_meta_str = '<a href="' . ELVWP_SUPPORT_URL . '" target="_blank">' . __( 'Support', 'error-log-viewer-wp' ) . '</a>';
@@ -2034,6 +2044,7 @@ add_action( 'plugins_loaded', 'elvwp_load' );
  * @return      void
  */
 function elvwp_activation() {
+
 	/* Activation functions here */
 	if ( ! wp_next_scheduled( 'elvwp_cron_task_hook_notification_time' ) ) {
 		wp_schedule_event( time(), 'elvwp_notification_time', 'elvwp_cron_task_hook_notification_time' );
