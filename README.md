@@ -1,1 +1,1 @@
-# Error Log Viewer By WP Guru (v 1.0.2) #
+# Error Log Viewer By WP Guru (v 1.0.3) #

@@ -53,11 +53,9 @@ if ( isset( $_POST['date'] ) && isset( $_POST['elvwp_nonce'] ) && ! empty( sanit
 }
 
 $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
-
 ?>
 
 <div id="elvwp_err_container">
-
 	<?php if ( ! empty( $log_details['logs'] ) ) : ?>
 		<h1><?php esc_html_e( 'Error Log Viewer', 'error-log-viewer-wp' ); ?></h1>
 		<div class="elvwp_error_log_filter">
@@ -112,6 +110,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 					</p>
 				</fieldset>
 				<?php } ?>
+
 				<div class="clear"></div>
 
 				<?php if ( ! $is_raw_log ) { ?>
@@ -136,7 +135,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 						" class="button primary" name="elvwp_error_raw_log" id="elvwp_error_raw_log" value=""><?php esc_html_e( 'View Log', 'error-log-viewer-wp' ); ?></a>
 				<?php } ?>
 
-					<a href="<?php echo esc_url( add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=error-log-viewer-wp' ) ) ); ?>" class="button primary" value=""><?php esc_html_e( 'Refresh Log', 'error-log-viewer-wp' ); ?></a>
+				<a href="<?php echo esc_url( add_query_arg( 'date', date( 'Y-m-d', strtotime( $log_date ) ), admin_url( 'admin.php?page=error-log-viewer-wp' ) ) ); ?>" class="button primary" value=""><?php esc_html_e( 'Refresh Log', 'error-log-viewer-wp' ); ?></a>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -144,9 +143,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 			<div class="elvwp_error_log_buttons">
 				<?php if ( isset( $log_details['error_log'] ) && ! empty( $log_details['error_log'] ) ) { ?>
 					<form method="post">
-
 						<button type="submit" class="button primary" name="elvwp_error_log_download" id="elvwp_error_log_download" value=""><?php esc_html_e( 'Download Log', 'error-log-viewer-wp' ); ?></button>
-
 						<input type="hidden" name="elvwp_error_log" id="elvwp_error_log" value="<?php echo esc_attr( $log_details['error_log'] ); ?>">
 						<button type="button" class="button primary" name="elvwp_error_log_purge" id="elvwp_error_log_purge" value=""><?php esc_html_e( 'Purge Log', 'error-log-viewer-wp' ); ?></button>
 					</form>
@@ -190,7 +187,6 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 			<?php } ?>
 		</div>
 		<section id="elvwp_error_list">
-
 			<?php if ( ! $is_raw_log ) { ?>
 				<?php foreach ( $log_details['logs'] as $log ) : ?>
 					<article class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
@@ -303,5 +299,4 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 
 	wp_localize_script( 'elvwp_admin_script', 'script_object', $script_object );
 	?>
-
 </div>
