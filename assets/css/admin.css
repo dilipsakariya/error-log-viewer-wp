@@ -621,3 +621,28 @@ div.elvwp_datatable.notice a, div.elvwp_datatable.fatal.error a, div.elvwp_datat
 .elvwp_notification_setting td label{
 	font-style: italic;
 }
+.elvwp_support_img_holder {
+  float: right;
+  margin-right: 15px;
+  position: relative;
+  text-decoration: none;
+  width: max-content;
+  text-align: center;
+}
+.elvwp_support_img {
+  width: 70px;
+  display: block;
+  margin: 0 auto;
+}
+.elvwp_clear_fix{
+	clear: both;
+}
+.elvwp_support_img_holder small {
+  font-size: 10px;
+  position: relative;
+  top: -10px;
+}
+.elvwp_support_img_holder:focus {
+  outline: 0;
+  box-shadow: none;
+}

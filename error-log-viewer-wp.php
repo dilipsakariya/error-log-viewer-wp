@@ -167,6 +167,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 			define( 'ELVWP_FILE', __FILE__ );
 
 			define( 'ELVWP_SUPPORT_URL', 'https://wordpress.org/support/plugin/' . $this->elvwp_permalink );
+			
+			define( 'ELVWP_SUPPORT_URL_GURU', 'https://wpguru.co/emergency-wordpress-support/' );
 
 			define( 'ELVWP_REVIEW_URL', 'https://wordpress.org/support/view/plugin-reviews/' . $this->elvwp_permalink . '?filter=5' );
 

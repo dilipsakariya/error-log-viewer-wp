@@ -60,7 +60,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 		<h1><?php esc_html_e( 'Error Log Viewer', 'error-log-viewer-wp' ); ?></h1>
 		<div class="elvwp_error_log_filter">
 			<div class="">
-				<h3 class="elvwp_filter_heading"><?php esc_html_e( 'Filters', 'error-log-viewer-wp' ); ?></h3>
+				<h3 class="elvwp_filter_heading"><?php esc_html_e( 'Filters', 'error-log-viewer-wp' ); ?> <a href="<?php echo ELVWP_SUPPORT_URL_GURU ?>" class="elvwp_support_img_holder"  target="_blank"><img class="elvwp_support_img" src="<?php echo ELVWP_URL.'assets/images/envelope-send.gif' ?>"><small><?php esc_html_e( 'Emergency WordPress Support', 'error-log-viewer-wp' );?></small> </a></h3>
 				<form action="" method="POST">
 					<fieldset id="dateFilter">
 						<div><label class="elvwp-lbl-filter"><?php esc_html_e( 'Filter by Date: ', 'error-log-viewer-wp' ); ?></label> <input type="text" name="date" id="elvwp_datepicker" class="hasDatepicker" value="<?php echo esc_attr( date( $date_format, strtotime( $log_date ) ) ); ?>" />&nbsp;&nbsp;
