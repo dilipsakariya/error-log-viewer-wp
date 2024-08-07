@@ -175,13 +175,13 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 		<div class="elvwp_type_error">
 			<?php foreach ( $log_details['types'] as $log_type => $class ) { ?>
 				<div class="elvwp_logoverview_static 
-				<?php
-				if ( ! empty( $class ) ) {
-					echo esc_attr( $class );
-				} else {
-					echo esc_attr( $log_type ); }
-				?>
-				">
+					<?php
+					if ( ! empty( $class ) ) {
+						echo esc_attr( $class );
+					} else {
+						echo esc_attr( $log_type ); }
+					?>
+					">
 					<div><strong><i class="dashicons-before dashicons-info<?php echo ( esc_attr( 'warning' === $log_type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( $log_type ) ); ?>: </strong><?php echo esc_html( $log_details['typecount'][ $log_type ] ); ?> <?php esc_html_e( 'Entries - ', 'error-log-viewer-wp' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $log_type ] / $log_details['total'], 2 ) ); ?>%</span></div>
 				</div>
 			<?php } ?>
