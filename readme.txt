@@ -15,7 +15,7 @@ Error Log Viewer By WP Guru plugin offers a user-friendly way to view and analyz
 
 == Description ==
 
-### Error Log Viewer By WP Guru - Best Error Log Viewer Plugin for WordPress ###
+### Best Error Log Viewer Plugin for WordPress ###
 
 A Lightweight Plugin to Handle Error Logs easily and efficiently.
 

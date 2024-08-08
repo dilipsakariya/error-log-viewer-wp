@@ -56,7 +56,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 ?>
 
 <div id="elvwp_err_container">
-	<?php if ( ! empty( $log_details['logs'] ) ) : ?>
+	<?php if ( isset ($log_details['logs'] ) && ! empty( $log_details['logs'] ) ) : ?>
 		<h1><?php esc_html_e( 'Error Log Viewer', 'error-log-viewer-wp' ); ?></h1>
 		<div class="elvwp_error_log_filter">
 			<div class="">
@@ -79,7 +79,7 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 						<label class="elvwp-lbl-filter"><?php esc_html_e( 'Filter by Type: ', 'error-log-viewer-wp' ); ?></label>
 						<?php foreach ( $log_details['types'] as $log_title => $class ) : ?>
 
-						<label class=" elvwp_type_lbl 
+						<label class="elvwp_type_lbl 
 							<?php
 							if ( ! empty( $class ) ) {
 								echo esc_attr( $class );
@@ -173,76 +173,82 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 		<p id="logfilesize">
 		</p>
 		<div class="elvwp_type_error">
-			<?php foreach ( $log_details['types'] as $log_type => $class ) { ?>
-				<div class="elvwp_logoverview_static 
-					<?php
-					if ( ! empty( $class ) ) {
-						echo esc_attr( $class );
-					} else {
-						echo esc_attr( $log_type ); }
-					?>
-					">
-					<div><strong><i class="dashicons-before dashicons-info<?php echo ( esc_attr( 'warning' === $log_type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( $log_type ) ); ?>: </strong><?php echo esc_html( $log_details['typecount'][ $log_type ] ); ?> <?php esc_html_e( 'Entries - ', 'error-log-viewer-wp' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $log_type ] / $log_details['total'], 2 ) ); ?>%</span></div>
-				</div>
-			<?php } ?>
+			<?php 
+				if( isset( $log_details['types'] ) ){
+					foreach ( $log_details['types'] as $log_type => $class ) { ?>
+					<div class="elvwp_logoverview_static 
+						<?php
+						if ( ! empty( $class ) ) {
+							echo esc_attr( $class );
+						} else {
+							echo esc_attr( $log_type ); }
+						?>
+						">
+						<div><strong><i class="dashicons-before dashicons-info<?php echo ( esc_attr( 'warning' === $log_type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( $log_type ) ); ?>: </strong><?php echo esc_html( $log_details['typecount'][ $log_type ] ); ?> <?php esc_html_e( 'Entries - ', 'error-log-viewer-wp' ); ?><span><?php echo esc_html( number_format( 100 * $log_details['typecount'][ $log_type ] / $log_details['total'], 2 ) ); ?>%</span></div>
+					</div>
+				<?php }
+				} 
+			?>
 		</div>
 		<section id="elvwp_error_list">
 			<?php if ( ! $is_raw_log ) { ?>
-				<?php foreach ( $log_details['logs'] as $log ) : ?>
-					<article class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
-							data-path="
-							<?php
-							if ( ! empty( $log->path ) ) {
-								echo esc_attr( htmlentities( $log->path ) );}
-							?>
-							"
-							data-line="
-							<?php
-							if ( ! empty( $log->line ) ) {
-								echo esc_attr( $log->line );}
-							?>
-							"
-							data-type="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
-							data-hits="<?php echo esc_attr( $log->hits ); ?>"
-							data-last="<?php echo esc_attr( $log->last ); ?>">
-						<div class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>">
-							<div class="elvwp_er_type"><i class="dashicons-before dashicons-info<?php echo esc_attr( ( 'warning' === $log->type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( htmlentities( $log->type ) ) ); ?></div> 
-							<div class="elvwp_er_path">
-								<b><?php echo esc_html( htmlentities( ( empty( $log->core ) ? $log->msg : $log->core ) ) ); ?></b>
-								<?php if ( ! empty( $log->more ) ) : ?>
-									<p><i><?php echo nl2br( esc_html( htmlentities( $log->more ) ) ); ?></i></p>
-								<?php endif; ?>
-								<div class="elvwp_err_trash">
-									<?php if ( ! empty( $log->trace ) ) : ?>
-										<?php $uid = uniqid( 'tbq' ); ?>
-									<p><a href="#" class="traceblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Show stack trace', 'error-log-viewer-wp' ); ?></a></p>
-									<blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->trace, true ) ); ?></blockquote>
-								<?php endif; ?>
+				<?php if ( $log_details['logs'] ) : ?>
+					<?php foreach ( $log_details['logs'] as $log ) : ?>
+						<article class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
+								data-path="
+								<?php
+								if ( ! empty( $log->path ) ) {
+									echo esc_attr( htmlentities( $log->path ) );}
+								?>
+								"
+								data-line="
+								<?php
+								if ( ! empty( $log->line ) ) {
+									echo esc_attr( $log->line );}
+								?>
+								"
+								data-type="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>"
+								data-hits="<?php echo esc_attr( $log->hits ); ?>"
+								data-last="<?php echo esc_attr( $log->last ); ?>">
+							<div class="<?php echo esc_attr( $log_details['types'][ $log->type ] ); ?>">
+								<div class="elvwp_er_type"><i class="dashicons-before dashicons-info<?php echo esc_attr( ( 'warning' === $log->type ) ? '-outline' : '' ); ?>"></i><?php echo esc_html( ucwords( htmlentities( $log->type ) ) ); ?></div> 
+								<div class="elvwp_er_path">
+									<b><?php echo esc_html( htmlentities( ( empty( $log->core ) ? $log->msg : $log->core ) ) ); ?></b>
+									<?php if ( ! empty( $log->more ) ) : ?>
+										<p><i><?php echo nl2br( esc_html( htmlentities( $log->more ) ) ); ?></i></p>
+									<?php endif; ?>
+									<div class="elvwp_err_trash">
+										<?php if ( ! empty( $log->trace ) ) : ?>
+											<?php $uid = uniqid( 'tbq' ); ?>
+										<p><a href="#" class="traceblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Show stack trace', 'error-log-viewer-wp' ); ?></a></p>
+										<blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->trace, true ) ); ?></blockquote>
+									<?php endif; ?>
 
-								<?php if ( ! empty( $log->code ) ) : ?>
-									<?php $uid = uniqid( 'cbq' ); ?>
-									<p><a href="#" class="codeblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Show code snippet', 'error-log-viewer-wp' ); ?></a></p>
-									<blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->code, true ) ); ?></blockquote>
-								<?php endif; ?>
+									<?php if ( ! empty( $log->code ) ) : ?>
+										<?php $uid = uniqid( 'cbq' ); ?>
+										<p><a href="#" class="codeblock" data-for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Show code snippet', 'error-log-viewer-wp' ); ?></a></p>
+										<blockquote id="<?php echo esc_attr( $uid ); ?>"><?php echo esc_html( highlight_string( $log->code, true ) ); ?></blockquote>
+									<?php endif; ?>
+									</div>
+								</div>
+								<div class="elvwp_er_time">
+									<p>
+										<?php if ( ! empty( $log->path ) ) : ?>
+											<?php echo esc_html( htmlentities( $log->path ) ); ?>, <?php esc_html_e( 'line', 'error-log-viewer-wp' ); ?> <?php echo esc_html( $log->line ); ?><br />
+										<?php endif; ?>
+										<?php esc_html_e( 'Last seen:', 'error-log-viewer-wp' ); ?> <?php echo esc_html( date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ) ); ?>, <strong><?php echo esc_html( $log->hits ); ?></strong> 
+											<?php
+												$hit_str = ( 1 === (int) $log->hits ? '' : 's' );
+												/* translators: %s: Number of hites */
+												printf( esc_html__( 'Hit%s', 'error-log-viewer-wp' ), esc_attr( $hit_str ) );
+											?>
+										<br />
+									</p>
 								</div>
 							</div>
-							<div class="elvwp_er_time">
-								<p>
-									<?php if ( ! empty( $log->path ) ) : ?>
-										<?php echo esc_html( htmlentities( $log->path ) ); ?>, <?php esc_html_e( 'line', 'error-log-viewer-wp' ); ?> <?php echo esc_html( $log->line ); ?><br />
-									<?php endif; ?>
-									<?php esc_html_e( 'Last seen:', 'error-log-viewer-wp' ); ?> <?php echo esc_html( date_format( date_create( "@{$log->last}" ), 'Y-m-d G:iA' ) ); ?>, <strong><?php echo esc_html( $log->hits ); ?></strong> 
-										<?php
-											$hit_str = ( 1 === (int) $log->hits ? '' : 's' );
-											/* translators: %s: Number of hites */
-											printf( esc_html__( 'Hit%s', 'error-log-viewer-wp' ), esc_attr( $hit_str ) );
-										?>
-									<br />
-								</p>
-							</div>
-						</div>
-					</article>
-				<?php endforeach; ?>
+						</article>
+					<?php endforeach; ?>
+				<?php endif; ?>
 				<a href="javascript:void(0);" name="elvwp_skip_to_top" id="elvwp_skip_to_top" value=""><?php esc_html_e( 'Skip To Top', 'error-log-viewer-wp' ); ?></a>
 			<?php } else { ?>
 				<textarea class="widefat" rows="25" name="raw_log_textarea">
