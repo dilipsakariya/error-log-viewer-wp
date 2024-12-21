@@ -71,7 +71,7 @@ if ( ! function_exists( 'elvwp_date_formate' ) ) {
 			$res_date_format = str_replace( array( 'Y', 'm', 'd' ), array( 'yyyy', 'mm', 'dd' ), $date_format );
 		}
 
-		return $res_date_format;
+		return esc_html( $res_date_format );
 	}
 }
 

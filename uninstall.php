@@ -35,7 +35,8 @@ function elvwp_uninstall() {
 	delete_option( 'elvwp_notification_status' );
 	delete_option( 'elvwp_notification_emails' );
 
-	$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'elvwp_error_logs' ); // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$table_name = $wpdb->prefix . 'elvwp_error_logs';
+	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %s', $table_name ) ); // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 }
 
 elvwp_uninstall();

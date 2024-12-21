@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Error Log Viewer By WP Guru
- * Version:           1.0.3
+ * Version:           1.0.4
  * Plugin URI:        https://wordpress.org/plugins/error-log-viewer-wp/
  * Description:       Error Log Viewer plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
  * Author:            WP Guru
@@ -18,7 +18,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       error-log-viewer-wp
  * Requires at least: 5.4
- * Tested up to:      6.6.1
+ * Tested up to:      6.7.1
  * Domain Path:       /languages
  */
 
@@ -1957,10 +1957,10 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 
 			if ( plugin_basename( ELVWP_FILE ) === $plugin_file ) {
 
-				$plugin_meta_str = '<a href="' . ELVWP_SUPPORT_URL . '" target="_blank">' . __( 'Support', 'error-log-viewer-wp' ) . '</a>';
+				$plugin_meta_str = '<a href="' . esc_url( ELVWP_SUPPORT_URL ) . '" target="_blank">' . esc_html__( 'Support', 'error-log-viewer-wp' ) . '</a>';
 				array_push( $plugin_meta, $plugin_meta_str );
 
-				$plugin_meta_str = '<a href="' . ELVWP_REVIEW_URL . '" target="_blank">' . __( 'Post Review', 'error-log-viewer-wp' ) . '</a>';
+				$plugin_meta_str = '<a href="' . esc_url( ELVWP_REVIEW_URL ) . '" target="_blank">' . esc_html__( 'Post Review', 'error-log-viewer-wp' ) . '</a>';
 				array_push( $plugin_meta, $plugin_meta_str );
 			}
 			return $plugin_meta;

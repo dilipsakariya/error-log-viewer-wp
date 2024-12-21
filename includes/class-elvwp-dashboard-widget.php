@@ -37,17 +37,17 @@ class Elvwp_Dashboard_Widget {
 		if ( 'index.php' === $hook ) {
 			wp_enqueue_script(
 				'elvwp-dashboard-widget-script',
-				plugins_url( 'assets/js/dashboard-widget.js', ELVWP_FILE ),
+				esc_url( plugins_url( 'assets/js/dashboard-widget.js', ELVWP_FILE ) ),
 				array( 'jquery' ),
-				ELVWP_VER,
+				esc_attr( ELVWP_VER ),
 				true
 			);
 
 			wp_enqueue_style(
 				'elvwp-dashboard-widget-styles',
-				plugins_url( $this->widget_css_path, ELVWP_FILE ),
+				esc_url( plugins_url( $this->widget_css_path, ELVWP_FILE ) ),
 				array(),
-				ELVWP_VER
+				esc_attr( ELVWP_VER )
 			);
 		}
 	}

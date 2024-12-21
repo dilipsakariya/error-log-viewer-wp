@@ -299,8 +299,8 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 	endif;
 
 	$script_object = array(
-		'error_type' => ( isset( $error_type ) ? $error_type : false ),
-		'total'      => ( isset( $log_details['total'] ) ? $log_details['total'] : 0 ),
+		'error_type' => ( isset( $error_type ) ? esc_js( $error_type ) : false ),
+		'total'      => ( isset( $log_details['total'] ) ? intval( $log_details['total'] ) : 0 ),
 	);
 
 	wp_localize_script( 'elvwp_admin_script', 'script_object', $script_object );

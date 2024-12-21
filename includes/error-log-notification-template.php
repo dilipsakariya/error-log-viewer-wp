@@ -65,10 +65,10 @@ $elvwp_frequency           = get_option( 'elvwp_frequency' );
 								<option value="daily" <?php echo ( 'daily' === $elvwp_frequency ) ? 'selected' : ''; ?>>
 									<?php esc_html_e( 'Daily', 'error-log-viewer-wp' ); ?>
 								</option>
-								<option value="weekly" <?php echo ( 'weekly' === $elvwp_frequency ) ? 'selected' : ''; ?>>
+								<option value="weekly" <?php echo ( 'weekly' === esc_attr( $elvwp_frequency ) ) ? 'selected' : ''; ?>>
 									<?php esc_html_e( 'Weekly', 'error-log-viewer-wp' ); ?>
 								</option>
-								<option value="monthly" <?php echo ( 'monthly' === $elvwp_frequency ) ? 'selected' : ''; ?>>
+								<option value="monthly" <?php echo ( 'monthly' === esc_attr( $elvwp_frequency ) ) ? 'selected' : ''; ?>>
 									<?php esc_html_e( 'Monthly', 'error-log-viewer-wp' ); ?>
 								</option>
 							</select>
