@@ -405,7 +405,7 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 					)
 				);
 				add_action(
-					'wp_ajax_nopriv_elvwp_log_download',
+					'wp_ajax_elvwp_log_download',
 					array(
 						$this,
 						'elvwp_log_download',
@@ -848,10 +848,19 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 		public function elvwp_log_download() {
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			if ( is_admin() && isset( $_POST['elvwp_error_log_download'] ) && isset( $_POST['elvwp_error_log'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) ) ) ) {
+			if ( isset( $_POST['elvwp_error_log_download'] ) && isset( $_POST['elvwp_error_log'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) ) ) ) {
+				// Check if the user has the appropriate capability
+				if ( ! current_user_can( 'manage_options' ) ) {
+					wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'error-log-viewer-wp' ) );
+				}
+			
+				// Verify the nonce
+				if ( ! isset( $_POST['elvwp_log_download_nonce'] ) || ! wp_verify_nonce( $_POST['elvwp_log_download_nonce'], 'elvwp_log_download_nonce' ) ) {
+					wp_die( esc_html__( 'Nonce verification failed.', 'error-log-viewer-wp' ) );
+				}
 
 				$elvwp_file = sanitize_text_field( wp_unslash( $_POST['elvwp_error_log'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
+				
 				try {
 					$filename = basename( $elvwp_file );
 					header( 'Pragma: public' );
@@ -869,8 +878,17 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 				}
 			}
 
-			if ( is_admin() && isset( $_POST['elvwp_datatable_log_download'] ) && isset( $_POST['elvwp_datatable_downloadid'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
+			if ( isset( $_POST['elvwp_datatable_log_download'] ) && isset( $_POST['elvwp_datatable_downloadid'] ) && ! empty( sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				// Check if the user has the appropriate capability
+				if ( ! current_user_can( 'manage_options' ) ) {
+					wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'error-log-viewer-wp' ) );
+				}
+			
+				// Verify the nonce
+				if ( ! isset( $_POST['elvwp_log_download_nonce'] ) || ! wp_verify_nonce( $_POST['elvwp_log_download_nonce'], 'elvwp_log_download_nonce' ) ) {
+					wp_die( esc_html__( 'Nonce verification failed.', 'error-log-viewer-wp' ) );
+				}
+				
 				global $wpdb;
 				$elvwp_table                = $wpdb->prefix . $this->elvwp_error_logs;
 				$elvwp_datatable_downloadid = sanitize_text_field( wp_unslash( $_POST['elvwp_datatable_downloadid'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1591,7 +1609,8 @@ if ( ! class_exists( 'Error_Log_Viewer_WP' ) ) {
 						}
 					}
 
-					$button = '<div class="elvwp_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $elvwp_url . '\';" id="elvwp_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="elvwp_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="elvwp_datatable_downloadid" value="' . $id . '"><button type="submit" name="elvwp_datatable_log_download" class="elvwp_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
+					$elvwp_log_download_nonce = wp_create_nonce( 'elvwp_log_download_nonce' );
+					$button = '<div class="elvwp_datatable_ajaxbutton"><form method="post"><button type="button" onclick="location.href = \'' . $elvwp_url . '\';" id="elvwp_datatable_view" ><i class="dashicons dashicons-text-page view"></i></button><button class="elvwp_datatable_delete" id="' . $id . '"><i class="dashicons dashicons-trash"></i></button><input type="hidden" name="elvwp_datatable_downloadid" value="' . $id . '"><input type="hidden" name="elvwp_log_download_nonce" value="' . esc_attr( $elvwp_log_download_nonce ) . '"><button type="submit" name="elvwp_datatable_log_download" class="elvwp_datatable_log_download"><i class="dashicons dashicons-download"></i></button></form></div>';
 
 					$data_ar = array(
 						'created_at'     => date( $date_format, strtotime( $created_at ) ),
