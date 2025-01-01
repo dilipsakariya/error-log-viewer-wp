@@ -1,5 +1,5 @@
 = Version 1.0.4 - Jan 01, 2025 =
-* New: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
+* Fix: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
 * Fix: Minor bug fixes
 
 = Version 1.0.2 - Mar 05, 2023 =

@@ -11,7 +11,7 @@ Stable Tag: 1.0.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
-Error Log Viewer By WP Guru plugin offers a user-friendly way to view and analyze PHP error logs. Easy to monitor distinct error log entries which helps to solve all errors quickly.
+Error Log Viewer by WP Guru simplifies viewing and analyzing PHP error logs, making it easier to monitor and resolve errors quickly.
 
 == Description ==
 
@@ -74,7 +74,7 @@ This plugin does not log nor transmit any user data. In fact, it doesn't even do
 == Changelog ==
 
 = 1.0.4 : January 2501, 2025 =
-* New: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
+* Fix: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
 * Fix: Minor bug fixes
 
 = 1.0.2 : March 05, 2023 =
