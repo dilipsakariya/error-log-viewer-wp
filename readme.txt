@@ -73,5 +73,14 @@ This plugin does not log nor transmit any user data. In fact, it doesn't even do
 
 == Changelog ==
 
+= 1.0.4 : January 2501, 2025 =
+* New: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
+* Fix: Minor bug fixes
+
+= 1.0.2 : March 05, 2023 =
+* New: Error Log report by Email Notification
+* Fix: WP Standards
+* Fix: Minor bugs
+
 = 1.0.0 : December 25, 2022 =
 * Plugin Release*
