@@ -19,10 +19,12 @@ $instance = new Error_Log_Viewer_WP();
 
 $date_format = get_option( 'date_format' );
 
+$log_date = '';
 if ( isset( $_GET['date'] ) && ! empty( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) ) {
 	$log_date = date( 'd-M-Y', strtotime( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) );
 }
 
+$error_type = '';
 if ( isset( $_GET['date'] ) && ! empty( sanitize_text_field( wp_unslash( $_GET['date'] ) ) ) && isset( $_GET['type'] ) && ! empty( sanitize_text_field( wp_unslash( $_GET['type'] ) ) ) ) {
 	$error_type = str_replace( ' ', '', sanitize_text_field( wp_unslash( $_GET['type'] ) ) );
 }
@@ -144,9 +146,9 @@ $log_details = $instance->elvwp_log_details( $log_date, $is_raw_log );
 				<?php if ( isset( $log_details['error_log'] ) && ! empty( $log_details['error_log'] ) ) { ?>
 					<?php $elvwp_log_download_nonce = wp_create_nonce( 'elvwp_log_download_nonce' ); ?>
 					<form method="post">
-						<button type="submit" class="button primary" name="elvwp_error_log_download" id="elvwp_error_log_download" value=""><?php esc_html_e( 'Download Log', 'error-log-viewer-wp' ); ?></button>
 						<input type="hidden" name="elvwp_log_download_nonce" value="<?php echo esc_attr( $elvwp_log_download_nonce ); ?>">
 						<input type="hidden" name="elvwp_error_log" id="elvwp_error_log" value="<?php echo esc_attr( $log_details['error_log'] ); ?>">
+						<button type="submit" class="button primary" name="elvwp_error_log_download" id="elvwp_error_log_download" value=""><?php esc_html_e( 'Download Log', 'error-log-viewer-wp' ); ?></button>
 						<button type="button" class="button primary" name="elvwp_error_log_purge" id="elvwp_error_log_purge" value=""><?php esc_html_e( 'Purge Log', 'error-log-viewer-wp' ); ?></button>
 					</form>
 				<?php } ?>

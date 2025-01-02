@@ -7,7 +7,7 @@ Tags: error log, error reporting, log report, debug tool, admin
 Requires at least: 5.4
 Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable Tag: 1.0.4
+Stable Tag: 1.0.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -73,9 +73,12 @@ This plugin does not log nor transmit any user data. In fact, it doesn't even do
 
 == Changelog ==
 
-= 1.0.4 : January 2501, 2025 =
+= 1.0.5 : January 02, 2025 =
+* Fix: Minor bugs
+
+= 1.0.4 : January 01, 2025 =
 * Fix: Unauthenticated Arbitrary File Read Vulnerability reported by yudha is fixed
-* Fix: Minor bug fixes
+* Fix: Minor bugs
 
 = 1.0.2 : March 05, 2023 =
 * New: Error Log report by Email Notification
@@ -83,4 +86,4 @@ This plugin does not log nor transmit any user data. In fact, it doesn't even do
 * Fix: Minor bugs
 
 = 1.0.0 : December 25, 2022 =
-* Plugin Release*
+* Plugin Release

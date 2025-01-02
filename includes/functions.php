@@ -79,8 +79,8 @@ if ( ! function_exists( 'elvwp_get_last_log' ) ) {
 
 	function elvwp_get_last_log() {
 		global $wpdb;
-		$table            = $wpdb->prefix . 'elvwp_error_logs';
-		$elvwp_table_data = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$table} ORDER BY created_at DESC LIMIT 1" ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$table            = esc_sql( $wpdb->prefix . 'elvwp_error_logs' );
+		$elvwp_table_data = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 1" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		if ( isset( $elvwp_table_data[0] ) ) {
 			return $elvwp_table_data[0];
